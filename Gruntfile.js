@@ -1,22 +1,22 @@
 module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
-            concat: {
-                options: {
-                    separator: ';'
-                }, 
-                dist: {
-                    src: ['src/**/*.js'],
-                    dest: '<%= pkg.name %>.js'
-                }
-            },
+        concat: {
+            options: {
+                separator: ';'
+            }, 
+            dist: {
+                src: ['src/**/*.js'],
+                dest: '<%= pkg.name %>.js'
+            }
+        },
         uglify: {
             options: {
                 banner: "/*! <%=pkg.name%> <%=grunt.template.today('yyyy-mm-dd')%> */\n"
             },
             build: {
                 src: '<%= pkg.name %>.js',
-               dest: '<%= concat.dist.dest %>'
+                dest: '<%= concat.dist.dest %>'
             }
         },
         qunit: {
@@ -28,7 +28,13 @@ module.exports = function(grunt) {
         watch: {
             files: ['<%= jshint.files %>'],
             tasks: ['jshint', 'qunit']  
-        }
+        },
+        shell: {
+            deploy: {
+                command: 'cp <%= pkg.name %>.js <%= test_server %>/public'
+            }
+        },
+        test_server: '/home/yangchen/snake-server'
     });
 
     grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -36,9 +42,12 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-shell');
 
-    grunt.registerTask('test', ['jshint', 'qunit']);
-    grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
+    grunt.registerTask('test', ['jshint']);
+    //grunt.registerTask('test', ['jshint', 'qunit']);
+    grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'shell']);
+    //grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
 }
 
 
