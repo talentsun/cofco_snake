@@ -1,3 +1,7 @@
+var requestAnimationFrame = window.requestAnimationFrame ||
+                            window.webkitRequestAnimationFrame ||
+                            window.mozRequestAnimationFrame;
+
 var self = this;
 
 (function(global) {
@@ -225,9 +229,9 @@ snake = {
   draw: function() {
     for (var i = 0; i < snake.sections.length; i++) {
         var section = snake.sections[i];
-        if (i == 0) {
+        if (i === 0) {
             snake.drawTail(section);
-        } else if(i == snake.sections.length - 1) {
+        } else if(i === snake.sections.length - 1) {
             snake.drawHead(section);
         } else {
             snake.drawBody(section);
@@ -346,7 +350,19 @@ var keys = {
   start_game: [13, 32]
 };
 
-function getKey(value){
+function require_game_over(func) {
+    if(!game.over) return;
+
+    func && func.call(this, arguments);
+}
+
+function require_game_not_over(func) {
+    if(game.over) return;
+
+    func && func.call(this.arguments);
+}
+
+function getDirectionByKeyCode(value){
     for (var key in keys) {
         if (keys[key] instanceof Array && 
             ~u.indexOf(keys[key], value)) {
@@ -356,26 +372,44 @@ function getKey(value){
     return null;
 }
 
-
-// TODO 添加对手势识别的支持
-addEventListener("keydown", function (e) {
-    if (game.over) return;
-
-    var lastKey = getKey(e.keyCode);
-    if (~u.indexOf(['up', 'down', 'left', 'right'], lastKey) && 
-        lastKey != inverseDirection[snake.direction]) {
-        snake.direction = lastKey;
+function change_direction(direction) {
+    if(direction !== inverseDirection[snake.direction]) {
+        snake.direction = direction;
     }
-}, false);
+}
 
-addEventListener("keyup", function(e) {
-    if (!game.over) return;
-    if (getKey(e.keyCode) === 'start_game') game.start();
-}, false);
+// TODO 适配IE的事件监听接口
+addEventListener("keydown", require_game_not_over(function (e) {
+    var direction = getDirectionByKeyCode(e.keyCode);
+    direction && change_direction(direction);
+}), false);
 
-var requestAnimationFrame = window.requestAnimationFrame ||
-                            window.webkitRequestAnimationFrame ||
-                            window.mozRequestAnimationFrame;
+Hammer(document.body).on("swipeup", require_game_not_over(function() {
+    change_direction('up');
+}));
+
+Hammer(document.body).on("swipedown", require_game_not_over(function() {
+    change_direction('down');
+}));
+
+Hammer(document.body).on("swipeleft", require_game_not_over(function() {
+    change_direction('left');
+}));
+
+Hammer(document.body).on("swiperight", require_game_not_over(function() {
+    change_direction('right');
+}));
+
+
+addEventListener("keyup", require_game_over(function(e) {
+    game.start();
+}), false);
+
+Hammer(document.body).on("tap", require_game_over(function() {
+    game.start();
+}));
+
+
 
 function loop() {
     game.resetCanvas();
@@ -390,4 +424,3 @@ function loop() {
         }, 1000 / game.fps);
     }
 }
-

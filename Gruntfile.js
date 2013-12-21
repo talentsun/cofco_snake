@@ -6,7 +6,7 @@ module.exports = function(grunt) {
                 separator: ';'
             }, 
             dist: {
-                src: ['src/**/*.js'],
+                src: ['bower_components/hammerjs/dist/hammer.js', 'src/snake.js'],
                 dest: '<%= pkg.name %>.js'
             }
         },
@@ -27,11 +27,11 @@ module.exports = function(grunt) {
         },
         watch: {
             files: ['<%= jshint.src %>'],
-            tasks: ['jshint', 'shell:deploy']  
+            tasks: ['default']  
         },
         shell: {
             deploy: {
-                command: 'cp src/<%= pkg.name %>.js <%= test_server %>/public',
+                command: 'cp <%= pkg.name %>.js <%= test_server %>/public',
                 options: {
                     stdout: true
                 }
@@ -49,7 +49,6 @@ module.exports = function(grunt) {
 
     grunt.registerTask('test', ['jshint', /*'qunit'*/]);
     grunt.registerTask('default', ['jshint', /*'qunit',*/ 'concat', /*'uglify',*/ 'shell:deploy']);
-    //grunt.registerTask('default', ['shell:deploy']);
 }
 
 
