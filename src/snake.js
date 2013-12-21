@@ -342,30 +342,33 @@ var inverseDirection = {
   'down': 'up'
 };
 
-var keys = {
-  up: [38, 75, 87],
-  down: [40, 74, 83],
-  left: [37, 65, 72],
-  right: [39, 68, 76],
-  start_game: [13, 32]
-};
 
 function require_game_over(func) {
-    if(!game.over) return;
-
-    func && func.call(this, arguments);
+    return function() {
+        if(!game.over) return;
+        func && func.apply(this, arguments);
+    }
 }
 
 function require_game_not_over(func) {
-    if(game.over) return;
-
-    func && func.call(this.arguments);
+    return function() {
+        if(game.over) return;
+        func && func.apply(this, arguments);
+    }
 }
 
+var start_keys = [13, 32];
+
+var direction_keys = {
+    up: [38, 75, 87],
+    down: [40, 74, 83],
+    left: [37, 65, 72],
+    right: [39, 68, 76],
+};
 function getDirectionByKeyCode(value){
-    for (var key in keys) {
-        if (keys[key] instanceof Array && 
-            ~u.indexOf(keys[key], value)) {
+    for (var key in direction_keys) {
+        var keylist = direction_keys[key];
+        if (~u.indexOf(keylist, value)) {
             return key;
         }
     }
@@ -381,35 +384,42 @@ function change_direction(direction) {
 // TODO 适配IE的事件监听接口
 addEventListener("keydown", require_game_not_over(function (e) {
     var direction = getDirectionByKeyCode(e.keyCode);
+    console.log(direction);
     direction && change_direction(direction);
 }), false);
 
-Hammer(document.body).on("swipeup", require_game_not_over(function() {
+var hammer = new Hammer(document);
+
+hammer.on('touchmove', function(e) {
+    e.preventDefault();
+});
+hammer.on("swipeup, dragup", require_game_not_over(function(e) {
+    e.preventDefault();
     change_direction('up');
 }));
-
-Hammer(document.body).on("swipedown", require_game_not_over(function() {
+hammer.on("swipedow dragdown", require_game_not_over(function(e) {
+    e.preventDefault();
     change_direction('down');
 }));
-
-Hammer(document.body).on("swipeleft", require_game_not_over(function() {
+hammer.on("swipeleft dragleft", require_game_not_over(function(e) {
+    e.preventDefault();
     change_direction('left');
 }));
-
-Hammer(document.body).on("swiperight", require_game_not_over(function() {
+hammer.on("swiperight dragright", require_game_not_over(function(e) {
+    e.preventDefault();
     change_direction('right');
 }));
 
 
 addEventListener("keyup", require_game_over(function(e) {
-    game.start();
+    if(~u.indexOf(start_keys, e.keyCode)) {
+        game.start();
+    }
 }), false);
 
 Hammer(document.body).on("tap", require_game_over(function() {
     game.start();
 }));
-
-
 
 function loop() {
     game.resetCanvas();
