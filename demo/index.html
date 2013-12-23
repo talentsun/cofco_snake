@@ -10,8 +10,22 @@
     <![endif]-->
 </head>
 <body>
-    <div>
-        <canvas id="the-game" width="320" height="320"></canvas>
+    <div class="snake-container">
+        <div class="scorebar">
+            <h3>积分</h3>
+            <div class='current'>
+                <h3>本局积分</h3>
+                <p>1234</p>
+            </div>
+            <div class='total'>
+                <h3>总积分</h3>
+                <p>31415926</p>
+            </div>
+        </div>
+        <canvas class='canvas' id="snake"></canvas>
+        <div class='control-bar'>
+            <button class='control'>开始</button>
+        </div>
     </div>
     <script type="text/javascript" src="js/snake.js"></script>
 </body>

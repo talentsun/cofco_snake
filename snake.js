@@ -1871,3 +1871,4 @@ function loop() {
         }, 1000 / game.fps);
     }
 }
+

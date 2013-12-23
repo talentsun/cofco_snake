@@ -11,8 +11,41 @@ h1 {
 p {
   text-align: center;
 }
-canvas {
-  display: block;
-  margin: 0 auto;
-  background-color: #666;
+
+.snake-container {
+    width: 960px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+body {
+    background: #f1f1f1;
+}
+
+.snake-container > .scorebar,
+.snake-container > .control-bar {
+    width: 150px;
+    margin-top: 150px;
+}
+
+.scorebar {
+    text-align: center;
+}
+
+.snake-container > .canvas {
+    background: #CCC;
+    width: 660px;
+    height: 660px;
+}
+
+.snake-container > .canvas, 
+.snake-container > .scorebar, 
+.snake-container > .control-bar {
+    float: left;
+}
+
+
+.control-bar > .control {
+    width: 130px;
+    height: 130px;
 }
