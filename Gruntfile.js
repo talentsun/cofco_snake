@@ -31,13 +31,12 @@ module.exports = function(grunt) {
         },
         shell: {
             deploy: {
-                command: 'cp <%= pkg.name %>.js <%= test_server %>/public',
+                command: 'cp <%= pkg.name %>.js demo/js',
                 options: {
                     stdout: true
                 }
             }
-        },
-        test_server: '/home/yangchen/snake-server'
+        }
     });
 
     grunt.loadNpmTasks('grunt-contrib-uglify');

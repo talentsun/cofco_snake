@@ -1418,7 +1418,10 @@ else {
         });
     }
 }
-})(this);;var requestAnimationFrame = window.requestAnimationFrame ||
+})(this);;if(screen.lockOrientation) screen.lockOrientation('landscape');
+window.scrollTo(0, 1);
+
+var requestAnimationFrame = window.requestAnimationFrame ||
                             window.webkitRequestAnimationFrame ||
                             window.mozRequestAnimationFrame;
 
@@ -1533,6 +1536,7 @@ game = {
     game.over = false;
     game.message = null;
     game.fps = 4;
+    food = null;
     game.foods = [];
     snake.init();
     snake.onCollision(function() {
@@ -1698,8 +1702,8 @@ snake = {
   },
   
   isCollision: function(x, y) {
-    if (x < 0 || x > game.blocks || 
-        y < 0 || y > game.blocks) return true;
+    if (x < 0 || x >= game.blocks || 
+        y < 0 || y >= game.blocks) return true;
 
     return this.onBody(x, y);
   },
@@ -1821,7 +1825,6 @@ if(addEventListener) {
     };
 }
 
-// TODO 适配IE的事件监听接口
 _addEventListener("keydown", require_game_not_over(function (e) {
     var direction = getDirectionByKeyCode(e.keyCode);
     direction && snake.changeDirection(direction);
@@ -1832,12 +1835,16 @@ var hammer = new Hammer(document);
 hammer.on('touchmove', function(e) {
     e.preventDefault();
 }).on("swipeup, dragup", require_game_not_over(function(e) {
+    e.preventDefault();
     snake.changeDirection('up');
 })).on("swipedow dragdown", require_game_not_over(function(e) {
+    e.preventDefault();
     snake.changeDirection('down');
 })).on("swipeleft dragleft", require_game_not_over(function(e) {
+    e.preventDefault();
     snake.changeDirection('left');
 })).on("swiperight dragright", require_game_not_over(function(e) {
+    e.preventDefault();
     snake.changeDirection('right');
 }));
 
