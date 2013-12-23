@@ -1144,8 +1144,6 @@ Hammer.gestures.Swipe = {
                 return;
             }
 
-            console.log(ev.velocityX, ev.velocityY);
-
             // when the distance we moved is too small we skip this gesture
             // or we can be already in dragging
             if(ev.velocityX > inst.options.swipe_velocity ||
@@ -1420,8 +1418,7 @@ else {
         });
     }
 }
-})(this);
-;var requestAnimationFrame = window.requestAnimationFrame ||
+})(this);;var requestAnimationFrame = window.requestAnimationFrame ||
                             window.webkitRequestAnimationFrame ||
                             window.mozRequestAnimationFrame;
 
@@ -1528,16 +1525,19 @@ game = {
   blocks: BLOCKS,
   block_size: canvas.width / BLOCKS, 
   foods: [],
-  fps: 8,
+  fps: 4,
   over: true,
   message: null,
   
   start: function() {
     game.over = false;
     game.message = null;
-    game.fps = 8;
+    game.fps = 4;
     game.foods = [];
     snake.init();
+    snake.onCollision(function() {
+        game.stop();
+    });
     setFood();
     requestAnimationFrame(loop);
   },
@@ -1593,7 +1593,6 @@ onFoodChange(function(prev, cur) {
     if (!prev) return;
 
     game.foods.push(prev);
-    console.log(game.foods);
 
     if (game.score() % 5 === 0 && game.fps < 60) {
         game.fps++;
@@ -1616,6 +1615,7 @@ snake = {
     snake.direction = 'left';
     snake.x = Math.ceil(game.blocks / 2);
     snake.y = Math.ceil(game.blocks / 2);
+    this.directionChanged = false;
     for (var i = snake.x + snake.INIT_LENGTH - 1; i >= snake.x; i--) {
         snake.sections.push({x: i, y: snake.y}); 
     }
@@ -1636,8 +1636,17 @@ snake = {
         snake.x++;
         break;
     }
-    snake.checkCollision();
-    snake.checkGrowth();
+
+    if (snake.isCollision(snake.x, snake.y)) {
+        this.collict();
+    }
+
+    this.directionChanged = false;
+    if (snake.x == food.x && snake.y == food.y) {
+        setFood();
+    } else {
+        snake.sections.shift();
+    }
     snake.sections.push({x: snake.x, y:snake.y});
   },
 
@@ -1679,11 +1688,13 @@ snake = {
                    section.y * game.block_size, 
                    game.block_size, snake.tailColor);
   },
+
+  collict: function() {
+      this.collisionListener && this.collisionListener();
+  },
   
-  checkCollision: function() {
-    if (snake.isCollision(snake.x, snake.y)) {
-        game.stop();
-    }
+  onCollision: function(l) {
+      this.collisionListener = l;
   },
   
   isCollision: function(x, y) {
@@ -1693,12 +1704,13 @@ snake = {
     return this.onBody(x, y);
   },
   
-  checkGrowth: function() {
-    if (snake.x == food.x && snake.y == food.y) {
-        setFood();
-    } else {
-        snake.sections.shift();
-    }
+  changeDirection: function(direction) {
+    if (this.directionChanged) return;
+
+    if (direction === inverseDirection[this.direction]) return;
+
+    this.direction = direction;
+    this.directionChanged = true;
   }
 };
 
@@ -1798,49 +1810,44 @@ function getDirectionByKeyCode(value){
     return null;
 }
 
-function change_direction(direction) {
-    if(direction !== inverseDirection[snake.direction]) {
-        snake.direction = direction;
-    }
+var _addEventListener;
+if(addEventListener) {
+    _addEventListener = function (event, handler) {
+        addEventListener(event, handler, false);
+    };
+} else {
+    _addEventListener = function(event, handler) {
+        attachEvent("on" + event, handler);
+    };
 }
 
 // TODO 适配IE的事件监听接口
-addEventListener("keydown", require_game_not_over(function (e) {
+_addEventListener("keydown", require_game_not_over(function (e) {
     var direction = getDirectionByKeyCode(e.keyCode);
-    console.log(direction);
-    direction && change_direction(direction);
+    direction && snake.changeDirection(direction);
 }), false);
 
 var hammer = new Hammer(document);
 
 hammer.on('touchmove', function(e) {
     e.preventDefault();
-});
-hammer.on("swipeup, dragup", require_game_not_over(function(e) {
-    e.preventDefault();
-    change_direction('up');
-}));
-hammer.on("swipedow dragdown", require_game_not_over(function(e) {
-    e.preventDefault();
-    change_direction('down');
-}));
-hammer.on("swipeleft dragleft", require_game_not_over(function(e) {
-    e.preventDefault();
-    change_direction('left');
-}));
-hammer.on("swiperight dragright", require_game_not_over(function(e) {
-    e.preventDefault();
-    change_direction('right');
+}).on("swipeup, dragup", require_game_not_over(function(e) {
+    snake.changeDirection('up');
+})).on("swipedow dragdown", require_game_not_over(function(e) {
+    snake.changeDirection('down');
+})).on("swipeleft dragleft", require_game_not_over(function(e) {
+    snake.changeDirection('left');
+})).on("swiperight dragright", require_game_not_over(function(e) {
+    snake.changeDirection('right');
 }));
 
-
-addEventListener("keyup", require_game_over(function(e) {
+_addEventListener("keyup", require_game_over(function(e) {
     if(~u.indexOf(start_keys, e.keyCode)) {
         game.start();
     }
 }), false);
 
-Hammer(document.body).on("tap", require_game_over(function() {
+hammer.on("tap", require_game_over(function() {
     game.start();
 }));
 
