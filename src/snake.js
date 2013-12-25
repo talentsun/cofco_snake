@@ -27,7 +27,7 @@ function has(obj, key) {
 var keys = nativeKeys || function(obj) {
     if (obj !== Object(obj)) throw new TypeError('Invalid object');
     var keys = [];
-    for (var key in obj) if (_.has(obj, key)) keys.push(key);
+    for (var key in obj) if (has(obj, key)) keys.push(key);
     return keys;
 };
 
@@ -48,9 +48,9 @@ function each(obj, iterator, context) {
             if (iterator.call(context, obj[i], i, obj) === breaker) return;
         }
     } else {
-        var keys = _.keys(obj);
-        for (var i = 0, length = keys.length; i < length; i++) {
-            if (iterator.call(context, obj[keys[i]], keys[i], obj) === breaker) return;
+        var _keys = keys(obj);
+        for (var i = 0, length = _keys.length; i < length; i++) {
+            if (iterator.call(context, obj[_keys[i]], _keys[i], obj) === breaker) return;
         }
     }
 }
@@ -89,11 +89,11 @@ global.u = {
 var u = self.u;
 
 var canvas = document.getElementById("snake");
-var context = canvas.getContext("2d");
+if (!canvas.getContext) G_vmlCanvasManager.initElement(canvas);
 
 var Fooder = {
     foods: {
-        default: {
+        food1: {
             score: 1,
             name: '中粮食品',
             color: '#0FF'
@@ -416,17 +416,6 @@ function getDirectionByKeyCode(value){
     return null;
 }
 
-var _addEventListener;
-if(addEventListener) {
-    _addEventListener = function (event, handler) {
-        addEventListener(event, handler, false);
-    };
-} else {
-    _addEventListener = function(event, handler) {
-        attachEvent("on" + event, handler);
-    };
-}
-
 var game = new Game(canvas);
 var controlButton = document.getElementById('control');
 controlButton.onclick = function() {
@@ -466,12 +455,12 @@ function while_playing(func) {
     }
 }
 
-_addEventListener("keydown", while_playing(function (e) {
+$(document).on("keydown", while_playing(function (e) {
     var direction = getDirectionByKeyCode(e.keyCode);
     direction && game.changeSnakeDirection(direction);
-}), false);
+}));
 
-var hammer = new Hammer(document);
+var hammer = $(document).hammer();
 
 hammer.on('touchmove', while_playing(function(e) {
     e.preventDefault();

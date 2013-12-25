@@ -16,6 +16,8 @@
     "tests"
   ],
   "dependencies": {
-      "hammerjs": "*"
+      "jquery": "1.9.1",
+      "hammerjs": "*",
+      "html5shiv": "*"
   }
 }

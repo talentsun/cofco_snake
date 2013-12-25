@@ -6,7 +6,7 @@ module.exports = function(grunt) {
                 separator: ';'
             }, 
             dist: {
-                src: ['bower_components/hammerjs/dist/hammer.js', 'src/snake.js'],
+                src: ['src/snake.js'],
                 dest: '<%= pkg.name %>.js'
             }
         },
