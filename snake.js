@@ -138,9 +138,7 @@ Timer.prototype = {
     },
 
     speedUp: function() {
-        if(this.fps % 5 === 0 && this.fps < 60) {
-            this.fps++;
-        }
+        this.fps < 60 && this.fps++;
     }
 };
 
@@ -250,8 +248,9 @@ function Game(canvas) {
         self.snake.directionChanged = false;
         if (self.snake.x == self.food.x && self.snake.y == self.food.y) {
             self.foods.push(self.food);
-            self.food = self.getFood();
+            self.foods.length % 5 === 0 && self.timer.speedUp();
             self.scoreListener && self.scoreListener();
+            self.food = self.getFood();
         } else {
             self.snake.sections.shift();
         }
@@ -261,7 +260,6 @@ function Game(canvas) {
             self.draw();
         });
 
-        self.timer.speedUp();
     });
 }
 
@@ -362,6 +360,7 @@ Game.prototype = {
     },
 
     drawBox: function(x, y, size, color) {
+        var context = this.context;
         context.fillStyle = color;
         context.beginPath();
         context.moveTo(x, y);
