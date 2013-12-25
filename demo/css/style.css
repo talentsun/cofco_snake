@@ -34,8 +34,6 @@ body {
 
 .snake-container > .canvas {
     background: #CCC;
-    width: 660px;
-    height: 660px;
 }
 
 .snake-container > .canvas, 

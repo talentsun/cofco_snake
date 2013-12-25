@@ -15,16 +15,16 @@
             <h3>积分</h3>
             <div class='current'>
                 <h3>本局积分</h3>
-                <p>1234</p>
+                <p id='current-score'>0</p>
             </div>
             <div class='total'>
                 <h3>总积分</h3>
-                <p>31415926</p>
+                <p id='total-score'>0</p>
             </div>
         </div>
-        <canvas class='canvas' id="snake"></canvas>
+        <canvas class='canvas' id="snake" width="660" height="660"></canvas>
         <div class='control-bar'>
-            <button class='control'>开始</button>
+            <button class='control' id="control">开始</button>
         </div>
     </div>
     <script type="text/javascript" src="js/snake.js"></script>
