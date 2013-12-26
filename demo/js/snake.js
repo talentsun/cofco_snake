@@ -67,6 +67,75 @@ function extend(obj) {
     return obj;
 }
 
+function once(func) {
+    var called = false;
+    return function() {
+        if (called) return;
+
+        called = true;
+        func && func.apply(this, arguments);
+    }
+}
+
+function parallels(tasks, cb) {
+    if(tasks.length == 0) setTimeout(cb, 0);
+
+    var failed = false;
+    function not_error(func) {
+        return function(err) {
+            if(failed) return;
+
+            if (err) {
+                failed = true;
+                cb(err);
+                return;
+            }
+
+            func && func.apply(this, arguments);
+        }
+    }
+
+    var length = tasks.length;
+    var result_map = {};
+    var result = [];
+    function gather_results(err, index, data) {
+        result.insert(index, data);
+        result_map[index + ""] = true;
+        var finish = true;
+        for(var i = 0; i < length; i++) {
+            finish = result_map[i + ""];
+        }
+        if(finish) {
+            cb(null, result);
+        }
+    }
+
+    function get_index(index, func) {
+        return function(err, data) {
+            func && func(err, index, data);
+        }
+    }
+
+    for(var i = 0; i < length; i++) {
+        var task = tasks[i];
+        task(get_index(i, once(not_error(gather_results))));
+    }
+}
+
+function eachAsync(items, func, cb) {
+    function gen(item) {
+        return function(cb) {
+            func(item, once(function(err, data) {
+                cb(err, data);
+            });
+        }
+    }
+    var funclist = [];
+    each(items, function(item) {
+        funclist.push(gen(item));
+    });
+    paralles(funclist, cb);
+}
 
 global.u = {
     indexOf: indexOf,
@@ -74,6 +143,7 @@ global.u = {
     has: has,
     keys: keys,
     extend: extend,
+    eachAsync: eachAsync,
     log: function() {
         if(!console || !console.log) return;
         console.log.apply(console, arguments);
@@ -398,22 +468,68 @@ Game.prototype = {
     }
 };
 
-var direction_keys = {
+var DIRECTION_KEYCODES = {
     up: [38, 75, 87],
     down: [40, 74, 83],
     left: [37, 65, 72],
     right: [39, 68, 76],
 };
 
-function getDirectionByKeyCode(value){
-    for (var key in direction_keys) {
-        var keylist = direction_keys[key];
-        if (~u.indexOf(keylist, value)) {
+function getDirectionByKeyCode(keyCode){
+    for (var key in DIRECTION_KEYCODES) {
+        var codelist = DIRECTION_KEYCODES[key];
+        if (~u.indexOf(codelist, keyCode)) {
             return key;
         }
     }
+
     return null;
 }
+
+var RESOURCES = {
+    snake: {
+        head: {
+            src: ''
+        },
+        tail: {
+            src: ''
+        },
+        body: {
+            src: ''
+        }
+    },
+    foods: {
+        food1: {
+            src: ''
+        },
+        food2: {
+            src: ''
+        },
+    }
+};
+
+function loadResources() {
+
+    var promise = {
+    };
+
+    var items = [];
+    u.each(u.keys(RESOURCES.snake), function(key) {
+        items.push(resources.snake[key]);
+    });
+    u.each(u.keys(RESOURCES.foods), function(key) {
+        items.push(resources.foods[key]);
+    });
+    u.eachAsync(items, function(item, callback) {
+        callback(null, '');
+    }, function() {
+        promise.onSuccess && promise.onSuccess();
+    });
+
+    return promise;
+}
+
+function init() {
 
 var game = new Game(canvas);
 var controlButton = document.getElementById('control');
@@ -477,3 +593,6 @@ hammer.on('touchmove', while_playing(function(e) {
     game.changeSnakeDirection('right');
 }));
 
+}
+
+loadResources(init);
