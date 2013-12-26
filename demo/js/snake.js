@@ -500,7 +500,7 @@ function loadResources() {
         };
 
         img.onerror = function() {
-            console.log('fail to load img:', item.src);
+            u.log('fail to load img:', item.src);
             callback('error');
         };
         img.src = item.src;
@@ -584,7 +584,7 @@ function init() {
 var promise = loadResources();
 promise.success = init;
 promise.progress = function(completed, length) {
-    console.log('progress:', completed, length);
+    u.log('progress:', completed, length);
 };
 promise.fail = function(err) {
     u.error(err);
