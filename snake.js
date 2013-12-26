@@ -59,8 +59,8 @@ u.each = function(obj, iterator, context) {
 		}
 	} else {
 		var _keys = u.keys(obj);
-		for (var i = 0, length = _keys.length; i < length; i++) {
-			if (iterator.call(context, obj[_keys[i]], _keys[i], obj) === breaker) return;
+		for (var index = 0; index < _keys.length; index++) {
+			if (iterator.call(context, obj[_keys[index]], _keys[index], obj) === breaker) return;
 		}
 	}
 };
@@ -83,8 +83,8 @@ function _only_once(func) {
 		if (called) return;
 
 		called = true;
-		func && func.apply(this, arguments);
-	}
+		if (func) func.apply(this, arguments);
+	};
 }
 
 u.eachAsync = function(arr, iterator, callback) {
@@ -111,14 +111,13 @@ u.eachAsync = function(arr, iterator, callback) {
 u.bind = function(func, context) {
 	var args = _slice.call(arguments, 2);
 	return function() {
-		func.apply(context, args.concat(_slice.call(arguments)));	
-	}
+		func.apply(context, args.concat(_slice.call(arguments)));
+	};
 };
 
 var console = console || {};
 console.log = console.log || function() {};
 console.error = console.error || function() {};
-
 
 ;
 
@@ -156,36 +155,36 @@ var server = {
 
 // Timer
 function Timer(tick) {
-    this.fps = 4;
-    this.tick = tick;
-    this.paused = false;
+	this.fps = 4;
+	this.tick = tick;
+	this.paused = false;
 }
 
 Timer.prototype = {
-    constructor: Timer,
+	constructor: Timer,
 
-    start: function() {
-        this.paused = false;
-        this.count();
-    },
+	start: function() {
+		this.paused = false;
+		this.count();
+	},
 
-    count: function() {
-        var self = this;
-        setTimeout(function() {
-            if (self.paused) return;
+	count: function() {
+		var self = this;
+		setTimeout(function() {
+			if (self.paused) return;
 
-            self.tick();
-            self.count();
-        }, 1000 / this.fps);
-    },
+			self.tick();
+			self.count();
+		}, 1000 / this.fps);
+	},
 
-    pause: function() {
-        this.paused = true;
-    },
+	pause: function() {
+		this.paused = true;
+	},
 
-    speedUp: function() {
-        this.fps < 60 && this.fps++;
-    }
+	speedUp: function() {
+		if (this.fps < 60) this.fps++;
+	}
 };
 
 ;
@@ -203,15 +202,15 @@ INVERSE_DIRECTION = {
 };
 
 function Snake(blocks, length) {
+    this.blocks = blocks;
+
     this.direction = DIRECTION_LEFT;
     this.directionChanged = false;
 
-    this.bodyColor = '#0F0',
-    this.headColor = '#08C',
-    this.tailColor = '#B20',
+    this.bodyColor = '#0F0';
+    this.headColor = '#08C';
+    this.tailColor = '#B20';
 
-
-    this.blocks = blocks;
     this.x = Math.ceil(this.blocks / 2);
     this.y = Math.ceil(this.blocks / 2);
     this.sections = [];
@@ -258,10 +257,14 @@ Snake.prototype = {
             case DIRECTION_LEFT:
                 this.x--;
                 break;
-            case DIRECTION_RIGHT:
+            //case DIRECTION_RIGHT:
             default:
                 this.x++;
         }
+    },
+
+    triggerScoreChange: function() {
+        if (this.scoreListener) this.scoreListener();
     }
 };
 
@@ -291,8 +294,8 @@ function Game(canvas) {
         self.snake.directionChanged = false;
         if (self.snake.x == self.food.x && self.snake.y == self.food.y) {
             self.foods.push(self.food);
-            self.foods.length % 5 === 0 && self.timer.speedUp();
-            self.scoreListener && self.scoreListener();
+            if (self.foods.length % 5 === 0) self.timer.speedUp();
+            self.triggerScoreChange();
             self.food = self.getFood();
         } else {
             self.snake.sections.shift();
@@ -341,8 +344,7 @@ Game.prototype = {
 
     fail: function() {
         this.status = Game.OVER;
-        this.failListener && this.failListener();
-        // this.resetCanvas();
+        if (this.failListener) this.failListener();
     },
 
     onFailed: function(l) {
@@ -431,14 +433,14 @@ Game.prototype = {
     },
 
     getFood: function() {
-        var food = Fooder.getFood();
+        var _food = Fooder.getFood();
         var x, y;
         do {
             x = Math.floor(Math.random() * this.blocks);
             y = Math.floor(Math.random() * this.blocks);
         } while (this.snake.onBody(x, y));
 
-        var food = u.extend({}, food, {
+        var food = u.extend({}, _food, {
             x: x,
             y: y
         });
@@ -472,13 +474,13 @@ var _Controller = {
         function while_playing(func) {
             return function() {
                 if (self.game.status !== Game.PLAYING) return;
-                func && func.apply(this, arguments);
-            }
+                if (func) func.apply(this, arguments);
+            };
         }
 
         $(document).on("keydown", while_playing(function(e) {
             var direction = getDirectionByKeyCode(e.keyCode);
-            direction && self.game.changeSnakeDirection(direction);
+            if (direction) self.game.changeSnakeDirection(direction);
         }));
 
         var hammer = $(document).hammer();
@@ -532,7 +534,7 @@ Controller.prototype = {
                     self.game.start();
                     this.innerHTML = '暂停';
                     break;
-                case Game.PLAYING:
+                //case Game.PLAYING:
                 default:
                     self.game.pause();
                     this.innerHTML = '继续';
@@ -595,7 +597,7 @@ function loadResources() {
         img.onload = function() {
             item.img = img;
             completed++;
-            promise.progress && promise.progress(completed, items.length);
+            if(promise.progress) promise.progress(completed, items.length);
             callback(null);
         };
 
@@ -606,9 +608,9 @@ function loadResources() {
         img.src = item.src;
     }, function(err) {
         if (err) {
-            promise.fail && promise.fail(err);
+            if (promise.fail) promise.fail(err);
         } else {
-            promise.success && promise.success();
+            if (promise.success) promise.success();
         }
     });
 

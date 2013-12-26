@@ -43,8 +43,8 @@ u.each = function(obj, iterator, context) {
 		}
 	} else {
 		var _keys = u.keys(obj);
-		for (var i = 0, length = _keys.length; i < length; i++) {
-			if (iterator.call(context, obj[_keys[i]], _keys[i], obj) === breaker) return;
+		for (var index = 0; index < _keys.length; index++) {
+			if (iterator.call(context, obj[_keys[index]], _keys[index], obj) === breaker) return;
 		}
 	}
 };
@@ -67,8 +67,8 @@ function _only_once(func) {
 		if (called) return;
 
 		called = true;
-		func && func.apply(this, arguments);
-	}
+		if (func) func.apply(this, arguments);
+	};
 }
 
 u.eachAsync = function(arr, iterator, callback) {
@@ -95,8 +95,8 @@ u.eachAsync = function(arr, iterator, callback) {
 u.bind = function(func, context) {
 	var args = _slice.call(arguments, 2);
 	return function() {
-		func.apply(context, args.concat(_slice.call(arguments)));	
-	}
+		func.apply(context, args.concat(_slice.call(arguments)));
+	};
 };
 
 var console = console || {};

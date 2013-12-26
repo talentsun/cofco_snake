@@ -31,7 +31,14 @@ module.exports = function(grunt) {
             files: ['test/**/*.html']
         },
         jshint: {
-            src: ['Gruntfile.js', 'src/**/*.js']
+            src: [
+                'Gruntfile.js',
+                'src/animation.js',
+                'src/utils.js',
+                'src/server.js',
+                'src/timer.js',
+                'src/core.js',
+            ]
         },
         watch: {
             files: ['<%= jshint.src %>'],
@@ -55,5 +62,5 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-shell');
 
     grunt.registerTask('test', []);
-    grunt.registerTask('default', ['concat', 'uglify', 'shell:deploy']);
+    grunt.registerTask('default', ['concat', 'jshint', 'uglify', 'shell:deploy']);
 };
