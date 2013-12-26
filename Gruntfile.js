@@ -3,10 +3,18 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON("package.json"),
         concat: {
             options: {
-                separator: ';'
-            }, 
+                separator: '\n\n;\n\n'
+            },
             dist: {
-                src: ['src/snake.js'],
+                src: [
+                    'src/head.js',
+                    'src/animation.js',
+                    'src/utils.js',
+                    'src/server.js',
+                    'src/timer.js',
+                    'src/core.js',
+                    'src/tail.js'
+                ],
                 dest: '<%= pkg.name %>.js'
             }
         },
@@ -23,11 +31,11 @@ module.exports = function(grunt) {
             files: ['test/**/*.html']
         },
         jshint: {
-            src: ['Gruntfile.js', 'src/**/*.js', 'test/**/*.js']
+            src: ['Gruntfile.js', 'src/**/*.js']
         },
         watch: {
             files: ['<%= jshint.src %>'],
-            tasks: ['default']  
+            tasks: ['default']
         },
         shell: {
             deploy: {
@@ -46,8 +54,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-shell');
 
-    grunt.registerTask('test', ['jshint', /*'qunit'*/]);
-    grunt.registerTask('default', ['jshint', /*'qunit',*/ 'concat', /*'uglify',*/ 'shell:deploy']);
-}
-
-
+    grunt.registerTask('test', []);
+    grunt.registerTask('default', ['concat', /*'uglify',*/ 'shell:deploy']);
+};

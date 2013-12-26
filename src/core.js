@@ -1,175 +1,3 @@
-function nextTick(cb) {
-    setTimeout(cb, 0);
-}
-
-var requestAnimationFrame = window.requestAnimationFrame ||
-    window.webkitRequestAnimationFrame ||
-    window.mozRequestAnimationFrame ||
-    nextTick;
-
-var self = this;
-
-(function(global) {
-    //utils
-    var ArrayProto = Array.prototype;
-    var ObjProto = Object.prototype;
-    var slice = ArrayProto.slice;
-    var nativeIndexOf = ArrayProto.indexOf;
-    var nativeForEach = ArrayProto.forEach;
-    var hasOwnProperty = ObjProto.hasOwnProperty;
-    var nativeKeys = Object.keys;
-    var breaker = {};
-
-    function has(obj, key) {
-        return hasOwnProperty.call(obj, key);
-    }
-
-    var keys = nativeKeys || function(obj) {
-            if (obj !== Object(obj)) throw new TypeError('Invalid object');
-            var keys = [];
-            for (var key in obj)
-                if (has(obj, key)) keys.push(key);
-            return keys;
-        };
-
-    function indexOf(array, item) {
-        if (array === null) return -1;
-        var i = 0,
-            length = array.length;
-        if (nativeIndexOf && array.indexOf === nativeIndexOf) return array.indexOf(item);
-        for (; i < length; i++)
-            if (array[i] === item) return i;
-        return -1;
-    }
-
-    function each(obj, iterator, context) {
-        if (obj === null) return;
-        if (nativeForEach && obj.forEach === nativeForEach) {
-            obj.forEach(iterator, context);
-        } else if (obj.length === +obj.length) {
-            for (var i = 0, length = obj.length; i < length; i++) {
-                if (iterator.call(context, obj[i], i, obj) === breaker) return;
-            }
-        } else {
-            var _keys = keys(obj);
-            for (var i = 0, length = _keys.length; i < length; i++) {
-                if (iterator.call(context, obj[_keys[i]], _keys[i], obj) === breaker) return;
-            }
-        }
-    }
-
-    function extend(obj) {
-        each(slice.call(arguments, 1), function(source) {
-            if (source) {
-                for (var prop in source) {
-                    obj[prop] = source[prop];
-                }
-            }
-        });
-
-        return obj;
-    }
-
-    function only_once(func) {
-        var called = false;
-        return function() {
-            if (called) return;
-
-            called = true;
-            func && func.apply(this, arguments);
-        }
-    }
-
-    function eachAsync(arr, iterator, callback) {
-        callback = callback || function() {};
-
-        if (!arr.length) return setTimeout(callback, 0);
-
-        var completed = 0;
-        u.each(arr, function(x) {
-            iterator(x, only_once(function(err) {
-                if (err) {
-                    callback(err);
-                    callback = function() {};
-                } else {
-                    completed += 1;
-                    if (completed >= arr.length) {
-                        callback(null);
-                    }
-                }
-            }));
-        });
-    }
-
-    var console = console || {};
-    console.log = console.log || function() {};
-    console.error = console.error || function() {};
-
-    global.u = {
-        indexOf: indexOf,
-        each: each,
-        has: has,
-        keys: keys,
-        extend: extend,
-        eachAsync: eachAsync,
-        log: function() {
-            console.log.apply(console, arguments);
-        },
-        error: function() {
-            console.err.apply(console, arguments);
-        }
-    };
-
-})(self);
-
-var u = self.u;
-
-var canvas = document.getElementById("snake");
-if (!canvas.getContext) G_vmlCanvasManager.initElement(canvas);
-
-var Fooder = {
-    getFood: function() {
-        var keyset = u.keys(META.foods);
-        if (keyset.length === 0) return null;
-
-        var index = Math.floor(Math.random() * keyset.length);
-        return META.foods[keyset[index]];
-    }
-};
-
-function Timer(tick) {
-    this.fps = 4;
-    this.tick = tick;
-    this.paused = false;
-}
-
-Timer.prototype = {
-    constructor: Timer,
-
-    start: function() {
-        this.paused = false;
-        this.count();
-    },
-
-    count: function() {
-        var self = this;
-        setTimeout(function() {
-            if (self.paused) return;
-
-            self.tick();
-            self.count();
-        }, 1000 / this.fps);
-    },
-
-    pause: function() {
-        this.paused = true;
-    },
-
-    speedUp: function() {
-        this.fps < 60 && this.fps++;
-    }
-};
-
 DIRECTION_LEFT = 'left';
 DIRECTION_RIGHT = 'right';
 DIRECTION_UP = 'up';
@@ -180,7 +8,7 @@ INVERSE_DIRECTION = {
     left: DIRECTION_RIGHT,
     right: DIRECTION_LEFT,
     down: DIRECTION_UP
-}
+};
 
 function Snake(blocks, length) {
     this.direction = DIRECTION_LEFT;
@@ -245,14 +73,6 @@ Snake.prototype = {
     }
 };
 
-
-var BLOCKS = 40;
-
-var GAME_INITIALIZED = 'initialized';
-var GAME_PLAYING = 'playing';
-var GAME_PAUSED = 'paused';
-var GAME_OVER = 'over';
-
 function Game(canvas) {
     var self = this;
     this.canvas = canvas;
@@ -265,7 +85,7 @@ function Game(canvas) {
     this.food = this.getFood();
     this.scoreListener = null;
 
-    this.status = GAME_INITIALIZED;
+    this.status = Game.INITIALIZED;
     this.failListener = null;
 
     this.timer = new Timer(function() {
@@ -293,22 +113,29 @@ function Game(canvas) {
         requestAnimationFrame(function() {
             self.draw();
         });
-
     });
 }
+
+u.extend(Game, {
+    BLOCKS: 5,
+    INITIALIZED: 'initialized',
+    PLAYING: 'playing',
+    PAUSED: 'paused',
+    OVER: 'over'
+});
 
 Game.prototype = {
     contructor: Game,
 
     start: function() {
         var self = this;
-        if (this.status !== GAME_INITIALIZED &&
-            this.status !== GAME_PAUSED) {
-            u.error('wrong status');
+        if (this.status !== Game.INITIALIZED &&
+            this.status !== Game.PAUSED) {
+            console.error('wrong status');
             return;
         }
 
-        this.status = GAME_PLAYING;
+        this.status = Game.PLAYING;
         this.timer.start();
         requestAnimationFrame(function() {
             self.draw();
@@ -317,11 +144,11 @@ Game.prototype = {
 
     pause: function() {
         this.timer.pause();
-        this.status = GAME_PAUSED;
+        this.status = Game.PAUSED;
     },
 
     fail: function() {
-        this.status = GAME_OVER;
+        this.status = Game.OVER;
         this.failListener && this.failListener();
         // this.resetCanvas();
     },
@@ -446,6 +273,87 @@ function getDirectionByKeyCode(keyCode) {
     return null;
 }
 
+
+var _Controller = {
+    setupKeyBindings: function() {
+        var self = this;
+
+        function while_playing(func) {
+            return function() {
+                if (self.game.status !== GAME_PLAYING) return;
+                func && func.apply(this, arguments);
+            }
+        }
+
+        $(document).on("keydown", while_playing(function(e) {
+            var direction = getDirectionByKeyCode(e.keyCode);
+            direction && self.game.changeSnakeDirection(direction);
+        }));
+
+        var hammer = $(document).hammer();
+
+        hammer.on('touchmove', while_playing(function(e) {
+            e.preventDefault();
+        })).on("swipeup, dragup", while_playing(function(e) {
+            e.preventDefault();
+            self.game.changeSnakeDirection('up');
+        })).on("swipedow dragdown", while_playing(function(e) {
+            e.preventDefault();
+            self.game.changeSnakeDirection('down');
+        })).on("swipeleft dragleft", while_playing(function(e) {
+            e.preventDefault();
+            self.game.changeSnakeDirection('left');
+        })).on("swiperight dragright", while_playing(function(e) {
+            e.preventDefault();
+            self.game.changeSnakeDirection('right');
+        }));
+    },
+
+    onScoreChanged: function() {
+        this.currentScoreEl.innerHTML = game.score();
+    },
+
+    onGameFailed: function() {
+        this.controlButton.innerHTML = '开始';
+        this.game = new Game(canvas);
+        this.game.onScoreChanged(u.bind(_Controller.onScoreChanged, this));
+        this.game.onFailed(u.bind(_Controller.onGameFailed, this));
+    }
+};
+
+function Controller() {}
+
+Controller.prototype = {
+
+    onload: function() {
+        var self;
+
+        this.game = new Game(canvas);
+        this.currentScoreEl = document.getElementById('current-score');
+
+        this.controlButton = document.getElementById('control');
+        this.controlButton.onclick = function() {
+            switch (self.game.status) {
+                case Game.INITIALIZED:
+                case Game.OVER:
+                case Game.PAUSED:
+                    self.game.start();
+                    this.innerHTML = '暂停';
+                    break;
+                case Game.PLAYING:
+                default:
+                    self.game.pause();
+                    this.innerHTML = '继续';
+            }
+        };
+
+        _Controller.setupKeyBindings.call(this);
+
+        this.game.onScoreChanged(u.bind(_Controller.onScoreChanged, this));
+        this.game.onFailed(u.bind(_Controller.onGameFailed, this));
+    }
+};
+
 var META = {
     snake: {
         head: {
@@ -464,6 +372,16 @@ var META = {
             name: '中粮食品',
             src: 'images/Wreath-icon.png'
         },
+    }
+};
+
+var Fooder = {
+    getFood: function() {
+        var keyset = u.keys(META.foods);
+        if (keyset.length === 0) return null;
+
+        var index = Math.floor(Math.random() * keyset.length);
+        return META.foods[keyset[index]];
     }
 };
 
@@ -490,7 +408,7 @@ function loadResources() {
         };
 
         img.onerror = function() {
-            u.log('fail to load img:', item.src);
+            console.log('fail to load img:', item.src);
             callback('error');
         };
         img.src = item.src;
@@ -505,77 +423,20 @@ function loadResources() {
     return promise;
 }
 
-function init() {
-    var game = new Game(canvas);
-    var controlButton = document.getElementById('control');
-    controlButton.onclick = function() {
-        switch (game.status) {
-            case GAME_INITIALIZED:
-            case GAME_OVER:
-            case GAME_PAUSED:
-                game.start();
-                this.innerHTML = '暂停';
-                break;
-            case GAME_PLAYING:
-            default:
-                game.pause();
-                this.innerHTML = '继续';
-        }
+var controller = new Controller();
+
+$(function() {
+    var canvas = document.getElementById("snake");
+    if (!canvas.getContext) G_vmlCanvasManager.initElement(canvas);
+
+    var promise = loadResources();
+    promise.success = _.bind(Controller.onload, contoller);
+
+    promise.progress = function(completed, length) {
+        console.log('progress:', completed, length);
     };
 
-    var currentScoreEl = document.getElementById('current-score');
-
-    function onScoreChanged() {
-        currentScoreEl.innerHTML = game.score();
-    }
-
-    function onGameFailed() {
-        controlButton.innerHTML = '开始';
-        game = new Game(canvas);
-        game.onScoreChanged(onScoreChanged);
-        game.onFailed(onGameFailed);
-    }
-
-    game.onScoreChanged(onScoreChanged);
-    game.onFailed(onGameFailed);
-
-    function while_playing(func) {
-        return function() {
-            if (game.status !== GAME_PLAYING) return;
-            func && func.apply(this, arguments);
-        }
-    }
-
-    $(document).on("keydown", while_playing(function(e) {
-        var direction = getDirectionByKeyCode(e.keyCode);
-        direction && game.changeSnakeDirection(direction);
-    }));
-
-    var hammer = $(document).hammer();
-
-    hammer.on('touchmove', while_playing(function(e) {
-        e.preventDefault();
-    })).on("swipeup, dragup", while_playing(function(e) {
-        e.preventDefault();
-        game.changeSnakeDirection('up');
-    })).on("swipedow dragdown", while_playing(function(e) {
-        e.preventDefault();
-        game.changeSnakeDirection('down');
-    })).on("swipeleft dragleft", while_playing(function(e) {
-        e.preventDefault();
-        game.changeSnakeDirection('left');
-    })).on("swiperight dragright", while_playing(function(e) {
-        e.preventDefault();
-        game.changeSnakeDirection('right');
-    }));
-
-}
-
-var promise = loadResources();
-promise.success = init;
-promise.progress = function(completed, length) {
-    u.log('progress:', completed, length);
-};
-promise.fail = function(err) {
-    u.error(err);
-};
+    promise.fail = function(err) {
+        console.error(err);
+    };
+});
