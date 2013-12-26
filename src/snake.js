@@ -128,20 +128,12 @@ var canvas = document.getElementById("snake");
 if (!canvas.getContext) G_vmlCanvasManager.initElement(canvas);
 
 var Fooder = {
-    foods: {
-        food1: {
-            score: 1,
-            name: '中粮食品',
-            color: '#0FF'
-        }
-    },
-
     getFood: function() {
-        var keyset = u.keys(Fooder.foods);
+        var keyset = u.keys(META.foods);
         if (keyset.length === 0) return null;
 
         var index = Math.floor(Math.random() * keyset.length);
-        return Fooder.foods[keyset[index]];
+        return META.foods[keyset[index]];
     }
 };
 
@@ -382,21 +374,19 @@ Game.prototype = {
     },
 
     drawSnakeBody: function(section) {
-        this.drawImage(section, RESOURCES.snake.body.img);
+        this.drawImage(section, META.snake.body.img);
     },
 
     drawSnakeTail: function(section) {
-        this.drawImage(section, RESOURCES.snake.tail.img);
+        this.drawImage(section, META.snake.tail.img);
     },
 
     drawSnakeHead: function(section) {
-        this.drawImage(section, RESOURCES.snake.head.img);
+        this.drawImage(section, META.snake.head.img);
     },
 
     drawFood: function() {
-        this.drawBox(this.food.x * this.block_size,
-            this.food.y * this.block_size,
-            this.block_size, this.food.color);
+        this.drawImage(this.food, this.food.img);
     },
 
     drawBox: function(x, y, size, color) {
@@ -456,7 +446,7 @@ function getDirectionByKeyCode(keyCode) {
     return null;
 }
 
-var RESOURCES = {
+var META = {
     snake: {
         head: {
             src: 'images/Festive-icon.png'
@@ -470,10 +460,9 @@ var RESOURCES = {
     },
     foods: {
         food1: {
-            src: ''
-        },
-        food2: {
-            src: ''
+            score: 1,
+            name: '中粮食品',
+            src: 'images/Wreath-icon.png'
         },
     }
 };
@@ -482,14 +471,13 @@ function loadResources() {
     var promise = {};
 
     var items = [];
-    u.each(u.keys(RESOURCES.snake), function(key) {
-        items.push(RESOURCES.snake[key]);
+    u.each(u.keys(META.snake), function(key) {
+        items.push(META.snake[key]);
     });
-    /*
-    u.each(u.keys(RESOURCES.foods), function(key) {
-        items.push(RESOURCES.foods[key]);
+    u.each(u.keys(META.foods), function(key) {
+        items.push(META.foods[key]);
     });
-    */
+
     var completed = 0;
     u.eachAsync(items, function(item, callback) {
         var img = new Image();
