@@ -77,7 +77,7 @@ function Game(canvas) {
     var self = this;
     this.canvas = canvas;
     this.context = this.canvas.getContext('2d');
-    this.blocks = BLOCKS;
+    this.blocks = Game.BLOCKS;
     this.block_size = this.canvas.width / this.blocks;
 
     this.snake = new Snake(this.blocks, 5);
@@ -117,7 +117,7 @@ function Game(canvas) {
 }
 
 u.extend(Game, {
-    BLOCKS: 5,
+    BLOCKS: 20,
     INITIALIZED: 'initialized',
     PLAYING: 'playing',
     PAUSED: 'paused',
@@ -273,14 +273,13 @@ function getDirectionByKeyCode(keyCode) {
     return null;
 }
 
-
 var _Controller = {
     setupKeyBindings: function() {
         var self = this;
 
         function while_playing(func) {
             return function() {
-                if (self.game.status !== GAME_PLAYING) return;
+                if (self.game.status !== Game.PLAYING) return;
                 func && func.apply(this, arguments);
             }
         }
@@ -310,12 +309,12 @@ var _Controller = {
     },
 
     onScoreChanged: function() {
-        this.currentScoreEl.innerHTML = game.score();
+        this.currentScoreEl.innerHTML = this.game.score();
     },
 
     onGameFailed: function() {
         this.controlButton.innerHTML = '开始';
-        this.game = new Game(canvas);
+        this.game = new Game(this.canvas);
         this.game.onScoreChanged(u.bind(_Controller.onScoreChanged, this));
         this.game.onFailed(u.bind(_Controller.onGameFailed, this));
     }
@@ -325,10 +324,11 @@ function Controller() {}
 
 Controller.prototype = {
 
-    onload: function() {
-        var self;
+    onload: function(canvas) {
+        var self = this;
 
-        this.game = new Game(canvas);
+        this.canvas = canvas;
+        this.game = new Game(this.canvas);
         this.currentScoreEl = document.getElementById('current-score');
 
         this.controlButton = document.getElementById('control');
@@ -426,11 +426,11 @@ function loadResources() {
 var controller = new Controller();
 
 $(function() {
-    var canvas = document.getElementById("snake");
+    canvas = document.getElementById("snake");
     if (!canvas.getContext) G_vmlCanvasManager.initElement(canvas);
 
     var promise = loadResources();
-    promise.success = _.bind(Controller.onload, contoller);
+    promise.success = u.bind(controller.onload, controller, canvas);
 
     promise.progress = function(completed, length) {
         console.log('progress:', completed, length);

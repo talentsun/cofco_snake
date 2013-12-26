@@ -1,10 +1,10 @@
 // utils
 var _ArrayProto = Array.prototype;
 var _ObjProto = Object.prototype;
-var _slice = ArrayProto.slice;
-var _nativeIndexOf = ArrayProto.indexOf;
-var _nativeForEach = ArrayProto.forEach;
-var _hasOwnProperty = ObjProto.hasOwnProperty;
+var _slice = _ArrayProto.slice;
+var _nativeIndexOf = _ArrayProto.indexOf;
+var _nativeForEach = _ArrayProto.forEach;
+var _hasOwnProperty = _ObjProto.hasOwnProperty;
 var _nativeKeys = Object.keys;
 
 var _breaker = {};
@@ -50,7 +50,7 @@ u.each = function(obj, iterator, context) {
 };
 
 u.extend = function(obj) {
-	u.each(slice.call(arguments, 1), function(source) {
+	u.each(_slice.call(arguments, 1), function(source) {
 		if (source) {
 			for (var prop in source) {
 				obj[prop] = source[prop];
@@ -90,6 +90,13 @@ u.eachAsync = function(arr, iterator, callback) {
 			}
 		}));
 	});
+};
+
+u.bind = function(func, context) {
+	var args = _slice.call(arguments, 2);
+	return function() {
+		func.apply(context, args.concat(_slice.call(arguments)));	
+	}
 };
 
 var console = console || {};

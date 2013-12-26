@@ -18,10 +18,10 @@ var requestAnimationFrame = window.requestAnimationFrame ||
 // utils
 var _ArrayProto = Array.prototype;
 var _ObjProto = Object.prototype;
-var _slice = ArrayProto.slice;
-var _nativeIndexOf = ArrayProto.indexOf;
-var _nativeForEach = ArrayProto.forEach;
-var _hasOwnProperty = ObjProto.hasOwnProperty;
+var _slice = _ArrayProto.slice;
+var _nativeIndexOf = _ArrayProto.indexOf;
+var _nativeForEach = _ArrayProto.forEach;
+var _hasOwnProperty = _ObjProto.hasOwnProperty;
 var _nativeKeys = Object.keys;
 
 var _breaker = {};
@@ -67,7 +67,7 @@ u.each = function(obj, iterator, context) {
 };
 
 u.extend = function(obj) {
-	u.each(slice.call(arguments, 1), function(source) {
+	u.each(_slice.call(arguments, 1), function(source) {
 		if (source) {
 			for (var prop in source) {
 				obj[prop] = source[prop];
@@ -107,6 +107,13 @@ u.eachAsync = function(arr, iterator, callback) {
 			}
 		}));
 	});
+};
+
+u.bind = function(func, context) {
+	var args = _slice.call(arguments, 2);
+	return function() {
+		func.apply(context, args.concat(_slice.call(arguments)));	
+	}
 };
 
 var console = console || {};
@@ -263,7 +270,7 @@ function Game(canvas) {
     var self = this;
     this.canvas = canvas;
     this.context = this.canvas.getContext('2d');
-    this.blocks = BLOCKS;
+    this.blocks = Game.BLOCKS;
     this.block_size = this.canvas.width / this.blocks;
 
     this.snake = new Snake(this.blocks, 5);
@@ -303,7 +310,7 @@ function Game(canvas) {
 }
 
 u.extend(Game, {
-    BLOCKS: 5,
+    BLOCKS: 20,
     INITIALIZED: 'initialized',
     PLAYING: 'playing',
     PAUSED: 'paused',
@@ -459,14 +466,13 @@ function getDirectionByKeyCode(keyCode) {
     return null;
 }
 
-
 var _Controller = {
     setupKeyBindings: function() {
         var self = this;
 
         function while_playing(func) {
             return function() {
-                if (self.game.status !== GAME_PLAYING) return;
+                if (self.game.status !== Game.PLAYING) return;
                 func && func.apply(this, arguments);
             }
         }
@@ -496,12 +502,12 @@ var _Controller = {
     },
 
     onScoreChanged: function() {
-        this.currentScoreEl.innerHTML = game.score();
+        this.currentScoreEl.innerHTML = this.game.score();
     },
 
     onGameFailed: function() {
         this.controlButton.innerHTML = '开始';
-        this.game = new Game(canvas);
+        this.game = new Game(this.canvas);
         this.game.onScoreChanged(u.bind(_Controller.onScoreChanged, this));
         this.game.onFailed(u.bind(_Controller.onGameFailed, this));
     }
@@ -511,10 +517,11 @@ function Controller() {}
 
 Controller.prototype = {
 
-    onload: function() {
-        var self;
+    onload: function(canvas) {
+        var self = this;
 
-        this.game = new Game(canvas);
+        this.canvas = canvas;
+        this.game = new Game(this.canvas);
         this.currentScoreEl = document.getElementById('current-score');
 
         this.controlButton = document.getElementById('control');
@@ -612,11 +619,11 @@ function loadResources() {
 var controller = new Controller();
 
 $(function() {
-    var canvas = document.getElementById("snake");
+    canvas = document.getElementById("snake");
     if (!canvas.getContext) G_vmlCanvasManager.initElement(canvas);
 
     var promise = loadResources();
-    promise.success = _.bind(Controller.onload, contoller);
+    promise.success = u.bind(controller.onload, controller, canvas);
 
     promise.progress = function(completed, length) {
         console.log('progress:', completed, length);
