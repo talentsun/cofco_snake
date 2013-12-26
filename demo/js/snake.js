@@ -101,6 +101,10 @@ var self = this;
         });
     }
 
+    var console = console || {};
+    console.log = console.log || function() {};
+    console.error = console.error || function() {};
+
     global.u = {
         indexOf: indexOf,
         each: each,
@@ -109,11 +113,9 @@ var self = this;
         extend: extend,
         eachAsync: eachAsync,
         log: function() {
-            if (!console || !console.log) return;
             console.log.apply(console, arguments);
         },
         error: function() {
-            if (!console || !console.err) return;
             console.err.apply(console, arguments);
         }
     };
