@@ -67,7 +67,7 @@ function extend(obj) {
     return obj;
 }
 
-function once(func) {
+function only_once(func) {
     var called = false;
     return function() {
         if (called) return;
@@ -77,64 +77,25 @@ function once(func) {
     }
 }
 
-function parallels(tasks, cb) {
-    if(tasks.length == 0) setTimeout(cb, 0);
+function eachAsync(arr, iterator, callback) {
+    callback = callback || function() {};
 
-    var failed = false;
-    function not_error(func) {
-        return function(err) {
-            if(failed) return;
+    if(!arr.length) return setTimeout(callback, 0);
 
-            if (err) {
-                failed = true;
-                cb(err);
-                return;
+    var completed = 0;
+    u.each(arr, function(x) {
+        iterator(x, only_once(function(err) {
+            if(err) {
+                callback(err);
+                callback = function() {};
+            } else {
+                completed += 1;
+                if(completed >= arr.length) {
+                    callback(null);
+                }
             }
-
-            func && func.apply(this, arguments);
-        }
-    }
-
-    var length = tasks.length;
-    var result_map = {};
-    var result = [];
-    function gather_results(err, index, data) {
-        result.insert(index, data);
-        result_map[index + ""] = true;
-        var finish = true;
-        for(var i = 0; i < length; i++) {
-            finish = result_map[i + ""];
-        }
-        if(finish) {
-            cb(null, result);
-        }
-    }
-
-    function get_index(index, func) {
-        return function(err, data) {
-            func && func(err, index, data);
-        }
-    }
-
-    for(var i = 0; i < length; i++) {
-        var task = tasks[i];
-        task(get_index(i, once(not_error(gather_results))));
-    }
-}
-
-function eachAsync(items, func, cb) {
-    function gen(item) {
-        return function(cb) {
-            func(item, once(function(err, data) {
-                cb(err, data);
-            });
-        }
-    }
-    var funclist = [];
-    each(items, function(item) {
-        funclist.push(gen(item));
+        }));
     });
-    paralles(funclist, cb);
 }
 
 global.u = {
