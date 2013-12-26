@@ -1,7 +1,6 @@
 (function() {
 
 
-
 ;
 
 function _nextTick(cb) {
@@ -635,6 +634,5 @@ $(function() {
 });
 
 ;
-
 
 })();

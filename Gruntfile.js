@@ -24,7 +24,7 @@ module.exports = function(grunt) {
             },
             build: {
                 src: '<%= pkg.name %>.js',
-                dest: '<%= concat.dist.dest %>'
+                dest: '<%= pkg.name %>.min.js',
             }
         },
         qunit: {
@@ -55,5 +55,5 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-shell');
 
     grunt.registerTask('test', []);
-    grunt.registerTask('default', ['concat', /*'uglify',*/ 'shell:deploy']);
+    grunt.registerTask('default', ['concat', 'uglify', 'shell:deploy']);
 };
