@@ -3,156 +3,120 @@ function nextTick(cb) {
 }
 
 var requestAnimationFrame = window.requestAnimationFrame ||
-                            window.webkitRequestAnimationFrame ||
-                            window.mozRequestAnimationFrame || 
-                            nextTick;
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    nextTick;
 
 var self = this;
 
 (function(global) {
-//utils
-var ArrayProto = Array.prototype;
-var ObjProto = Object.prototype;
-var slice = ArrayProto.slice;
-var nativeIndexOf = ArrayProto.indexOf;
-var nativeForEach = ArrayProto.forEach;
-var hasOwnProperty = ObjProto.hasOwnProperty;
-var nativeKeys = Object.keys;
-var breaker = {};
-    
-function has(obj, key) {
-    return hasOwnProperty.call(obj, key);
-}
+    //utils
+    var ArrayProto = Array.prototype;
+    var ObjProto = Object.prototype;
+    var slice = ArrayProto.slice;
+    var nativeIndexOf = ArrayProto.indexOf;
+    var nativeForEach = ArrayProto.forEach;
+    var hasOwnProperty = ObjProto.hasOwnProperty;
+    var nativeKeys = Object.keys;
+    var breaker = {};
 
-var keys = nativeKeys || function(obj) {
-    if (obj !== Object(obj)) throw new TypeError('Invalid object');
-    var keys = [];
-    for (var key in obj) if (has(obj, key)) keys.push(key);
-    return keys;
-};
-
-function indexOf(array, item) {
-    if (array === null) return -1;
-    var i = 0, length = array.length;
-    if (nativeIndexOf && array.indexOf === nativeIndexOf) return array.indexOf(item);
-    for (; i < length; i++) if (array[i] === item) return i;
-    return -1;
-}
-
-function each(obj, iterator, context) {
-    if (obj === null) return;
-    if (nativeForEach && obj.forEach === nativeForEach) {
-        obj.forEach(iterator, context);
-    } else if (obj.length === +obj.length) {
-        for (var i = 0, length = obj.length; i < length; i++) {
-            if (iterator.call(context, obj[i], i, obj) === breaker) return;
-        }
-    } else {
-        var _keys = keys(obj);
-        for (var i = 0, length = _keys.length; i < length; i++) {
-            if (iterator.call(context, obj[_keys[i]], _keys[i], obj) === breaker) return;
-        }
+    function has(obj, key) {
+        return hasOwnProperty.call(obj, key);
     }
-}
 
-function extend(obj) {
-    each(slice.call(arguments, 1), function(source) {
-        if (source) {
-            for (var prop in source) {
-                obj[prop] = source[prop];
+    var keys = nativeKeys || function(obj) {
+            if (obj !== Object(obj)) throw new TypeError('Invalid object');
+            var keys = [];
+            for (var key in obj)
+                if (has(obj, key)) keys.push(key);
+            return keys;
+        };
+
+    function indexOf(array, item) {
+        if (array === null) return -1;
+        var i = 0,
+            length = array.length;
+        if (nativeIndexOf && array.indexOf === nativeIndexOf) return array.indexOf(item);
+        for (; i < length; i++)
+            if (array[i] === item) return i;
+        return -1;
+    }
+
+    function each(obj, iterator, context) {
+        if (obj === null) return;
+        if (nativeForEach && obj.forEach === nativeForEach) {
+            obj.forEach(iterator, context);
+        } else if (obj.length === +obj.length) {
+            for (var i = 0, length = obj.length; i < length; i++) {
+                if (iterator.call(context, obj[i], i, obj) === breaker) return;
+            }
+        } else {
+            var _keys = keys(obj);
+            for (var i = 0, length = _keys.length; i < length; i++) {
+                if (iterator.call(context, obj[_keys[i]], _keys[i], obj) === breaker) return;
             }
         }
-    });
-
-    return obj;
-}
-
-function once(func) {
-    var called = false;
-    return function() {
-        if (called) return;
-
-        called = true;
-        func && func.apply(this, arguments);
     }
-}
 
-function parallels(tasks, cb) {
-    if(tasks.length == 0) setTimeout(cb, 0);
-
-    var failed = false;
-    function not_error(func) {
-        return function(err) {
-            if(failed) return;
-
-            if (err) {
-                failed = true;
-                cb(err);
-                return;
+    function extend(obj) {
+        each(slice.call(arguments, 1), function(source) {
+            if (source) {
+                for (var prop in source) {
+                    obj[prop] = source[prop];
+                }
             }
+        });
 
+        return obj;
+    }
+
+    function only_once(func) {
+        var called = false;
+        return function() {
+            if (called) return;
+
+            called = true;
             func && func.apply(this, arguments);
         }
     }
 
-    var length = tasks.length;
-    var result_map = {};
-    var result = [];
-    function gather_results(err, index, data) {
-        result.insert(index, data);
-        result_map[index + ""] = true;
-        var finish = true;
-        for(var i = 0; i < length; i++) {
-            finish = result_map[i + ""];
-        }
-        if(finish) {
-            cb(null, result);
-        }
+    function eachAsync(arr, iterator, callback) {
+        callback = callback || function() {};
+
+        if (!arr.length) return setTimeout(callback, 0);
+
+        var completed = 0;
+        u.each(arr, function(x) {
+            iterator(x, only_once(function(err) {
+                if (err) {
+                    callback(err);
+                    callback = function() {};
+                } else {
+                    completed += 1;
+                    if (completed >= arr.length) {
+                        callback(null);
+                    }
+                }
+            }));
+        });
     }
 
-    function get_index(index, func) {
-        return function(err, data) {
-            func && func(err, index, data);
+    global.u = {
+        indexOf: indexOf,
+        each: each,
+        has: has,
+        keys: keys,
+        extend: extend,
+        eachAsync: eachAsync,
+        log: function() {
+            if (!console || !console.log) return;
+            console.log.apply(console, arguments);
+        },
+        error: function() {
+            if (!console || !console.err) return;
+            console.err.apply(console, arguments);
         }
-    }
-
-    for(var i = 0; i < length; i++) {
-        var task = tasks[i];
-        task(get_index(i, once(not_error(gather_results))));
-    }
-}
-
-function eachAsync(items, func, cb) {
-    function gen(item) {
-        return function(cb) {
-            func(item, once(function(err, data) {
-                cb(err, data);
-            });
-        }
-    }
-    var funclist = [];
-    each(items, function(item) {
-        funclist.push(gen(item));
-    });
-    paralles(funclist, cb);
-}
-
-global.u = {
-    indexOf: indexOf,
-    each: each,
-    has: has,
-    keys: keys,
-    extend: extend,
-    eachAsync: eachAsync,
-    log: function() {
-        if(!console || !console.log) return;
-        console.log.apply(console, arguments);
-    },
-    err: function() {
-        if(!console || !console.err) return;
-        console.err.apply(console, arguments);
-    }
-};
+    };
 
 })(self);
 
@@ -172,7 +136,7 @@ var Fooder = {
 
     getFood: function() {
         var keyset = u.keys(Fooder.foods);
-        if(keyset.length === 0) return null;
+        if (keyset.length === 0) return null;
 
         var index = Math.floor(Math.random() * keyset.length);
         return Fooder.foods[keyset[index]];
@@ -180,7 +144,7 @@ var Fooder = {
 };
 
 function Timer(tick) {
-    this.fps =  4;
+    this.fps = 4;
     this.tick = tick;
     this.paused = false;
 }
@@ -238,7 +202,10 @@ function Snake(blocks, length) {
     this.y = Math.ceil(this.blocks / 2);
     this.sections = [];
     for (var i = this.x + length - 1; i >= this.x; i--) {
-        this.sections.push({x: i, y: this.y}); 
+        this.sections.push({
+            x: i,
+            y: this.y
+        });
     }
 }
 
@@ -258,9 +225,9 @@ Snake.prototype = {
     },
 
     onBody: function(x, y) {
-        for(var i = 0; i < this.sections.length; i++) {
+        for (var i = 0; i < this.sections.length; i++) {
             var section = this.sections[i];
-            if(section.x === x && section.y === y) return true;
+            if (section.x === x && section.y === y) return true;
         }
 
         return false;
@@ -272,7 +239,7 @@ Snake.prototype = {
                 this.y--;
                 break;
             case DIRECTION_DOWN:
-                this.y++; 
+                this.y++;
                 break;
             case DIRECTION_LEFT:
                 this.x--;
@@ -309,7 +276,7 @@ function Game(canvas) {
 
     this.timer = new Timer(function() {
         self.snake.move();
-        if(self.isCollision()) {
+        if (self.isCollision()) {
             self.timer.pause();
             self.fail();
             return;
@@ -324,7 +291,10 @@ function Game(canvas) {
         } else {
             self.snake.sections.shift();
         }
-        self.snake.sections.push({x: self.snake.x, y: self.snake.y});
+        self.snake.sections.push({
+            x: self.snake.x,
+            y: self.snake.y
+        });
 
         requestAnimationFrame(function() {
             self.draw();
@@ -338,9 +308,9 @@ Game.prototype = {
 
     start: function() {
         var self = this;
-        if(this.status !== GAME_INITIALIZED &&
-           this.status !== GAME_PAUSED) {
-            u.err('wrong status');
+        if (this.status !== GAME_INITIALIZED &&
+            this.status !== GAME_PAUSED) {
+            u.error('wrong status');
             return;
         }
 
@@ -367,7 +337,7 @@ Game.prototype = {
     },
 
     isCollision: function() {
-        if (this.snake.x < 0 || this.snake.x >= this.blocks || 
+        if (this.snake.x < 0 || this.snake.x >= this.blocks ||
             this.snake.y < 0 || this.snake.y >= this.blocks) return true;
 
         return this.snake.bumpSelf();
@@ -394,7 +364,7 @@ Game.prototype = {
             var section = this.snake.sections[i];
             if (i === 0) {
                 this.drawSnakeTail(section);
-            } else if(i === this.snake.sections.length - 1) {
+            } else if (i === this.snake.sections.length - 1) {
                 this.drawSnakeHead(section);
             } else {
                 this.drawSnakeBody(section);
@@ -402,31 +372,29 @@ Game.prototype = {
         }
     },
 
-    drawSnakeBody: function(section) {
-        this.drawBox(section.x * this.block_size, 
-                     section.y * this.block_size, 
-                     this.block_size, this.snake.bodyColor);
+    drawImage: function(section, img) {
+        var context = this.context;
+        context.drawImage(img, section.x * this.block_size,
+            section.y * this.block_size,
+            this.block_size, this.block_size);
+    },
 
+    drawSnakeBody: function(section) {
+        this.drawImage(section, RESOURCES.snake.body.img);
     },
 
     drawSnakeTail: function(section) {
-        this.drawBox(section.x * this.block_size, 
-                     section.y * this.block_size, 
-                     this.block_size, this.snake.tailColor);
-
+        this.drawImage(section, RESOURCES.snake.tail.img);
     },
 
     drawSnakeHead: function(section) {
-        this.drawBox(section.x * this.block_size, 
-                     section.y * this.block_size, 
-                     this.block_size, this.snake.headColor);
-
+        this.drawImage(section, RESOURCES.snake.head.img);
     },
 
     drawFood: function() {
-        this.drawBox(this.food.x * this.block_size, 
-                     this.food.y * this.block_size, 
-                     this.block_size, this.food.color);
+        this.drawBox(this.food.x * this.block_size,
+            this.food.y * this.block_size,
+            this.block_size, this.food.color);
     },
 
     drawBox: function(x, y, size, color) {
@@ -457,7 +425,7 @@ Game.prototype = {
         do {
             x = Math.floor(Math.random() * this.blocks);
             y = Math.floor(Math.random() * this.blocks);
-        } while(this.snake.onBody(x, y));
+        } while (this.snake.onBody(x, y));
 
         var food = u.extend({}, food, {
             x: x,
@@ -475,7 +443,7 @@ var DIRECTION_KEYCODES = {
     right: [39, 68, 76],
 };
 
-function getDirectionByKeyCode(keyCode){
+function getDirectionByKeyCode(keyCode) {
     for (var key in DIRECTION_KEYCODES) {
         var codelist = DIRECTION_KEYCODES[key];
         if (~u.indexOf(codelist, keyCode)) {
@@ -489,13 +457,13 @@ function getDirectionByKeyCode(keyCode){
 var RESOURCES = {
     snake: {
         head: {
-            src: ''
+            src: 'images/Festive-icon.png'
         },
         tail: {
-            src: ''
+            src: 'images/Snowy-icon.png'
         },
         body: {
-            src: ''
+            src: 'images/Wreath-icon.png'
         }
     },
     foods: {
@@ -509,90 +477,115 @@ var RESOURCES = {
 };
 
 function loadResources() {
-
-    var promise = {
-    };
+    var promise = {};
 
     var items = [];
     u.each(u.keys(RESOURCES.snake), function(key) {
-        items.push(resources.snake[key]);
+        items.push(RESOURCES.snake[key]);
     });
+    /*
     u.each(u.keys(RESOURCES.foods), function(key) {
-        items.push(resources.foods[key]);
+        items.push(RESOURCES.foods[key]);
     });
+    */
+    var completed = 0;
     u.eachAsync(items, function(item, callback) {
-        callback(null, '');
-    }, function() {
-        promise.onSuccess && promise.onSuccess();
+        var img = new Image();
+
+        img.onload = function() {
+            item.img = img;
+            completed++;
+            promise.progress && promise.progress(completed, items.length);
+            callback(null);
+        };
+
+        img.onerror = function() {
+            console.log('fail to load img:', item.src);
+            callback('error');
+        };
+        img.src = item.src;
+    }, function(err) {
+        if (err) {
+            promise.fail && promise.fail(err);
+        } else {
+            promise.success && promise.success();
+        }
     });
 
     return promise;
 }
 
 function init() {
+    var game = new Game(canvas);
+    var controlButton = document.getElementById('control');
+    controlButton.onclick = function() {
+        switch (game.status) {
+            case GAME_INITIALIZED:
+            case GAME_OVER:
+            case GAME_PAUSED:
+                game.start();
+                this.innerHTML = '暂停';
+                break;
+            case GAME_PLAYING:
+            default:
+                game.pause();
+                this.innerHTML = '继续';
+        }
+    };
 
-var game = new Game(canvas);
-var controlButton = document.getElementById('control');
-controlButton.onclick = function() {
-    switch(game.status) {
-        case GAME_INITIALIZED:
-        case GAME_OVER:
-        case GAME_PAUSED:
-            game.start();
-            this.innerHTML = '暂停';
-            break;
-        case GAME_PLAYING:
-        default:
-            game.pause();
-            this.innerHTML = '继续';
+    var currentScoreEl = document.getElementById('current-score');
+
+    function onScoreChanged() {
+        currentScoreEl.innerHTML = game.score();
     }
-};
 
-var currentScoreEl = document.getElementById('current-score');
-function onScoreChanged() {
-    currentScoreEl.innerHTML = game.score();
-}
+    function onGameFailed() {
+        controlButton.innerHTML = '开始';
+        game = new Game(canvas);
+        game.onScoreChanged(onScoreChanged);
+        game.onFailed(onGameFailed);
+    }
 
-function onGameFailed() {
-    controlButton.innerHTML = '开始';
-    game = new Game(canvas);
     game.onScoreChanged(onScoreChanged);
     game.onFailed(onGameFailed);
-}
 
-game.onScoreChanged(onScoreChanged);
-game.onFailed(onGameFailed);
-
-function while_playing(func) {
-    return function() {
-        if(game.status !== GAME_PLAYING) return;
-        func && func.apply(this, arguments);
+    function while_playing(func) {
+        return function() {
+            if (game.status !== GAME_PLAYING) return;
+            func && func.apply(this, arguments);
+        }
     }
+
+    $(document).on("keydown", while_playing(function(e) {
+        var direction = getDirectionByKeyCode(e.keyCode);
+        direction && game.changeSnakeDirection(direction);
+    }));
+
+    var hammer = $(document).hammer();
+
+    hammer.on('touchmove', while_playing(function(e) {
+        e.preventDefault();
+    })).on("swipeup, dragup", while_playing(function(e) {
+        e.preventDefault();
+        game.changeSnakeDirection('up');
+    })).on("swipedow dragdown", while_playing(function(e) {
+        e.preventDefault();
+        game.changeSnakeDirection('down');
+    })).on("swipeleft dragleft", while_playing(function(e) {
+        e.preventDefault();
+        game.changeSnakeDirection('left');
+    })).on("swiperight dragright", while_playing(function(e) {
+        e.preventDefault();
+        game.changeSnakeDirection('right');
+    }));
+
 }
 
-$(document).on("keydown", while_playing(function (e) {
-    var direction = getDirectionByKeyCode(e.keyCode);
-    direction && game.changeSnakeDirection(direction);
-}));
-
-var hammer = $(document).hammer();
-
-hammer.on('touchmove', while_playing(function(e) {
-    e.preventDefault();
-})).on("swipeup, dragup", while_playing(function(e) {
-    e.preventDefault();
-    game.changeSnakeDirection('up');
-})).on("swipedow dragdown", while_playing(function(e) {
-    e.preventDefault();
-    game.changeSnakeDirection('down');
-})).on("swipeleft dragleft", while_playing(function(e) {
-    e.preventDefault();
-    game.changeSnakeDirection('left');
-})).on("swiperight dragright", while_playing(function(e) {
-    e.preventDefault();
-    game.changeSnakeDirection('right');
-}));
-
-}
-
-loadResources(init);
+var promise = loadResources();
+promise.success = init;
+promise.progress = function(completed, length) {
+    console.log('progress:', completed, length);
+};
+promise.fail = function(err) {
+    u.error(err);
+};
