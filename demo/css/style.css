@@ -73,3 +73,15 @@ body {
     width: 130px;
     height: 130px;
 }
+
+.snake-container > .control-bar > .title-pane {
+    overflow:  hidden;
+}
+
+.snake-container > .control-bar > .title-pane > .title {
+    display: inline-block;
+    vertical-align: middle;
+    width: 1.5em;
+    text-align: center;
+
+}
