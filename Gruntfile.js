@@ -1,7 +1,18 @@
+var path = require('path');
+
 module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
         async: 'bower_components/async/lib/async.js',
+        express: {
+            dev: {
+                options: {
+                    port: 11111,
+                    background: true,
+                    script: 'app.js'
+                }
+            }
+        },
         concat: {
             options: {
                 separator: '\n\n;\n\n'
@@ -43,8 +54,13 @@ module.exports = function(grunt) {
             ]
         },
         watch: {
-            files: ['<%= jshint.src %>'],
-            tasks: ['default']
+            express: {
+                files: ['<%= jshint.src %>'],
+                tasks: ['default', 'express:dev'],
+                options: {
+                    spawn: false
+                }
+            }
         },
         shell: {
             deploy: {
@@ -61,8 +77,10 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-express-server');
     grunt.loadNpmTasks('grunt-shell');
 
     grunt.registerTask('test', []);
+    grunt.registerTask('server', ['express:dev', 'watch']);
     grunt.registerTask('default', ['concat', 'jshint', 'uglify', 'shell:deploy']);
 };

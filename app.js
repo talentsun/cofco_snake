@@ -33,4 +33,3 @@ app.get('/test/upload', function(req, res) {
 });
 
 app.listen(11111);
-console.log('Listening on port 11111');
