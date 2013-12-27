@@ -66,7 +66,7 @@ Snake.prototype = {
             case DIRECTION_LEFT:
                 this.x--;
                 break;
-            //case DIRECTION_RIGHT:
+                //case DIRECTION_RIGHT:
             default:
                 this.x++;
         }
@@ -316,14 +316,57 @@ var _Controller = {
     },
 
     onGameFailed: function() {
+        var self = this;
+
         this.controlButton.innerHTML = '开始';
+
+        var STATUS_UPLOADING = 'uploading';
+        var STATUS_UPLOADED = 'uploaded';
+        var STATUS_TIMEOUT = 'timeout';
+        var status = STATUS_UPLOADING;
+
+        var _round = controller.rounds();
+
+        function _uploading(func) {
+            var _round = self.rounds();
+            return function() {
+                if (_round !== self.rounds ||
+                    status !== STATUS_UPLOADING) {
+                    return;
+                }
+
+                if (func) func.apply(this, arguments);
+            };
+        }
+
+        setTimeout(_uploading(function() {
+            status = STATUS_TIMEOUT;
+            _Controller.onUploadTimeout.call(self);
+        }), 15 * 1000);
+
+        server.sync_score({
+            score: score
+        }, _uploading(function(err, data) {
+            status = STATUS_UPLOADED;
+
+            if (err) {
+                console.error(err);
+                _Controller.onUploadScoreFailed.call(self);
+            } else {
+                console.data(data);
+                _Controller.onScoreUploaded.call(self, data);
+            }
+        }));
+
         this.game = new Game(this.canvas);
         this.game.onScoreChanged(u.bind(_Controller.onScoreChanged, this));
         this.game.onFailed(u.bind(_Controller.onGameFailed, this));
     }
 };
 
-function Controller() {}
+function Controller() {
+    this.rounds = 0;
+}
 
 Controller.prototype = {
 
@@ -337,14 +380,18 @@ Controller.prototype = {
         this.controlButton = document.getElementById('control');
         this.controlButton.onclick = function() {
             switch (self.game.status) {
-                case Game.INITIALIZED:
                 case Game.OVER:
+                case Game.INITIALIZED:
+                    self.rounds++;
+                    self.game.start();
+                    this.innerHTML = '暂停';
+                    break;
                 case Game.PAUSED:
                     self.game.start();
                     this.innerHTML = '暂停';
                     break;
-                //case Game.PLAYING:
                 default:
+                    //Game.PLAYING
                     self.game.pause();
                     this.innerHTML = '继续';
             }
@@ -406,7 +453,7 @@ function loadResources() {
         img.onload = function() {
             item.img = img;
             completed++;
-            if(promise.progress) promise.progress(completed, items.length);
+            if (promise.progress) promise.progress(completed, items.length);
             callback(null);
         };
 
@@ -428,6 +475,7 @@ function loadResources() {
 
 var controller = new Controller();
 
+
 $(function() {
     canvas = document.getElementById("snake");
     if (!canvas.getContext) G_vmlCanvasManager.initElement(canvas);
@@ -440,6 +488,7 @@ $(function() {
     };
 
     promise.fail = function(err) {
+        // TODO
         console.error(err);
     };
 });

@@ -1,6 +1,6 @@
 var server = {
 
-	sync_score: function(params, callback) {
+	upload: function(params, callback) {
 		console.log(params.score);
 		$.post('/test/upload_score', params, "json").sucess(function(data) {
 			console.log(data);
@@ -24,6 +24,19 @@ var server = {
 			}
 		}).error(function() {
 			callback('network error');
+		});
+	},
+
+	sync_score: function(params, callback) {
+		server.upload(params, function(err, data) {
+			if(err) return callback(err);
+
+			var gift = data.gift;
+			server.info(function(err, data) {
+				if(err) return callback(err);
+				data.gift = gift;
+				callback(null, data);
+			});
 		});
 	}
 };
