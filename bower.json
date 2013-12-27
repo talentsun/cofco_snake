@@ -17,6 +17,7 @@
   ],
   "dependencies": {
       "jquery": "1.9.1",
+	  "async": "*",
       "hammerjs": "*",
       "html5shiv": "*"
   }

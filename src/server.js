@@ -1,8 +1,8 @@
+// server
 var server = {
-
 	upload: function(params, callback) {
 		console.log(params.score);
-		$.post('/test/upload_score', params, "json").sucess(function(data) {
+		$.get('/test/upload', params, "json").success(function(data) {
 			console.log(data);
 			if (data.status != 1) {
 				callback('error');
@@ -15,7 +15,7 @@ var server = {
 	},
 
 	info: function(callback) {
-		$.post('/test/info', "json").sucess(function(data) {
+		$.get('/test/info', "json").success(function(data) {
 			console.log(data);
 			if (data.status != 1) {
 				callback('error');
@@ -28,15 +28,28 @@ var server = {
 	},
 
 	sync_score: function(params, callback) {
-		server.upload(params, function(err, data) {
-			if(err) return callback(err);
-
-			var gift = data.gift;
-			server.info(function(err, data) {
-				if(err) return callback(err);
-				data.gift = gift;
-				callback(null, data);
+		function _upload(callback) {
+			server.upload(params, function(err, data) {
+				if (err) return callback(err);
+				callback(null, data.gift);
 			});
-		});
+		}
+
+		function _info(gift, callback) {
+			server.info(function(err, user) {
+				if (err) return callback(err);
+				user.gift = gift;
+				callback(null, user);
+			});
+		}
+
+		async.waterfall([_upload, _info],
+			u.delay(5,
+				function(err, result) {
+					if (err) return callback(err);
+					callback(null, result);
+				}
+			)
+		);
 	}
 };

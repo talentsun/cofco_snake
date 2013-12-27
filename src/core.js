@@ -16,10 +16,6 @@ function Snake(blocks, length) {
     this.direction = DIRECTION_LEFT;
     this.directionChanged = false;
 
-    this.bodyColor = '#0F0';
-    this.headColor = '#08C';
-    this.tailColor = '#B20';
-
     this.x = Math.ceil(this.blocks / 2);
     this.y = Math.ceil(this.blocks / 2);
     this.sections = [];
@@ -71,8 +67,10 @@ Snake.prototype = {
                 this.x++;
         }
     },
+};
 
-    triggerScoreChange: function() {
+var _Game = {
+    triggerScoreChanged: function() {
         if (this.scoreListener) this.scoreListener();
     }
 };
@@ -104,7 +102,7 @@ function Game(canvas) {
         if (self.snake.x == self.food.x && self.snake.y == self.food.y) {
             self.foods.push(self.food);
             if (self.foods.length % 5 === 0) self.timer.speedUp();
-            self.triggerScoreChange();
+            _Game.triggerScoreChanged.call(self);
             self.food = self.getFood();
         } else {
             self.snake.sections.shift();
@@ -315,6 +313,20 @@ var _Controller = {
         this.currentScoreEl.innerHTML = this.game.score();
     },
 
+    onUploadScoreFailed: function() {
+        // TODO
+        console.error('failed to upload score');
+    },
+
+    onScoreUploaded: function() {
+        // TODO
+        console.log('score has been uploaded');
+    },
+
+    onUploadScoreTimeout: function() {
+        console.log('upload score: time is up');
+    },
+
     onGameFailed: function() {
         var self = this;
 
@@ -325,12 +337,9 @@ var _Controller = {
         var STATUS_TIMEOUT = 'timeout';
         var status = STATUS_UPLOADING;
 
-        var _round = controller.rounds();
-
-        function _uploading(func) {
-            var _round = self.rounds();
+        function _on_uploading(round, func) {
             return function() {
-                if (_round !== self.rounds ||
+                if (round !== self.rounds ||
                     status !== STATUS_UPLOADING) {
                     return;
                 }
@@ -339,21 +348,22 @@ var _Controller = {
             };
         }
 
-        setTimeout(_uploading(function() {
+        setTimeout(_on_uploading(this.rounds, function() {
             status = STATUS_TIMEOUT;
-            _Controller.onUploadTimeout.call(self);
-        }), 15 * 1000);
+
+            _Controller.onUploadScoreTimeout.call(self);
+        }), /*15*/ 3 * 1000);
 
         server.sync_score({
-            score: score
-        }, _uploading(function(err, data) {
+            score: this.game.score()
+        }, _on_uploading(this.rounds, function(err, data) {
             status = STATUS_UPLOADED;
 
             if (err) {
                 console.error(err);
                 _Controller.onUploadScoreFailed.call(self);
             } else {
-                console.data(data);
+                console.log(data);
                 _Controller.onScoreUploaded.call(self, data);
             }
         }));
@@ -401,6 +411,11 @@ Controller.prototype = {
 
         this.game.onScoreChanged(u.bind(_Controller.onScoreChanged, this));
         this.game.onFailed(u.bind(_Controller.onGameFailed, this));
+    },
+
+    showScore: function(totalScore) {
+        this.totalScore = totalScore;
+        // TODO
     }
 };
 
@@ -447,7 +462,7 @@ function loadResources() {
     });
 
     var completed = 0;
-    u.eachAsync(items, function(item, callback) {
+    async.each(items, function(item, callback) {
         var img = new Image();
 
         img.onload = function() {
@@ -475,20 +490,40 @@ function loadResources() {
 
 var controller = new Controller();
 
-
 $(function() {
     canvas = document.getElementById("snake");
     if (!canvas.getContext) G_vmlCanvasManager.initElement(canvas);
 
-    var promise = loadResources();
-    promise.success = u.bind(controller.onload, controller, canvas);
+    function _load(callback) {
+        var promise = loadResources();
+        promise.success = function() {
+            callback(null);
+        };
 
-    promise.progress = function(completed, length) {
-        console.log('progress:', completed, length);
-    };
+        promise.progress = function(completed, length) {
+            // TODO
+            console.log('progress:', completed, length);
+        };
 
-    promise.fail = function(err) {
-        // TODO
-        console.error(err);
-    };
+        promise.fail = function(err) {
+            console.error(err);
+            callback(err);
+        };
+    }
+
+    function _get_info(callback) {
+        server.info(function(err, data) {
+            if (err) {
+                callback(err);
+            } else {
+                callback(null, data);
+            }
+        });
+    }
+
+    async.parallel([_load, _get_info], function(err, results) {
+        var data = results[1];
+        controller.showScore(data.score);
+        controller.onload(canvas);
+    });
 });

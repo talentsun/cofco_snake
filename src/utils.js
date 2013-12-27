@@ -71,27 +71,6 @@ function _only_once(func) {
 	};
 }
 
-u.eachAsync = function(arr, iterator, callback) {
-	callback = callback || function() {};
-
-	if (!arr.length) return setTimeout(callback, 0);
-
-	var completed = 0;
-	u.each(arr, function(x) {
-		iterator(x, _only_once(function(err) {
-			if (err) {
-				callback(err);
-				callback = function() {};
-			} else {
-				completed += 1;
-				if (completed >= arr.length) {
-					callback(null);
-				}
-			}
-		}));
-	});
-};
-
 u.bind = function(func, context) {
 	var args = _slice.call(arguments, 2);
 	return function() {
@@ -99,6 +78,16 @@ u.bind = function(func, context) {
 	};
 };
 
-var console = console || {};
+
+u.delay = function(seconds, func) {
+	return function() {
+		var args = arguments;
+		setTimeout(function() {
+			if (func) func.apply(this, args);
+		}, seconds * 1000);
+	};
+};
+
+if (!console) console = {};
 console.log = console.log || function() {};
 console.error = console.error || function() {};

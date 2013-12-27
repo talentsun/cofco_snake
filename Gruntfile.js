@@ -1,12 +1,14 @@
 module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
+        async: 'bower_components/async/lib/async.js',
         concat: {
             options: {
                 separator: '\n\n;\n\n'
             },
             dist: {
                 src: [
+                    '<%= async %>',
                     'src/head.js',
                     'src/animation.js',
                     'src/utils.js',

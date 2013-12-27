@@ -1,7 +1,7 @@
 all: run
 
 run:
-	nohup node server.js &
+	nohup node app.js &
 
 .PHONY: run
 
