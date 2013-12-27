@@ -1,6 +1,14 @@
-var path = require('path');
-
 module.exports = function(grunt) {
+    var sources = [
+        'src/head.js',
+        'src/animation.js',
+        'src/utils.js',
+        'src/server.js',
+        'src/timer.js',
+        'src/core.js',
+        'src/tail.js'
+    ];
+
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
         async: 'bower_components/async/lib/async.js',
@@ -18,16 +26,7 @@ module.exports = function(grunt) {
                 separator: '\n\n;\n\n'
             },
             dist: {
-                src: [
-                    '<%= async %>',
-                    'src/head.js',
-                    'src/animation.js',
-                    'src/utils.js',
-                    'src/server.js',
-                    'src/timer.js',
-                    'src/core.js',
-                    'src/tail.js'
-                ],
+                src: ['<%= async %>'].concat(sources),
                 dest: '<%= pkg.name %>.js'
             }
         },
@@ -41,21 +40,19 @@ module.exports = function(grunt) {
             }
         },
         qunit: {
-            files: ['test/**/*.html']
+            files: ['test/**/*.html'],
         },
+
         jshint: {
             src: [
                 'Gruntfile.js',
-                'src/animation.js',
-                'src/utils.js',
-                'src/server.js',
-                'src/timer.js',
-                'src/core.js',
+                'app.js'
             ]
         },
+
         watch: {
             express: {
-                files: ['<%= jshint.src %>'],
+                files: ['app.js'].concat(sources),
                 tasks: ['default', 'express:dev'],
                 options: {
                     spawn: false
@@ -81,6 +78,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-shell');
 
     grunt.registerTask('test', []);
-    grunt.registerTask('server', ['express:dev', 'watch']);
+    grunt.registerTask('server', ['default', 'express:dev', 'watch']);
     grunt.registerTask('default', ['concat', 'jshint', 'uglify', 'shell:deploy']);
 };

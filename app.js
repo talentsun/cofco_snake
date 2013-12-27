@@ -10,8 +10,8 @@ app.use("/images", express.static(__dirname + '/images'));
 
 var user = {
 	id: 0,
-	score: 0,
-}
+	score: 2000,
+};
 
 app.get('/test/info', function(req, res) {
 	res.send({
@@ -21,7 +21,7 @@ app.get('/test/info', function(req, res) {
 });
 
 app.get('/test/upload', function(req, res) {
-	var score = parseInt(req.query.score, 10)
+	var score = parseInt(req.query.score, 10);
 	user.score += score;
 	res.send({
 		status: 1,
@@ -29,7 +29,7 @@ app.get('/test/upload', function(req, res) {
 			id: user.id,
 			gift: score > 500
 		}
-	})
+	});
 });
 
 app.listen(11111);

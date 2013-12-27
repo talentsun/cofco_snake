@@ -1116,12 +1116,12 @@ var server = {
 		}
 
 		async.waterfall([_upload, _info],
-			u.delay(5,
-				function(err, result) {
-					if (err) return callback(err);
-					callback(null, result);
-				}
-			)
+			//u.delay(5,
+			function(err, result) {
+				if (err) return callback(err);
+				callback(null, result);
+			}
+			//)
 		);
 	}
 };
@@ -1518,7 +1518,7 @@ var _Controller = {
             status = STATUS_TIMEOUT;
 
             _Controller.onUploadScoreTimeout.call(self);
-        }), /*15*/ 3 * 1000);
+        }), 15 * 1000);
 
         server.sync_score({
             score: this.game.score()
@@ -1558,9 +1558,10 @@ Controller.prototype = {
             switch (self.game.status) {
                 case Game.OVER:
                 case Game.INITIALIZED:
-                    self.rounds++;
                     self.game.start();
                     this.innerHTML = '暂停';
+                    self.rounds++;
+                    self.currentScoreEl.innerHTML = 0;
                     break;
                 case Game.PAUSED:
                     self.game.start();

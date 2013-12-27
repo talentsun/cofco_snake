@@ -44,12 +44,12 @@ var server = {
 		}
 
 		async.waterfall([_upload, _info],
-			u.delay(5,
-				function(err, result) {
-					if (err) return callback(err);
-					callback(null, result);
-				}
-			)
+			//u.delay(5,
+			function(err, result) {
+				if (err) return callback(err);
+				callback(null, result);
+			}
+			//)
 		);
 	}
 };
