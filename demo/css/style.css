@@ -38,8 +38,8 @@ body {
 
 .snake-container > .content {
     background: #CCC;
-    width: 660px;
-    height: 660px;
+    width: 450px;
+    height: 450px;
     position: relative;
 }
 
@@ -70,8 +70,8 @@ body {
 }
 
 .control-bar > .control {
-    width: 130px;
-    height: 130px;
+    width: 100px;
+    height: 100px;
 }
 
 .snake-container > .control-bar > .title-pane {
