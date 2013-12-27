@@ -1484,9 +1484,9 @@ var _Controller = {
         console.error('failed to upload score');
     },
 
-    onScoreUploaded: function() {
-        // TODO
+    onScoreUploaded: function(user) {
         console.log('score has been uploaded');
+        this.showTotalScore(user.score);
     },
 
     onUploadScoreTimeout: function() {
@@ -1497,6 +1497,7 @@ var _Controller = {
         var self = this;
 
         this.controlButton.innerHTML = '开始';
+        this.currentScoreEl.innerHTML = 0;
 
         var STATUS_UPLOADING = 'uploading';
         var STATUS_UPLOADED = 'uploaded';
@@ -1552,6 +1553,7 @@ Controller.prototype = {
         this.canvas = canvas;
         this.game = new Game(this.canvas);
         this.currentScoreEl = document.getElementById('current-score');
+        this.totalScoreEl = document.getElementById('total-score');
 
         this.controlButton = document.getElementById('control');
         this.controlButton.onclick = function() {
@@ -1561,7 +1563,6 @@ Controller.prototype = {
                     self.game.start();
                     this.innerHTML = '暂停';
                     self.rounds++;
-                    self.currentScoreEl.innerHTML = 0;
                     break;
                 case Game.PAUSED:
                     self.game.start();
@@ -1580,9 +1581,8 @@ Controller.prototype = {
         this.game.onFailed(u.bind(_Controller.onGameFailed, this));
     },
 
-    showScore: function(totalScore) {
-        this.totalScore = totalScore;
-        // TODO
+    showTotalScore: function(totalScore) {
+        this.totalScoreEl.innerHTML = totalScore;
     }
 };
 
@@ -1690,8 +1690,8 @@ $(function() {
 
     async.parallel([_load, _get_info], function(err, results) {
         var data = results[1];
-        controller.showScore(data.score);
         controller.onload(canvas);
+        controller.showTotalScore(data.score);
     });
 });
 
