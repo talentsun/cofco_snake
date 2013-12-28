@@ -13,19 +13,19 @@
 </head>
 <body>
     <div class="snake-container">
-        <div class="scorebar">
-            <h1>积分</h1>
-            <div class='current'>
+        <div class="couplet scorebar">
+            <h1 class='couplet-head'>积分</h1>
+            <div class='current score'>
                 <h2>本局积分</h2>
                 <h2 id='current-score'>0</h2>
             </div>
-            <div class='total'>
+            <div class='total score'>
                 <h2>总积分</h2>
                 <h2 id='total-score'>0</h2>
             </div>
         </div>
         <div class='content'>
-            <canvas class='canvas' id="snake" width="450" height="450"></canvas>
+            <canvas class='canvas' id="snake" width="600" height="600"></canvas>
             <div class='hide msgbox'>
                 <div class='loading'></div>
                 <div class='timeout-pane hide'></div>
@@ -33,8 +33,12 @@
                 <div class='result hide'></div>
             </div>
         </div>
-        <div class='control-bar'>
-            <button class='control' id="control">开始</button>
+        <div class='couplet control-bar'>
+            <button class='couplet-head' id="control">
+                <img src='images/bt_play.png' role='start' alt='开始'/>
+                <img src='images/bt_pause.png' role='pause' alt='暂停'/>
+                <img src='images/bt_play.png' role='continue' alt='继续'/>
+            </button>
             <div class="title-pane">
                 <h1 class="title">贪吃达人</h1>
                 <h2 class="title" >年货</h2>

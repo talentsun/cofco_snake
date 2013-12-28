@@ -1,19 +1,5 @@
-article, aside, details, figcaption, figure, footer, header,
-hgroup, menu, nav, section { 
-    display: block; 
-}
-body {
-    background-color: #CCC;
-}
-h1 {
-    text-align: center;
-}
-p {
-    text-align: center;
-}
-
 .snake-container {
-    width: 960px;
+    width: 1280px;
     margin: 0 auto;
     overflow: hidden;
 }
@@ -26,10 +12,9 @@ body {
     display: none;
 }
 
-.snake-container > .scorebar,
-.snake-container > .control-bar {
-    width: 150px;
-    margin-top: 150px;
+.snake-container > .couplet {
+    width: 158px;
+    height: 454px;
 }
 
 .snake-container > .scorebar {
@@ -45,8 +30,8 @@ body {
 }
 
 .snake-container > .content {
-    width: 450px;
-    height: 450px;
+    width: 600px;
+    height: 600px;
     position: relative;
     background: url(../images/canvas_bg.png) repeat;
 }
@@ -72,24 +57,88 @@ body {
 }
 
 .snake-container > .content, 
-.snake-container > .scorebar, 
-.snake-container > .control-bar {
-    float: left;
+.snake-container > .couplet {
+    display: inline-block;
+    vertical-align: bottom;
 }
 
-.control-bar > .control {
+.snake-container .couplet .couplet-head {
+    width: 128px;
+    height: 128px;
+    line-height: 128px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    margin-bottom: 60px;
+    margin-top: 10px;
+}
+
+.snake-container .title-pane {
+    overflow: hidden;
     width: 100px;
-    height: 100px;
+    margin: 0 auto;
 }
 
-.snake-container > .control-bar > .title-pane {
-    overflow:  hidden;
-}
-
-.snake-container > .control-bar > .title-pane > .title {
+.snake-container .title {
     display: inline-block;
     vertical-align: middle;
-    width: 1.5em;
     text-align: center;
+}
 
+.snake-container h1.title {
+    width: 50px;
+}
+
+.snake-container h2.title {
+    width: 45px;
+}
+
+.snake-container .scorebar > h1 {
+    background: url('../images/score_bg.png') no-repeat;
+}
+
+.snake-container .scorebar .score {
+    height: 90px;
+}
+
+.couplet.scorebar {
+    color: #fff;
+}
+
+.couplet.control-bar {
+    color: #fff;
+}
+
+.snake-container #control {
+    padding: 0px;
+    border: none;
+    outline: none;
+    background: url(../images/bt_normal.png) no-repeat transparent;
+}
+
+.snake-container #control:active {
+    background: url(../images/bt_pressed.png) no-repeat transparent;
+}
+
+.snake-container #control > img {
+    display: none;
+}
+.snake-container #control > [role=start] {
+    display: block;
+}
+
+.snake-container #control.control-play > [role=pause] {
+    display: block;
+}
+.snake-container #control.control-play > [role=start],
+.snake-container #control.control-play > [role=continue] {
+    display: none;
+}
+
+.snake-container #control.control-pause > [role=continue] {
+    display: block;
+}
+.snake-container #control.control-pause > [role=start],
+.snake-container #control.control-pause > [role=pause] {
+    display: none;
 }
