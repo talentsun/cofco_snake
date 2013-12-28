@@ -241,18 +241,19 @@ Game.prototype = {
 
     getFood: function() {
         var _food = Fooder.getFood();
-        var x, y;
+        var pos = this.getNewFoodPosition();
+        return u.extend({}, _food, pos);
+    },
+
+    getNewFoodPosition: function() {
+        var pos = {};
+
         do {
-            x = Math.floor(Math.random() * this.blocks);
-            y = Math.floor(Math.random() * this.blocks);
-        } while (this.snake.onBody(x, y));
+            pos.x = Math.floor(Math.random() * this.blocks);
+            pos.y = Math.floor(Math.random() * this.blocks);
+        } while (this.snake.onBody(pos.x, pos.y));
 
-        var food = u.extend({}, _food, {
-            x: x,
-            y: y
-        });
-
-        return food;
+        return pos;
     }
 };
 
@@ -451,12 +452,12 @@ var META = {
             score: 1,
             name: '蒙牛',
             src: 'images/mengniu.png'
-        }, 
+        },
         jindi: {
             score: 1,
             name: 'jingdi',
             src: 'images/jindi.png'
-        }, 
+        },
         jiajiakang: {
             score: 1,
             name: '家佳康',
