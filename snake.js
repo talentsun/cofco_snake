@@ -1285,7 +1285,7 @@ function Game(canvas) {
 }
 
 u.extend(Game, {
-    BLOCKS: 20,
+    BLOCKS: 10,
     INITIALIZED: 'initialized',
     PLAYING: 'playing',
     PAUSED: 'paused',
@@ -1599,11 +1599,41 @@ var META = {
         }
     },
     foods: {
-        food1: {
+        zhongcha: {
             score: 1,
-            name: '中粮食品',
-            src: 'images/Wreath-icon.png'
+            name: '中茶',
+            src: 'images/zhongcha.png'
         },
+        wugu: {
+            score: 1,
+            name: '五谷',
+            src: 'images/wugu.png'
+        },
+        mengniu: {
+            score: 1,
+            name: '蒙牛',
+            src: 'images/mengniu.png'
+        }, 
+        jindi: {
+            score: 1,
+            name: 'jingdi',
+            src: 'images/jindi.png'
+        }, 
+        jiajiakang: {
+            score: 1,
+            name: '家佳康',
+            src: 'images/jiajiakang.png'
+        },
+        changcheng: {
+            score: 1,
+            name: '长城',
+            src: 'images/changcheng.png'
+        },
+        fulinmen: {
+            score: 1,
+            name: '福临门',
+            src: 'images/fulinmen.png'
+        }
     }
 };
 

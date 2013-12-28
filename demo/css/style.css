@@ -32,15 +32,23 @@ body {
     margin-top: 150px;
 }
 
+.snake-container > .scorebar {
+    background: url(../images/couplet_left.png);
+}
+
+.snake-container > .control-bar {
+    background: url(../images/couplet_right.png);
+}
+
 .scorebar {
     text-align: center;
 }
 
 .snake-container > .content {
-    background: #CCC;
     width: 450px;
     height: 450px;
     position: relative;
+    background: url(../images/canvas_bg.png) repeat;
 }
 
 .snake-container > .content > .canvas, 
