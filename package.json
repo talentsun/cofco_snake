@@ -1,18 +1,21 @@
 {
-    "name": "snake",
-    "verison": "0.0.0",
-    "devDependencies": {
-        "less": "*",
-        "express": "*",
-        "grunt": "~0.4.2",
-        "grunt-express-server": "*",
-        "grunt-contrib-jshint": "~0.6.0",
-        "grunt-contrib-nodeunit": "~0.2.0",
-        "grunt-contrib-uglify": "~0.2.2",
-        "grunt-contrib-watch": "~0.5.3",
-        "grunt-contrib-concat": "~0.1.2",
-        "grunt-contrib-qunit": "~0.1.1",
-        "grunt-shell": "~0.6.1"
-    }
+  "name": "snake",
+  "verison": "0.0.0",
+  "devDependencies": {
+    "less": "*",
+    "express": "*",
+    "grunt": "~0.4.2",
+    "grunt-express-server": "*",
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-contrib-concat": "~0.1.2",
+    "grunt-contrib-qunit": "~0.1.1",
+    "grunt-shell": "~0.6.1",
+    "grunt-env": "~0.4.1"
+  },
+  "dependencies": {
+    "mu2": "~0.5.20"
+  }
 }
-

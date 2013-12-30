@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 
+var util = require('util');
+
 var express = require('express');
+var mu = require('mu2');
+mu.root = __dirname + "/templates";
+
 
 var app = express();
-app.use(express.logger());
-app.use(express.static(__dirname + '/demo'));
+app.use(express.logger('dev'));
+app.use(express.static(__dirname + '/public'));
 app.use("/libs", express.static(__dirname + '/bower_components'));
-app.use("/images", express.static(__dirname + '/images'));
-app.use("/fonts", express.static(__dirname + '/fonts'));
 
 var user = {
 	id: 0,
@@ -33,5 +36,11 @@ app.get('/test/upload', function(req, res) {
 	});
 });
 
-app.listen(11111);
+app.get('/', function(req, res) {
+	var stream = mu.compileAndRender('index.html', {
+		DEBUG: process.env.NODE_ENV === 'development'
+	});
+	util.pump(stream, res);
+});
 
+app.listen(11111);

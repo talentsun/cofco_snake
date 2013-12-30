@@ -31,14 +31,15 @@
 .snake-container > .couplet {
     width: 158px;
     height: 454px;
+    padding-bottom: 40px;
 }
 
 .snake-container > .scorebar {
-    background: url(../images/couplet_left.png);
+    background: url(../images/couplet_left.png) no-repeat;
 }
 
 .snake-container > .control-bar {
-    background: url(../images/couplet_right.png);
+    background: url(../images/couplet_right.png) no-repeat;
 }
 
 .scorebar {
@@ -52,7 +53,7 @@
     border-radius: 22px;
     position: relative;
     background: #e8392a;
-    box-shadow: inset 0px 0px 10px rgba(0, 0, 0, .3);
+    box-shadow: inset 0px 0px 15px rgba(0, 0, 0, .4);
 }
 
 .snake-container > .content > .canvas, 
@@ -62,7 +63,7 @@
 
 .snake-container > .content > .canvas {
     background: url(../images/canvas_bg.png) repeat;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, .3);
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, .4);
     width: 634px;
     height: 634px;
 }
@@ -89,7 +90,7 @@
     margin-left: auto;
     margin-right: auto;
     display: block;
-    margin-bottom: 60px;
+    margin-bottom: 50px;
     margin-top: 10px;
 }
 
@@ -119,11 +120,13 @@
 }
 
 .snake-container .scorebar .score {
-    height: 90px;
+    margin-bottom: 15px;
 }
 
 .snake-container .score h2 {
     color: #fcf1f1;
+    line-height: 45px;
+    margin: 0px;
 }
 
 .couplet.scorebar {
@@ -138,6 +141,7 @@
     padding: 0px;
     border: none;
     outline: none;
+    cursor: pointer;
     background: url(../images/bt_normal.png) no-repeat transparent;
 }
 

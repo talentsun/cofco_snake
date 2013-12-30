@@ -12,11 +12,17 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
         async: 'bower_components/async/lib/async.js',
+        env: {
+            dev: {
+                NODE_ENV: 'development'
+            }
+        },
         express: {
             dev: {
                 options: {
                     port: 11111,
                     background: true,
+                    debug: false,
                     script: 'app.js'
                 }
             }
@@ -53,7 +59,7 @@ module.exports = function(grunt) {
         watch: {
             express: {
                 files: ['Gruntfile.js', 'app.js'].concat(sources),
-                tasks: ['default', 'express:dev'],
+                tasks: ['default', 'env:dev', 'express:dev'],
                 options: {
                     spawn: false
                 }
@@ -76,9 +82,10 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-express-server');
     grunt.loadNpmTasks('grunt-shell');
+    grunt.loadNpmTasks('grunt-env');
 
     grunt.registerTask('test', []);
     grunt.registerTask('demo', ['shell:copy_js']);
-    grunt.registerTask('server', ['default', 'express:dev', 'watch']);
+    grunt.registerTask('server', ['default', 'env:dev', 'express:dev', 'watch']);
     grunt.registerTask('default', ['concat', 'jshint', 'uglify', 'demo']);
 };
