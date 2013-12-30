@@ -1,20 +1,27 @@
 @font-face {
     font-family: 'jianzhi';
-    src: url(../fonts/jianzhi.eot?) format('eot'), /*IE*/ 
+    src: url(../fonts/jianzhi.eot) format('eot'); /*IE*/ 
+    src: url(../fonts/jianzhi.eot?#iefix) format('embedded-opentype'), 
          url(../fonts/jianzhi.woff) format('woff'), 
          url(../fonts/jianzhi.ttf) format('truetype');
 }
 
+.snake-container-wrap {
+    background: url(../images/bg.png) no-repeat;
+    width: 1280px;
+    margin: 0 auto;
+}
+
 .snake-container {
     font-family: 'jianzhi' '微软雅黑';
-    width: 1280px;
+    width: 990px;
     margin: 0 auto;
     overflow: hidden;
 }
 
 .snake-container h1,
 .snake-container h2 {
-    font-weight: normal;
+    font-weight: lighter;
 }
 
 .snake-container > .hide {
@@ -40,10 +47,11 @@
 
 .snake-container > .content {
     padding: 20px;
-    width: 600px;
-    height: 600px;
+    width: 634px;
+    height: 634px;
     border-radius: 22px;
     position: relative;
+    background: #e8392a;
     box-shadow: inset 0px 0px 10px rgba(0, 0, 0, .3);
 }
 
@@ -55,8 +63,8 @@
 .snake-container > .content > .canvas {
     background: url(../images/canvas_bg.png) repeat;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, .3);
-    width: 600px;
-    height: 600px;
+    width: 634px;
+    height: 634px;
 }
 
 .snake-container > .content > .msgbox {
@@ -74,6 +82,7 @@
 }
 
 .snake-container .couplet .couplet-head {
+    color: #fcf1f1;
     width: 128px;
     height: 128px;
     line-height: 128px;
@@ -94,6 +103,7 @@
     display: inline-block;
     vertical-align: middle;
     text-align: center;
+    color: #fde85b;
 }
 
 .snake-container h1.title {
@@ -101,7 +111,7 @@
 }
 
 .snake-container h2.title {
-    width: 45px;
+    width: 40px;
 }
 
 .snake-container .scorebar > h1 {
@@ -110,6 +120,10 @@
 
 .snake-container .scorebar .score {
     height: 90px;
+}
+
+.snake-container .score h2 {
+    color: #fcf1f1;
 }
 
 .couplet.scorebar {

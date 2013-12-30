@@ -1638,6 +1638,11 @@ var META = {
             score: 1,
             name: '福临门',
             src: '/images/fulinmen.png'
+        },
+        yuehuo: {
+            score: 1,
+            name: 'yuehuo',
+            src: '/images/yuehuo.png'
         }
     }
 };
