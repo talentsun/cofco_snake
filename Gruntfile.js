@@ -52,7 +52,7 @@ module.exports = function(grunt) {
 
         watch: {
             express: {
-                files: ['app.js'].concat(sources),
+                files: ['Gruntfile.js', 'app.js'].concat(sources),
                 tasks: ['default', 'express:dev'],
                 options: {
                     spawn: false
@@ -60,7 +60,7 @@ module.exports = function(grunt) {
             }
         },
         shell: {
-            deploy: {
+            copy_js: {
                 command: 'cp <%= pkg.name %>.js demo/js',
                 options: {
                     stdout: true
@@ -78,6 +78,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-shell');
 
     grunt.registerTask('test', []);
+    grunt.registerTask('demo', ['shell:copy_js']);
     grunt.registerTask('server', ['default', 'express:dev', 'watch']);
-    grunt.registerTask('default', ['concat', 'jshint', 'uglify', 'shell:deploy']);
+    grunt.registerTask('default', ['concat', 'jshint', 'uglify', 'demo']);
 };

@@ -1,11 +1,20 @@
+@font-face {
+    font-family: 'jianzhi';
+    src: url(../fonts/jianzhi.eot?) format('eot'), /*IE*/ 
+         url(../fonts/jianzhi.woff) format('woff'), 
+         url(../fonts/jianzhi.ttf) format('truetype');
+}
+
 .snake-container {
+    font-family: 'jianzhi' '微软雅黑';
     width: 1280px;
     margin: 0 auto;
     overflow: hidden;
 }
 
-body {
-    background: #f1f1f1;
+.snake-container h1,
+.snake-container h2 {
+    font-weight: normal;
 }
 
 .snake-container > .hide {

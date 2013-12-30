@@ -88,6 +88,6 @@ u.delay = function(seconds, func) {
 	};
 };
 
-if (!console) console = {};
+console = window.console || {};
 console.log = console.log || function() {};
 console.error = console.error || function() {};

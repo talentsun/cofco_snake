@@ -428,50 +428,50 @@ Controller.prototype = {
 var META = {
     snake: {
         head: {
-            src: 'images/Festive-icon.png'
+            src: '/images/Festive-icon.png'
         },
         tail: {
-            src: 'images/Snowy-icon.png'
+            src: '/images/Snowy-icon.png'
         },
         body: {
-            src: 'images/Wreath-icon.png'
+            src: '/images/Wreath-icon.png'
         }
     },
     foods: {
         zhongcha: {
             score: 1,
             name: '中茶',
-            src: 'images/zhongcha.png'
+            src: '/images/zhongcha.png'
         },
         wugu: {
             score: 1,
             name: '五谷',
-            src: 'images/wugu.png'
+            src: '/images/wugu.png'
         },
         mengniu: {
             score: 1,
             name: '蒙牛',
-            src: 'images/mengniu.png'
+            src: '/images/mengniu.png'
         },
         jindi: {
             score: 1,
             name: 'jingdi',
-            src: 'images/jindi.png'
+            src: '/images/jindi.png'
         },
         jiajiakang: {
             score: 1,
             name: '家佳康',
-            src: 'images/jiajiakang.png'
+            src: '/images/jiajiakang.png'
         },
         changcheng: {
             score: 1,
             name: '长城',
-            src: 'images/changcheng.png'
+            src: '/images/changcheng.png'
         },
         fulinmen: {
             score: 1,
             name: '福临门',
-            src: 'images/fulinmen.png'
+            src: '/images/fulinmen.png'
         }
     }
 };

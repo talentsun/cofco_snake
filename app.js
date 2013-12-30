@@ -7,6 +7,7 @@ app.use(express.logger());
 app.use(express.static(__dirname + '/demo'));
 app.use("/libs", express.static(__dirname + '/bower_components'));
 app.use("/images", express.static(__dirname + '/images'));
+app.use("/fonts", express.static(__dirname + '/fonts'));
 
 var user = {
 	id: 0,
@@ -33,3 +34,4 @@ app.get('/test/upload', function(req, res) {
 });
 
 app.listen(11111);
+

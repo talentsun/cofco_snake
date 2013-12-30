@@ -1063,7 +1063,7 @@ u.delay = function(seconds, func) {
 	};
 };
 
-console = window.console || {};
+if (!console) console = {};
 console.log = console.log || function() {};
 console.error = console.error || function() {};
 
