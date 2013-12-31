@@ -103,13 +103,18 @@ function Game(canvas) {
         if (self.snake.x == self.food.x && self.snake.y == self.food.y) {
             self.foods.push(self.food);
             if (self.foods.length % 5 === 0) self.timer.speedUp();
-            
+
             _Game.triggerScoreChanged.call(self);
             self.snake.sections.push({
                 x: self.snake.x,
                 y: self.snake.y
             });
-            self.food = self.getFood();
+            
+            var food = self.getFood();
+            if (!food) {
+                self.fail();
+                return;
+            }
         } else {
             self.snake.sections.shift();
             self.snake.sections.push({
@@ -234,6 +239,8 @@ Game.prototype = {
     },
 
     getFood: function() {
+        if (this.sections.length === this.blocks * this.blocks) return null;
+
         var _food = Fooder.getFood();
         var pos = this.getNewFoodPosition();
         return u.extend({}, _food, pos, {
@@ -243,7 +250,6 @@ Game.prototype = {
 
     getNewFoodPosition: function() {
         var pos = {};
-
         do {
             pos.x = Math.floor(Math.random() * this.blocks);
             pos.y = Math.floor(Math.random() * this.blocks);
