@@ -21,7 +21,6 @@ module.exports = function(grunt) {
         express: {
             dev: {
                 options: {
-                    port: 11111,
                     background: true,
                     debug: false,
                     script: 'app.js'

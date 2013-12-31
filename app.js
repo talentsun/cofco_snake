@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
+
 var util = require('util');
 
 var express = require('express');
 var mu = require('mu2');
 mu.root = __dirname + "/templates";
-
 
 var app = express();
 app.use(express.logger('dev'));
@@ -43,4 +43,10 @@ app.get('/', function(req, res) {
 	util.pump(stream, res);
 });
 
-app.listen(11111);
+var port = 3000;
+if(process.env.PORT) {
+	port = process.env.PORT;
+} else if(process.argv.length > 2) {
+	port = process.argv[2];
+}
+app.listen(port);
