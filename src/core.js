@@ -70,6 +70,7 @@ Snake.prototype = {
 };
 
 var _Game = {
+    DEFAULT_SCORE: 10,
     triggerScoreChanged: function() {
         if (this.scoreListener) this.scoreListener();
     }
@@ -242,7 +243,9 @@ Game.prototype = {
     getFood: function() {
         var _food = Fooder.getFood();
         var pos = this.getNewFoodPosition();
-        return u.extend({}, _food, pos);
+        return u.extend({}, _food, pos, {
+            score: _food.score || _Game.DEFAULT_SCORE
+        });
     },
 
     getNewFoodPosition: function() {
@@ -439,42 +442,34 @@ var META = {
     },
     foods: {
         zhongcha: {
-            score: 1,
             name: '中茶',
             src: '/images/zhongcha.png'
         },
         wugu: {
-            score: 1,
             name: '五谷',
             src: '/images/wugu.png'
         },
         mengniu: {
-            score: 1,
             name: '蒙牛',
             src: '/images/mengniu.png'
         },
         jindi: {
-            score: 1,
             name: 'jingdi',
             src: '/images/jindi.png'
         },
         jiajiakang: {
-            score: 1,
             name: '家佳康',
             src: '/images/jiajiakang.png'
         },
         changcheng: {
-            score: 1,
             name: '长城',
             src: '/images/changcheng.png'
         },
         fulinmen: {
-            score: 1,
             name: '福临门',
             src: '/images/fulinmen.png'
         },
         yuehuo: {
-            score: 1,
             name: 'yuehuo',
             src: '/images/yuehuo.png'
         }

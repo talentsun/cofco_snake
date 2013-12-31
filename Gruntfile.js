@@ -12,6 +12,7 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
         async: 'bower_components/async/lib/async.js',
+        static_dir: 'public',
         env: {
             dev: {
                 NODE_ENV: 'development'
@@ -67,7 +68,7 @@ module.exports = function(grunt) {
         },
         shell: {
             copy_js: {
-                command: 'cp <%= pkg.name %>.js demo/js',
+                command: 'cp <%= pkg.name %>.js <%= static_dir %>/js',
                 options: {
                     stdout: true
                 }
@@ -85,7 +86,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-env');
 
     grunt.registerTask('test', []);
-    grunt.registerTask('demo', ['shell:copy_js']);
     grunt.registerTask('server', ['default', 'env:dev', 'express:dev', 'watch']);
-    grunt.registerTask('default', ['concat', 'jshint', 'uglify', 'demo']);
+    grunt.registerTask('default', ['concat', 'jshint', 'uglify', 'shell:copy_js']);
 };
