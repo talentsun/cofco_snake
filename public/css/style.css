@@ -14,22 +14,32 @@
     position: relative;
 }
 
+.snake-container-wrap h1 {
+    font-size: 32px;
+}
+
+.snake-container-wrap h2 {
+    font-size: 24px;
+}
+
 .snake-container-wrap > img.bottom {
     width: 100%;
     position: absolute;
     bottom: 0px;
 }
 
-.snake-container {
-    font-family: 'jianzhi' '微软雅黑';
-    width: 990px;
-    margin: 0 auto;
-    overflow: hidden;
+.snake-container-wrap h1,
+.snake-container-wrap h2 {
+    font-weight: lighter;
 }
 
-.snake-container h1,
-.snake-container h2 {
-    font-weight: lighter;
+.snake-container {
+    font-family: 'jianzhi' '微软雅黑';
+    width: 1006px;
+    box-sizing: border-box;
+    padding-left: 9px;
+    margin: 0 auto;
+    overflow: hidden;
 }
 
 .snake-container > .hide {
@@ -55,13 +65,14 @@
 }
 
 .snake-container > .content {
-    padding: 20px;
+    padding: 22px;
     width: 634px;
     height: 634px;
-    border-radius: 22px;
+    border-radius: 23px;
     position: relative;
     background: #e8392a;
-    box-shadow: inset 0px 0px 15px rgba(0, 0, 0, .4);
+    border: 1px solid #C9231A;
+    box-shadow: inset 0px 0px 20px rgba(0, 0, 0, .5);
 }
 
 .snake-container > .content > .canvas, 
@@ -98,29 +109,36 @@
     margin-left: auto;
     margin-right: auto;
     display: block;
-    margin-bottom: 50px;
-    margin-top: 10px;
+    margin-bottom: 42px;
+    margin-top: 18px;
 }
 
 .snake-container .title-pane {
     overflow: hidden;
-    width: 100px;
+    width: 95px;
     margin: 0 auto;
+    padding-top: 20px;
 }
 
 .snake-container .title {
     display: inline-block;
     vertical-align: middle;
+    margin: 0px;
     text-align: center;
     color: #fde85b;
+    text-shadow: 0px 0px 3px #B90401;
 }
 
 .snake-container h1.title {
-    width: 50px;
+    width: 36px;
+    font-size: 36px;
+    padding: 0px 9px;
 }
 
 .snake-container h2.title {
-    width: 40px;
+    width: 27px;
+    font-size: 28px;
+    padding: 0px 5px;
 }
 
 .snake-container .scorebar > h1 {

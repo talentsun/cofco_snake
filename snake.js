@@ -1275,12 +1275,10 @@ function Game(canvas) {
                 x: self.snake.x,
                 y: self.snake.y
             });
-            
+
             var food = self.getFood();
-            if (!food) {
-                self.fail();
-                return;
-            }
+            if (!food) return self.fail();
+            self.food = food;
         } else {
             self.snake.sections.shift();
             self.snake.sections.push({
@@ -1405,7 +1403,7 @@ Game.prototype = {
     },
 
     getFood: function() {
-        if (this.sections.length === this.blocks * this.blocks) return null;
+        if (this.snake.sections.length === this.blocks * this.blocks) return null;
 
         var _food = Fooder.getFood();
         var pos = this.getNewFoodPosition();
