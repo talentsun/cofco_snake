@@ -68,7 +68,7 @@ module.exports = function(grunt) {
         },
         shell: {
             copy_js: {
-                command: 'cp <%= pkg.name %>.js <%= static_dir %>/js',
+                command: 'cp <%= pkg.name %>.js  <%= pkg.name %>.min.js <%= static_dir %>/js',
                 options: {
                     stdout: true
                 }
