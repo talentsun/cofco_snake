@@ -12,6 +12,9 @@
     padding-bottom: 40px;
     margin: 0 auto;
     position: relative;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
 }
 
 .snake-container-wrap h1 {
@@ -70,7 +73,7 @@
     height: 634px;
     border-radius: 23px;
     position: relative;
-    background: #e8392a;
+    background: #C9231A;
     border: 1px solid #C9231A;
     box-shadow: inset 0px 0px 20px rgba(0, 0, 0, .5);
 }
