@@ -331,8 +331,7 @@ var _Controller = {
     onGameFailed: function() {
         var self = this;
 
-        $(this.controlButton).removeClass('control-pause');
-        $(this.controlButton).removeClass('control-play');
+        $(this.controlButton).removeClass('pause');
         this.currentScoreEl.innerHTML = 0;
 
         var STATUS_UPLOADING = 'uploading';
@@ -397,20 +396,17 @@ Controller.prototype = {
                 case Game.OVER:
                 case Game.INITIALIZED:
                     self.game.start();
-                    $(this).addClass('control-play');
-                    $(this).removeClass('control-pause');
+                    $(this).addClass('pause');
                     self.rounds++;
                     break;
                 case Game.PAUSED:
                     self.game.start();
-                    $(this).addClass('control-play');
-                    $(this).removeClass('control-pause');
+                    $(this).addClass('pause');
                     break;
                 default:
                     //Game.PLAYING
                     self.game.pause();
-                    $(this).addClass('control-pause');
-                    $(this).removeClass('control-play');
+                    $(this).removeClass('pause');
             }
         };
 
