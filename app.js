@@ -43,10 +43,4 @@ app.get('/', function(req, res) {
 	util.pump(stream, res);
 });
 
-var port = 3000;
-if(process.env.PORT) {
-	port = process.env.PORT;
-} else if(process.argv.length > 2) {
-	port = process.argv[2];
-}
-app.listen(port);
+app.listen(process.argv.length > 2 ? process.argv[2] : 3000);

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -12,45 +13,48 @@
     <script type="text/javascript" src="/js/excanvas.compiled.js"></script>
     <![endif]-->
 </head>
+
 <body>
     <div class="snake-container-wrap">
-    <div class="snake-container">
-        <div class="couplet scorebar">
-            <h1 class='couplet-head'>积分</h1>
-            <div class='current score'>
-                <h2>本局积分</h2>
-                <h2 id='current-score'>0</h2>
+        <div class="snake-container">
+            <div class="couplet scorebar">
+                <h1 class='couplet-head'>积分</h1>
+                <div class='current score'>
+                    <h2>本局积分</h2>
+                    <h2 id='current-score'>0</h2>
+                </div>
+                <div class='total score'>
+                    <h2>总积分</h2>
+                    <h2 id='total-score'>0</h2>
+                </div>
             </div>
-            <div class='total score'>
-                <h2>总积分</h2>
-                <h2 id='total-score'>0</h2>
+            <div class='content'>
+                <canvas class='canvas' id="snake" width="634" height="634"></canvas>
+                <div class='hide msgbox'>
+                    <div class='loading'></div>
+                    <div class='timeout-pane hide'></div>
+                    <div class='error hide'></div>
+                    <div class='result hide'></div>
+                </div>
             </div>
-        </div><div class='content'>
-            <canvas class='canvas' id="snake" width="634" height="634"></canvas>
-            <div class='hide msgbox'>
-                <div class='loading'></div>
-                <div class='timeout-pane hide'></div>
-                <div class='error hide'></div>
-                <div class='result hide'></div>
-            </div>
-        </div><div class='couplet control-bar'>
-            <button class='couplet-head' id="control">
-                <img src='/images/bt_play.png' role='start' alt='开始'/>
-                <img src='/images/bt_pause.png' role='pause' alt='暂停'/>
-                <img src='/images/bt_play.png' role='continue' alt='继续'/>
-            </button>
-            <div class="title-pane">
-                <h1 class="title">贪吃达人</h1>
-                <h2 class="title" >年货</h2>
+            <div class='couplet control-bar'>
+                <button class='couplet-head' id="control">
+                    <img src='/images/bt_play.png' role='start' alt='开始' />
+                    <img src='/images/bt_pause.png' role='pause' alt='暂停' />
+                    <img src='/images/bt_play.png' role='continue' alt='继续' />
+                </button>
+                <div class="title-pane">
+                    <h1 class="title">贪吃达人</h1>
+                    <h2 class="title">年货</h2>
+                </div>
             </div>
         </div>
-    </div>
-    <img class="bottom" src="/images/bg_bottom.png"></img>
+        <img class="bottom" src="/images/bg_bottom.png"></img>
     </div>
 
     <script type="text/javascript" src="/libs/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/libs/hammerjs/dist/jquery.hammer.min.js"></script>
-    
+
     {{#DEBUG}}
     <script type="text/javascript" src="/js/snake.js"></script>
     {{/DEBUG}}
@@ -64,13 +68,13 @@
         var s = document.createElement("script");
         s.type = "text/javascript";
         s.async = true;
-        s.src = '//api.usersnap.com/beta/'+ 
-                '536e632a-2fcf-4f73-b259-75969ecb2f14.js';
+        s.src = '//api.usersnap.com/beta/' +
+            '536e632a-2fcf-4f73-b259-75969ecb2f14.js';
         var x = document.getElementsByTagName('head')[0];
         x.appendChild(s);
     })();
     </script>
     {{/DEBUG}}
 </body>
-</html>
 
+</html>
