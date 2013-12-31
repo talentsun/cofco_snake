@@ -1269,15 +1269,20 @@ function Game(canvas) {
         if (self.snake.x == self.food.x && self.snake.y == self.food.y) {
             self.foods.push(self.food);
             if (self.foods.length % 5 === 0) self.timer.speedUp();
+            
             _Game.triggerScoreChanged.call(self);
+            self.snake.sections.push({
+                x: self.snake.x,
+                y: self.snake.y
+            });
             self.food = self.getFood();
         } else {
             self.snake.sections.shift();
+            self.snake.sections.push({
+                x: self.snake.x,
+                y: self.snake.y
+            });
         }
-        self.snake.sections.push({
-            x: self.snake.x,
-            y: self.snake.y
-        });
 
         requestAnimationFrame(function() {
             self.draw();
