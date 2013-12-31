@@ -1384,22 +1384,10 @@ Game.prototype = {
         this.drawImage(this.food, this.food.img);
     },
 
-    drawBox: function(x, y, size, color) {
-        var context = this.context;
-        context.fillStyle = color;
-        context.beginPath();
-        context.moveTo(x, y);
-        context.lineTo(x + size, y);
-        context.lineTo(x + size, y + size);
-        context.lineTo(x, y + size);
-        context.closePath();
-        context.fill();
-    },
-
     draw: function() {
         this.resetCanvas();
-        this.drawFood();
         this.drawSnake();
+        this.drawFood();
     },
 
     changeSnakeDirection: function(direction) {
