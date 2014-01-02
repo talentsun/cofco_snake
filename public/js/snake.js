@@ -1133,6 +1133,7 @@ var _Timer = {
 	INIT_FPS: 4
 };
 
+
 function Timer(tick) {
 	this.fps = _Timer.INIT_FPS;
 	this.tick = tick;
