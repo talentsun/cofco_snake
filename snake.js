@@ -1199,6 +1199,15 @@ function Snake(blocks, length) {
 
 Snake.prototype = {
 
+    section: function(i) {
+        var index = (this.sections.length + i) % this.sections.length;
+        return this.sections[index];
+    },
+
+    length: function() {
+        return this.sections.length;
+    },
+
     changeDirection: function(direction) {
         if (this.directionChanged) return;
 
@@ -1221,24 +1230,31 @@ Snake.prototype = {
         return false;
     },
 
-    getTailDirection: function() {
-        var tail = this.sections[0];
-        var prev = this.sections[1];
+    directionOfSection: function(i) {
+        var len = this.sections.length;
+        var index = (len + i) % len;
+        if (index == len - 1) {
+            // snake head
+            return this.direction;
+        }
+
+        var section = this.section(index);
+        var prev = this.section(index + 1);
+
         var direction;
-        if (prev.x === tail.x) {
-            if (prev.y === tail.y - 1) {
+        if (prev.x === section.x) {
+            if (prev.y === section.y - 1) {
                 direction = DIRECTION_UP;
             } else {
                 direction = DIRECTION_DOWN;
             }
         } else {
-            if (prev.x === tail.x - 1) {
+            if (prev.x === section.x - 1) {
                 direction = DIRECTION_LEFT;
             } else {
                 direction = DIRECTION_RIGHT;
             }
         }
-        console.log(direction);
         return direction;
     },
 
@@ -1267,7 +1283,7 @@ var _Game = {
     },
 
     getAngleByDirection: function(direction) {
-        var angle = 0; 
+        var angle = 0;
         switch (direction) {
             case DIRECTION_UP:
                 angle = 180;
@@ -1402,49 +1418,48 @@ Game.prototype = {
     },
 
     drawSnake: function() {
-        for (var i = 0; i < this.snake.sections.length; i++) {
-            var section = this.snake.sections[i];
-            if (i === 0) {
-                this.drawSnakeTail(section);
-            } else if (i === this.snake.sections.length - 1) {
-                this.drawSnakeHead(section);
-            } else {
-                this.drawSnakeBody(section);
-            }
+        this.drawSnakeHead();
+        this.drawSnakeBody();
+        this.drawSnakeTail();
+    },
+
+    drawImage: function(section, img, angle) {
+        var angle = angle === undefined ? 0 : angle;
+        var ctx = this.context;
+
+        ctx.save();
+        ctx.translate((section.x + 0.5) * this.block_size, (section.y + 0.5) * this.block_size);
+        ctx.rotate(angle * Math.PI / 180);
+        ctx.drawImage(img, -this.block_size / 2, -this.block_size / 2,
+            this.block_size, this.block_size);
+        ctx.restore();
+    },
+
+    drawSnakeBody: function() {
+        for (var i = 2; i < this.snake.length() - 2; i++) {
+            this.drawImage(this.snake.section(i), META.snake.body.img);
         }
     },
 
-    drawImage: function(section, img) {
-        var context = this.context;
-        context.drawImage(img, section.x * this.block_size,
-            section.y * this.block_size,
-            this.block_size, this.block_size);
-    },
-
-    drawSnakeBody: function(section) {
-        this.drawImage(section, META.snake.body.img);
-    },
-
     drawSnakeTail: function(section) {
-        var ctx = this.context;
-        ctx.save();
-        var angle = _Game.getAngleByDirection(this.snake.getTailDirection());
-        ctx.translate((section.x + 0.5) * this.block_size, (section.y + 0.5) * this.block_size);
-        ctx.rotate(angle * Math.PI / 180);
-        ctx.drawImage(META.snake.tail.img, -this.block_size / 2, -this.block_size / 2,
-            this.block_size, this.block_size);
-        ctx.restore();
+        var tail = this.snake.section(0);
+        var angle = _Game.getAngleByDirection(this.snake.directionOfSection(0));
+        this.drawImage(tail, META.snake.tail.img, angle);
+
+        var beforeTail = this.snake.section(1);
+        angle = _Game.getAngleByDirection(this.snake.directionOfSection(1));
+        this.drawImage(beforeTail, META.snake.beforeTail.img, angle);
     },
 
-    drawSnakeHead: function(section) {
-        var ctx = this.context;
-        ctx.save();
+    drawSnakeHead: function() {
+        var head = this.snake.section(-1);
         var angle = _Game.getAngleByDirection(this.snake.direction);
-        ctx.translate((section.x + 0.5) * this.block_size, (section.y + 0.5) * this.block_size);
-        ctx.rotate(angle * Math.PI / 180);
-        ctx.drawImage(META.snake.head.img, -this.block_size / 2, -this.block_size / 2,
-            this.block_size, this.block_size);
-        ctx.restore();
+        this.drawImage(head, META.snake.head.img, angle);
+
+        var afterHead = this.snake.section(-2);
+        var direction = this.snake.directionOfSection(-2);
+        angle = _Game.getAngleByDirection(direction);
+        this.drawImage(afterHead, META.snake.afterHead.img, angle);
     },
 
     drawFood: function() {
@@ -1650,6 +1665,12 @@ var META = {
     snake: {
         head: {
             src: '/images/head.png'
+        },
+        afterHead: {
+            src: '/images/after_head.png'
+        },
+        beforeTail: {
+            src: '/images/before_tail.png'
         },
         tail: {
             src: '/images/tail.png'
