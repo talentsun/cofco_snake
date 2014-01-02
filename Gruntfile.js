@@ -13,6 +13,22 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON("package.json"),
         async: 'bower_components/async/lib/async.js',
         static_dir: 'public',
+
+        less: {
+            prod: {
+                options: {
+                    cleancss: true
+                },
+                files: {
+                    "<%= static_dir %>/css/snake.min.css": "less/snake.less"
+                }
+            }, 
+            development: {
+                files: {
+                        "<%= static_dir %>/css/snake.css": "less/snake.less"
+                }
+            }
+        },
         env: {
             dev: {
                 NODE_ENV: 'development'
@@ -63,6 +79,10 @@ module.exports = function(grunt) {
                 options: {
                     spawn: false
                 }
+            },
+            styles: {
+                files: ['less/**/*.less'],
+                tasks: ['less']
             }
         },
         shell: {
@@ -80,11 +100,12 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-express-server');
     grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks('grunt-env');
 
     grunt.registerTask('test', []);
-    grunt.registerTask('server', ['default', 'env:dev', 'express:dev', 'watch']);
+    grunt.registerTask('server', ['default', 'env:dev', 'express:dev', 'watch:express']);
     grunt.registerTask('default', ['concat', 'jshint', 'uglify', 'shell:copy_js']);
 };

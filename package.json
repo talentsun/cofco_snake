@@ -2,7 +2,7 @@
   "name": "snake",
   "verison": "0.0.0",
   "devDependencies": {
-    "less": "*",
+    "less": "~1.6.0",
     "express": "*",
     "grunt": "~0.4.2",
     "grunt-express-server": "*",
@@ -13,7 +13,8 @@
     "grunt-contrib-concat": "~0.1.2",
     "grunt-contrib-qunit": "~0.1.1",
     "grunt-shell": "~0.6.1",
-    "grunt-env": "~0.4.1"
+    "grunt-env": "~0.4.1",
+    "grunt-contrib-less": "~0.8.3"
   },
   "dependencies": {
     "mu2": "~0.5.20"

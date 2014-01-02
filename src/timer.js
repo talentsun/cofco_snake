@@ -1,6 +1,10 @@
 // Timer
+var _Timer = {
+	INIT_FPS: 4
+};
+
 function Timer(tick) {
-	this.fps = 4;
+	this.fps = _Timer.INIT_FPS;
 	this.tick = tick;
 	this.paused = false;
 }

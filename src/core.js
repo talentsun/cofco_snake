@@ -51,6 +51,27 @@ Snake.prototype = {
         return false;
     },
 
+    getTailDirection: function() {
+        var tail = this.sections[0];
+        var prev = this.sections[1];
+        var direction;
+        if (prev.x === tail.x) {
+            if (prev.y === tail.y - 1) {
+                direction = DIRECTION_UP;
+            } else {
+                direction = DIRECTION_DOWN;
+            }
+        } else {
+            if (prev.x === tail.x - 1) {
+                direction = DIRECTION_LEFT;
+            } else {
+                direction = DIRECTION_RIGHT;
+            }
+        }
+        console.log(direction);
+        return direction;
+    },
+
     move: function() {
         switch (this.direction) {
             case DIRECTION_UP:
@@ -73,6 +94,26 @@ var _Game = {
     DEFAULT_SCORE: 10,
     triggerScoreChanged: function() {
         if (this.scoreListener) this.scoreListener();
+    },
+
+    getAngleByDirection: function(direction) {
+        var angle = 0; 
+        switch (direction) {
+            case DIRECTION_UP:
+                angle = 180;
+                break;
+            case DIRECTION_LEFT:
+                angle = 90;
+                break;
+            case DIRECTION_RIGHT:
+                angle = 270;
+                break;
+            case DIRECTION_DOWN:
+                break;
+        }
+
+        console.log(angle);
+        return angle;
     }
 };
 
@@ -215,11 +256,25 @@ Game.prototype = {
     },
 
     drawSnakeTail: function(section) {
-        this.drawImage(section, META.snake.tail.img);
+        var ctx = this.context;
+        ctx.save();
+        var angle = _Game.getAngleByDirection(this.snake.getTailDirection());
+        ctx.translate((section.x + 0.5) * this.block_size, (section.y + 0.5) * this.block_size);
+        ctx.rotate(angle * Math.PI / 180);
+        ctx.drawImage(META.snake.tail.img, -this.block_size / 2, -this.block_size / 2,
+            this.block_size, this.block_size);
+        ctx.restore();
     },
 
     drawSnakeHead: function(section) {
-        this.drawImage(section, META.snake.head.img);
+        var ctx = this.context;
+        ctx.save();
+        var angle = _Game.getAngleByDirection(this.snake.direction);
+        ctx.translate((section.x + 0.5) * this.block_size, (section.y + 0.5) * this.block_size);
+        ctx.rotate(angle * Math.PI / 180);
+        ctx.drawImage(META.snake.head.img, -this.block_size / 2, -this.block_size / 2,
+            this.block_size, this.block_size);
+        ctx.restore();
     },
 
     drawFood: function() {
@@ -424,13 +479,13 @@ Controller.prototype = {
 var META = {
     snake: {
         head: {
-            src: '/images/Festive-icon.png'
+            src: '/images/head.png'
         },
         tail: {
-            src: '/images/Snowy-icon.png'
+            src: '/images/tail.png'
         },
         body: {
-            src: '/images/Wreath-icon.png'
+            src: '/images/body.png'
         }
     },
     foods: {
