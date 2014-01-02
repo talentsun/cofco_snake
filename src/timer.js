@@ -1,6 +1,6 @@
 // Timer
 var _Timer = {
-	INIT_FPS: 4
+	INIT_FPS: 1
 };
 
 function Timer(tick) {

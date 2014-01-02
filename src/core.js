@@ -273,11 +273,12 @@ Game.prototype = {
 
     drawSnakeTail: function(section) {
         var tail = this.snake.section(0);
-        var angle = _Game.getAngleByDirection(this.snake.directionOfSection(0));
+        var tailDirection = this.snake.directionOfSection(0);
+        var angle = _Game.getAngleByDirection(tailDirection);
         this.drawImage(tail, META.snake.tail.img, angle);
 
         var beforeTail = this.snake.section(1);
-        angle = _Game.getAngleByDirection(this.snake.directionOfSection(1));
+        angle = _Game.getAngleByDirection(tailDirection);
         this.drawImage(beforeTail, META.snake.beforeTail.img, angle);
     },
 
