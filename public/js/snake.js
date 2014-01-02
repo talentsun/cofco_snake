@@ -1130,7 +1130,7 @@ var server = {
 
 // Timer
 var _Timer = {
-	INIT_FPS: 1
+	INIT_FPS: 4
 };
 
 function Timer(tick) {

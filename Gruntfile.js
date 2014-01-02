@@ -22,10 +22,10 @@ module.exports = function(grunt) {
                 files: {
                     "<%= static_dir %>/css/snake.min.css": "less/snake.less"
                 }
-            }, 
+            },
             development: {
                 files: {
-                        "<%= static_dir %>/css/snake.css": "less/snake.less"
+                    "<%= static_dir %>/css/snake.css": "less/snake.less"
                 }
             }
         },
@@ -49,7 +49,7 @@ module.exports = function(grunt) {
             },
             dist: {
                 src: ['<%= async %>'].concat(sources),
-                dest: '<%= pkg.name %>.js'
+                dest: '<%= static_dir %>/js/<%= pkg.name %>.js',
             }
         },
         uglify: {
@@ -57,8 +57,8 @@ module.exports = function(grunt) {
                 banner: "/*! <%=pkg.name%> <%=grunt.template.today('yyyy-mm-dd')%> */\n"
             },
             build: {
-                src: '<%= pkg.name %>.js',
-                dest: '<%= pkg.name %>.min.js',
+                src: '<%= concat.dist.dest %>',
+                dest: '<%= static_dir %>/js/<%= pkg.name %>.min.js',
             }
         },
         qunit: {
