@@ -1,3 +1,6 @@
+
+@import "sprite.less";
+
 @font-face {
 	font-family: 'jianzhi';
     src: url(../fonts/jianzhi.eot) format('eot'); 
@@ -49,10 +52,9 @@
 @baseFontSize: 16px;
 
 .snake-container-wrap {
+	.sprite(@bg);
 	font-family: 'jianzhi', '微软雅黑';
-	background: url(../images/bg.png) no-repeat;
     width: @wrapperWidth;
-    padding-bottom: 40px;
     margin: 0 auto;
     position: relative;
 	.unselectable;    
@@ -70,7 +72,8 @@
 		font-size: @baseFontSize * 1.5;
 	}
 
-	img.bottom {
+	.bottom {
+		.sprite(@bg_bottom);
 		width: 100%;
 		position: absolute;
 		bottom: 0px;
@@ -93,11 +96,11 @@
 
 		
 		.scorebar {
-		    background: url(../images/couplet_left.png) no-repeat;
+			.sprite(@couplet_left);
 		    color: #fcf1f1;
 
 			h1 {
-				background: url(../images/score_bg.png) no-repeat;	
+				.sprite(@score_bg);
 				.couplet-head;
 			}
 		    
@@ -112,7 +115,7 @@
 		}
 
 		.control-bar {
-		    background: url(../images/couplet_right.png) no-repeat;
+			.sprite(@couplet_right);
 
 			#control {
 				.couplet-head;
@@ -120,19 +123,20 @@
     			border: none;
     			outline: none;
     			cursor: pointer;
-    			background: url(../images/bt_play_normal.png) no-repeat;
+    			.sprite(@bt_play_normal);
+    			background-color: transparent;
 			}
 
 			#control:active {
-		    	background: url(../images/bt_play_pressed.png) no-repeat;
+				.sprite(@bt_play_pressed);
 			}
 
 			#control.pause {
-			    background: url(../images/bt_pause_normal.png) no-repeat;
+				.sprite(@bt_pause_normal);
 			}
 
 			#control.pause:active {
-			    background: url(../images/bt_pause_pressed.png) no-repeat;
+				.sprite(@bt_pause_pressed);
 			}
 
 			.title-pane {
@@ -183,7 +187,7 @@
 
     		.canvas {
 				position: absolute;
-				background: url(../images/canvas_bg.png) repeat;
+				.sprite(@canvas_bg);
     			box-shadow: 0px 0px 15px rgba(0, 0, 0, .4);
     			width: @contentSize;
     			height: @contentSize;

@@ -14,6 +14,29 @@ module.exports = function(grunt) {
         async: 'bower_components/async/lib/async.js',
         static_dir: 'public',
 
+        sprite: {
+            resources: {
+                src: "images/res/*.png",
+                destImg: '<%= static_dir %>/images/resources.png',
+                destCSS: 'less/resources.less',
+                imgPath: '../images/resources.png',
+                cssOpts: {
+                    'cssClass': function(item) {
+                        return '.snake-' + item.name
+                    }
+                }
+            },
+            foods: {
+                src: "images/food/*.png",
+                destImg: '<%= static_dir %>/images/foods.png',
+                destCSS: '<%= static_dir %>/json/foods.json'
+            },
+            snake: {
+                src: "images/snake/*.png",
+                destImg: '<%= static_dir %>/images/snake.png',
+                destCSS: '<%= static_dir %>/json/snake.json'
+            }
+        },
         less: {
             prod: {
                 options: {
@@ -84,14 +107,6 @@ module.exports = function(grunt) {
                 files: ['less/**/*.less'],
                 tasks: ['less']
             }
-        },
-        shell: {
-            copy_js: {
-                command: 'cp <%= pkg.name %>.js  <%= pkg.name %>.min.js <%= static_dir %>/js',
-                options: {
-                    stdout: true
-                }
-            }
         }
     });
 
@@ -102,10 +117,10 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-express-server');
-    grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks('grunt-env');
+    grunt.loadNpmTasks('grunt-spritesmith');
 
     grunt.registerTask('test', []);
     grunt.registerTask('server', ['default', 'env:dev', 'express:dev', 'watch:express']);
-    grunt.registerTask('default', ['concat', 'jshint', 'uglify', 'shell:copy_js']);
+    grunt.registerTask('default', ['concat', 'jshint', 'uglify']);
 };

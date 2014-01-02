@@ -4,10 +4,11 @@
   src: url(../fonts/jianzhi.eot?#iefix) format('embedded-opentype'), url(../fonts/jianzhi.woff) format('woff'), url(../fonts/jianzhi.ttf) format('truetype');
 }
 .snake-container-wrap {
+  background-image: url(../images/sprite.png);
+  background-position: 0px -2768px;
+  height: 720px;
   font-family: 'jianzhi', '微软雅黑';
-  background: url(../images/bg.png) no-repeat;
   width: 1280px;
-  padding-bottom: 40px;
   margin: 0 auto;
   position: relative;
   -ms-user-select: none;
@@ -25,7 +26,11 @@
 .snake-container-wrap h2 {
   font-size: 24px;
 }
-.snake-container-wrap img.bottom {
+.snake-container-wrap .bottom {
+  background-image: url(../images/sprite.png);
+  background-position: 0px -896px;
+  width: 1280px;
+  height: 330px;
   width: 100%;
   position: absolute;
   bottom: 0px;
@@ -45,11 +50,15 @@
   vertical-align: bottom;
 }
 .snake-container-wrap .snake-container .scorebar {
-  background: url(../images/couplet_left.png) no-repeat;
+  background-image: url(../images/sprite.png);
+  background-position: 0px -1226px;
+  width: 158px;
+  height: 454px;
   color: #fcf1f1;
 }
 .snake-container-wrap .snake-container .scorebar h1 {
-  background: url(../images/score_bg.png) no-repeat;
+  background-image: url(../images/sprite.png);
+  background-position: 0px -128px;
   color: #fcf1f1;
   width: 128px;
   height: 128px;
@@ -68,12 +77,13 @@
   margin: 0px;
 }
 .snake-container-wrap .snake-container .control-bar {
-  background: url(../images/couplet_right.png) no-repeat;
+  background-image: url(../images/sprite.png);
+  background-position: 0px -1680px;
+  width: 158px;
+  height: 454px;
 }
 .snake-container-wrap .snake-container .control-bar #control {
   color: #fcf1f1;
-  width: 128px;
-  height: 128px;
   line-height: 128px;
   margin-left: auto;
   margin-right: auto;
@@ -84,16 +94,29 @@
   border: none;
   outline: none;
   cursor: pointer;
-  background: url(../images/bt_play_normal.png) no-repeat;
+  background-image: url(../images/sprite.png);
+  background-position: 0px 0px;
+  width: 128px;
+  height: 128px;
+  background-color: transparent;
 }
 .snake-container-wrap .snake-container .control-bar #control:active {
-  background: url(../images/bt_play_pressed.png) no-repeat;
+  background-image: url(../images/sprite.png);
+  background-position: 0px -768px;
+  width: 128px;
+  height: 128px;
 }
 .snake-container-wrap .snake-container .control-bar #control.pause {
-  background: url(../images/bt_pause_normal.png) no-repeat;
+  background-image: url(../images/sprite.png);
+  background-position: 0px -384px;
+  width: 128px;
+  height: 128px;
 }
 .snake-container-wrap .snake-container .control-bar #control.pause:active {
-  background: url(../images/bt_pause_pressed.png) no-repeat;
+  background-image: url(../images/sprite.png);
+  background-position: 0px -512px;
+  width: 128px;
+  height: 128px;
 }
 .snake-container-wrap .snake-container .control-bar .title-pane {
   color: #fde85b;
@@ -135,7 +158,8 @@
 }
 .snake-container-wrap .snake-container .content .canvas {
   position: absolute;
-  background: url(../images/canvas_bg.png) repeat;
+  background-image: url(../images/sprite.png);
+  background-position: 0px -2134px;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.4);
   width: 634px;
   height: 634px;

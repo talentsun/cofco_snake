@@ -85,6 +85,7 @@ Snake.prototype = {
                 direction = DIRECTION_RIGHT;
             }
         }
+        console.log(direction);
         return direction;
     },
 
@@ -358,6 +359,7 @@ var _Controller = {
         }
 
         $(document).on("keydown", while_playing(function(e) {
+            e.preventDefault();
             var direction = getDirectionByKeyCode(e.keyCode);
             if (direction) self.game.changeSnakeDirection(direction);
         }));

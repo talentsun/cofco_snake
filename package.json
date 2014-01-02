@@ -1,11 +1,12 @@
 {
   "name": "snake",
-  "verison": "0.0.0",
+  "verison": "0.1.0",
   "devDependencies": {
     "less": "~1.6.0",
-    "express": "*",
     "grunt": "~0.4.2",
-    "grunt-express-server": "*",
+    "express": "~3.4.7",
+    "grunt-env": "~0.4.1",
+    "grunt-less": "~0.1.7",
     "grunt-contrib-jshint": "~0.6.0",
     "grunt-contrib-nodeunit": "~0.2.0",
     "grunt-contrib-uglify": "~0.2.2",
@@ -13,10 +14,16 @@
     "grunt-contrib-concat": "~0.1.2",
     "grunt-contrib-qunit": "~0.1.1",
     "grunt-shell": "~0.6.1",
-    "grunt-env": "~0.4.1",
-    "grunt-contrib-less": "~0.8.3"
+    "grunt-contrib-less": "~0.8.3",
+    "grunt-express-server": "~0.4.11",
+    "mu2": "~0.5.20",
+    "node-sprite-generator": "~0.3.1",
+    "node-spritesheet": "~0.4.2",
+    "grunt-oversprite": "~0.1.5",
+    "gm": "~1.14.2",
+    "grunt-spritesmith": "~1.21.0"
   },
   "dependencies": {
-    "mu2": "~0.5.20"
+    "gm": "~1.14.2"
   }
 }
