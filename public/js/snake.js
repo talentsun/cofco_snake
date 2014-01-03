@@ -1130,7 +1130,7 @@ var server = {
 
 // Timer
 var _Timer = {
-	INIT_FPS: 4
+	INIT_FPS: 3
 };
 
 function Timer(tick) {
@@ -1233,13 +1233,14 @@ Snake.prototype = {
     directionOfSection: function(i) {
         var len = this.sections.length;
         var index = (len + i) % len;
+        var prev, section;
         if (index == len - 1) {
-            // snake head
-            return this.direction;
+            prev = this.section(index);
+            section = this.section(index - 1);
+        } else {
+            section = this.section(index);
+            prev = this.section(index + 1);
         }
-
-        var section = this.section(index);
-        var prev = this.section(index + 1);
 
         var direction;
         if (prev.x === section.x) {
@@ -1450,7 +1451,7 @@ Game.prototype = {
 
     drawSnakeHead: function() {
         var head = this.snake.section(-1),
-            direction = this.snake.direction,
+            direction = this.snake.directionOfSection(-1),
             sprite = snakeSprites["animal_head_" + direction];
         this.drawImage(snakeImage, sprite, this.getRect(head));
 
