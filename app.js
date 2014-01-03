@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 
-
 var util = require('util');
-
 var express = require('express');
 var mu = require('mu2');
 mu.root = __dirname + "/templates";

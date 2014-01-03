@@ -490,6 +490,10 @@ Controller.prototype = {
 
     onload: function(canvas) {
         var self = this;
+        $(".snake-loading-pane").addClass('fade');
+        setTimeout(function() {
+            $(".snake-loading-pane").addClass("hide");
+        }, 150);
 
         this.canvas = canvas;
         _Controller.newGame.call(this);
@@ -592,12 +596,13 @@ function loadResources() {
     var promise = {};
 
     function _loadImages(callback) {
-        async.each(["images/snake.png", "images/foods.png"], function(item, cb) {
+        var images = ["images/snake.png", "images/foods.png", "images/resources.png"];
+        async.each(images, function(item, cb) {
             var image = new Image();
             image.onload = function() {
                 if (item === "images/snake.png") {
                     snakeImage = image;
-                } else {
+                } else if (item == "images/foods.png") {
                     foodImage = image;
                 }
                 cb(null, image);
@@ -638,17 +643,21 @@ function loadResources() {
         });
     }
 
-    async.parallel([_loadImages, _loadSprites], function(err) {
-        if (err) {
-            if (promise.fail) {
-                promise.fail(err);
+    async.parallel([_loadImages, _loadSprites],
+        u.delay(2 * 1000,
+            function(err) {
+                if (err) {
+                    if (promise.fail) {
+                        promise.fail(err);
+                    }
+                } else {
+                    if (promise.success) {
+                        promise.success();
+                    }
+                }
             }
-        } else {
-            if (promise.success) {
-                promise.success();
-            }
-        }
-    });
+        )
+    );
 
     return promise;
 }

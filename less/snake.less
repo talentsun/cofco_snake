@@ -1,5 +1,6 @@
-
 @import "resources.less";
+@import "../bower_components/bootstrap/less/mixins.less";
+@import "../bower_components/bootstrap/less/component-animations.less";
 
 @font-face {
 	font-family: 'jianzhi';
@@ -27,12 +28,10 @@
 }
 
 .couplet-head() {
+    .center-block();
+    .size(128px, 128px);
 	color: #fcf1f1;
-    width: 128px;
-    height: 128px;
     line-height: 128px;
-    margin-left: auto;
-    margin-right: auto;
 	margin-bottom: 42px;
 	margin-top: 18px;
     display: block;
@@ -41,6 +40,10 @@
 .inline-column() {
 	display: inline-block;
 	vertical-align: bottom;
+}
+
+.font-highlight() {
+	color: #fde85b;
 }
 
 @wrapperWidth: 1280px;
@@ -53,9 +56,9 @@
 
 .snake-container-wrap {
 	.sprite(@bg);
+    .center-block();
 	font-family: 'jianzhi', '微软雅黑';
     width: @wrapperWidth;
-    margin: 0 auto;
     position: relative;
 	.unselectable;    
 
@@ -83,10 +86,14 @@
 
 .snake-container-wrap {
 	
+	.hide {
+		display: none;			
+	}
+
 	.snake-container {
+		.center-block();
 		width: 	@containerWidth;
 		padding-left: 8px;
-		margin: 0 auto;
 		overflow: hidden;
 
 		.scorebar, .control-bar {
@@ -140,9 +147,8 @@
 			}
 
 			.title-pane {
-    			color: #fde85b;
+    			.center-block();
     			width: 98px;
-    			margin: 0 auto;
     			padding-top: 0px;
 
     			.title {
@@ -151,6 +157,7 @@
     				margin: 0px;
     				text-align: center;
     				text-shadow: 0px 0px 3px #B90401;
+    				.font-highlight;
     			}
 
 				@h1Size: 40px;
@@ -169,10 +176,7 @@
 			}
 		}
 
-		.hide {
-			display: none;			
-		}
-		
+				
 		.content {
 			.inline-column;
 
@@ -192,6 +196,31 @@
     			width: @contentSize;
     			height: @contentSize;
     		}
+		}
+	}
+
+	@loadingPaneWidth: 1156px;
+	@loadingPaneHeight: 720px;
+	.snake-loading-pane {
+		 background:url(../images/loading_bg.png);
+   		filter:"progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale')";
+   		-moz-background-size:100% 100%;
+   		background-size:100% 100%;
+		position: absolute;
+		top: 0px;
+		width: 100%;
+		height: @loadingPaneHeight * @wrapperWidth / @loadingPaneWidth;
+
+		@loadingTitleWidth: 300px;
+		h1 {
+			.font-highlight;
+			width: @loadingTitleWidth;
+			margin-left: -@loadingTitleWidth / 2;
+			left: 50%;
+			position: absolute;
+			text-align: center;
+			bottom: 20%;
+			font-size: 64px;
 		}
 	}
 }

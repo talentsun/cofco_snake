@@ -16,9 +16,12 @@
     "tests"
   ],
   "dependencies": {
-      "jquery": "1.9.1",
-	  "async": "*",
-      "hammerjs": "*",
-      "html5shiv": "*"
+    "jquery": "1.9.1",
+    "async": "*",
+    "hammerjs": "*",
+    "html5shiv": "*",
+    "bootstrap": "~3.0.3"
+  },
+  "devDependencies": {
   }
 }
