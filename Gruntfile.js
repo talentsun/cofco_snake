@@ -20,20 +20,23 @@ module.exports = function(grunt) {
                 destImg: '<%= static_dir %>/images/resources.png',
                 destCSS: 'less/resources.less',
                 imgPath: '../images/resources.png',
+                padding: 20,
                 cssOpts: {
                     'cssClass': function(item) {
-                        return '.snake-' + item.name
+                        return '.snake-' + item.name;
                     }
                 }
             },
             foods: {
                 src: "images/food/*.png",
                 destImg: '<%= static_dir %>/images/foods.png',
+                padding: 20,
                 destCSS: '<%= static_dir %>/json/foods.json'
             },
             snake: {
                 src: "images/snake/*.png",
                 destImg: '<%= static_dir %>/images/snake.png',
+                padding: 20,
                 destCSS: '<%= static_dir %>/json/snake.json'
             }
         },

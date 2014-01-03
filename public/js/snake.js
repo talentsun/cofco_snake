@@ -1424,48 +1424,55 @@ Game.prototype = {
         this.drawSnakeTail();
     },
 
-    drawImage: function(section, img, angle) {
-        var angle = angle === undefined ? 0 : angle;
+    drawImage: function(image, sprite, rect) {
         var ctx = this.context;
-
-        ctx.save();
-        ctx.translate((section.x + 0.5) * this.block_size, (section.y + 0.5) * this.block_size);
-        ctx.rotate(angle * Math.PI / 180);
-        ctx.drawImage(img, -this.block_size / 2, -this.block_size / 2,
-            this.block_size, this.block_size);
-        ctx.restore();
+        ctx.drawImage(image, sprite.x, sprite.y, sprite.width, sprite.height,
+            rect.x, rect.y, rect.width, rect.height);
     },
 
     drawSnakeBody: function() {
         for (var i = 2; i < this.snake.length() - 2; i++) {
-            this.drawImage(this.snake.section(i), META.snake.body.img);
+            var section = this.snake.section(i);
+            this.drawImage(snakeImage, snakeSprites["animal_body_nian"], this.getRect(section));
         }
     },
 
     drawSnakeTail: function(section) {
-        var tail = this.snake.section(0);
-        var tailDirection = this.snake.directionOfSection(0);
-        var angle = _Game.getAngleByDirection(tailDirection);
-        this.drawImage(tail, META.snake.tail.img, angle);
+        var tail = this.snake.section(0),
+            direction = this.snake.directionOfSection(0),
+            sprite = snakeSprites["animal_tail_" + direction];
+        this.drawImage(snakeImage, sprite, this.getRect(tail));
 
         var beforeTail = this.snake.section(1);
-        angle = _Game.getAngleByDirection(tailDirection);
-        this.drawImage(beforeTail, META.snake.beforeTail.img, angle);
+        sprite = snakeSprites["animal_tail_nian_" + direction];
+        this.drawImage(snakeImage, sprite, this.getRect(beforeTail));
     },
 
     drawSnakeHead: function() {
-        var head = this.snake.section(-1);
-        var angle = _Game.getAngleByDirection(this.snake.direction);
-        this.drawImage(head, META.snake.head.img, angle);
+        var head = this.snake.section(-1),
+            direction = this.snake.direction,
+            sprite = snakeSprites["animal_head_" + direction];
+        this.drawImage(snakeImage, sprite, this.getRect(head));
 
         var afterHead = this.snake.section(-2);
-        var direction = this.snake.directionOfSection(-2);
-        angle = _Game.getAngleByDirection(direction);
-        this.drawImage(afterHead, META.snake.afterHead.img, angle);
+        sprite = snakeSprites["animal_head_nian_" + direction];
+        this.drawImage(snakeImage, sprite, this.getRect(afterHead));
+    },
+
+    getRect: function(section) {
+        return {
+            x: section.x * this.block_size,
+            y: section.y * this.block_size,
+            width: this.block_size,
+            height: this.block_size
+        };
     },
 
     drawFood: function() {
-        this.drawImage(this.food, this.food.img);
+        console.log(this.food);
+        var sprite = foodSprites[this.food.key];
+        var rect = this.getRect(this.food);
+        this.drawImage(foodImage, sprite, rect);
     },
 
     draw: function() {
@@ -1665,55 +1672,38 @@ Controller.prototype = {
 };
 
 var META = {
-    snake: {
-        head: {
-            src: '/images/head.png'
-        },
-        afterHead: {
-            src: '/images/after_head.png'
-        },
-        beforeTail: {
-            src: '/images/before_tail.png'
-        },
-        tail: {
-            src: '/images/tail.png'
-        },
-        body: {
-            src: '/images/body.png'
-        }
-    },
     foods: {
         zhongcha: {
-            name: '中茶',
-            src: '/images/zhongcha.png'
+            key: "zhongcha",
+            name: '中茶'
         },
         wugu: {
-            name: '五谷',
-            src: '/images/wugu.png'
+            key: "wugu",
+            name: '五谷'
         },
         mengniu: {
-            name: '蒙牛',
-            src: '/images/mengniu.png'
+            key: "mengniu",
+            name: '蒙牛'
         },
         jindi: {
-            name: 'jingdi',
-            src: '/images/jindi.png'
+            key: "jindi",
+            name: 'jingdi'
         },
         jiajiakang: {
-            name: '家佳康',
-            src: '/images/jiajiakang.png'
+            key: "jiajiakang",
+            name: '家佳康'
         },
         changcheng: {
-            name: '长城',
-            src: '/images/changcheng.png'
+            key: "changcheng",
+            name: '长城'
         },
         fulinmen: {
-            name: '福临门',
-            src: '/images/fulinmen.png'
+            key: "fulinmen",
+            name: '福临门'
         },
         yuehuo: {
-            name: 'yuehuo',
-            src: '/images/yuehuo.png'
+            key: "yuehuo",
+            name: 'yuehuo'
         }
     }
 };
@@ -1728,38 +1718,70 @@ var Fooder = {
     }
 };
 
+var foodImage = null;
+var foodSprites = null;
+var snakeImage = null;
+var snakeSprites = null;
+
 function loadResources() {
     var promise = {};
 
-    var items = [];
-    u.each(u.keys(META.snake), function(key) {
-        items.push(META.snake[key]);
-    });
-    u.each(u.keys(META.foods), function(key) {
-        items.push(META.foods[key]);
-    });
+    function _loadImages(callback) {
+        async.each(["images/snake.png", "images/foods.png"], function(item, cb) {
+            var image = new Image();
+            image.onload = function() {
+                if (item === "images/snake.png") {
+                    snakeImage = image;
+                } else {
+                    foodImage = image;
+                }
+                cb(null, image);
+            };
 
-    var completed = 0;
-    async.each(items, function(item, callback) {
-        var img = new Image();
+            image.onerror = function() {
+                cb('fail to load image:' + item);
+            };
 
-        img.onload = function() {
-            item.img = img;
-            completed++;
-            if (promise.progress) promise.progress(completed, items.length);
-            callback(null);
-        };
+            image.src = item;
+        }, function(err, results) {
+            if (err) {
+                return callback(err);
+            }
 
-        img.onerror = function() {
-            console.log('fail to load img:', item.src);
-            callback('error');
-        };
-        img.src = item.src;
-    }, function(err) {
+            callback(null, results);
+        });
+    }
+
+    function _loadSprites(callback) {
+        async.each(["json/snake.json", "json/foods.json"], function(item, cb) {
+            $.get(item, "json").success(function(sprites) {
+                if (item === "json/snake.json") {
+                    snakeSprites = sprites;
+                } else {
+                    foodSprites = sprites;
+                }
+                cb(null, sprites);
+            }).error(function() {
+                cb('fail to load sprites: ' + item);
+            });
+        }, function(err, results) {
+            if (err) {
+                return callback(err);
+            }
+
+            callback(null, results);
+        });
+    }
+
+    async.parallel([_loadImages, _loadSprites], function(err) {
         if (err) {
-            if (promise.fail) promise.fail(err);
+            if (promise.fail) {
+                promise.fail(err);
+            }
         } else {
-            if (promise.success) promise.success();
+            if (promise.success) {
+                promise.success();
+            }
         }
     });
 
@@ -1775,12 +1797,9 @@ $(function() {
     function _load(callback) {
         var promise = loadResources();
         promise.success = function() {
+            console.log(snakeSprites);
+            console.log(foodSprites);
             callback(null);
-        };
-
-        promise.progress = function(completed, length) {
-            // TODO
-            console.log('progress:', completed, length);
         };
 
         promise.fail = function(err) {

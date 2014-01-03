@@ -4,8 +4,8 @@
   src: url(../fonts/jianzhi.eot?#iefix) format('embedded-opentype'), url(../fonts/jianzhi.woff) format('woff'), url(../fonts/jianzhi.ttf) format('truetype');
 }
 .snake-container-wrap {
-  background-image: url(../images/sprite.png);
-  background-position: 0px -2768px;
+  background-image: url(../images/resources.png);
+  background-position: 0px -2988px;
   height: 720px;
   font-family: 'jianzhi', '微软雅黑';
   width: 1280px;
@@ -27,8 +27,8 @@
   font-size: 24px;
 }
 .snake-container-wrap .bottom {
-  background-image: url(../images/sprite.png);
-  background-position: 0px -896px;
+  background-image: url(../images/resources.png);
+  background-position: 0px -1036px;
   width: 1280px;
   height: 330px;
   width: 100%;
@@ -50,15 +50,15 @@
   vertical-align: bottom;
 }
 .snake-container-wrap .snake-container .scorebar {
-  background-image: url(../images/sprite.png);
-  background-position: 0px -1226px;
+  background-image: url(../images/resources.png);
+  background-position: 0px -1386px;
   width: 158px;
   height: 454px;
   color: #fcf1f1;
 }
 .snake-container-wrap .snake-container .scorebar h1 {
-  background-image: url(../images/sprite.png);
-  background-position: 0px -128px;
+  background-image: url(../images/resources.png);
+  background-position: 0px -148px;
   color: #fcf1f1;
   width: 128px;
   height: 128px;
@@ -77,8 +77,8 @@
   margin: 0px;
 }
 .snake-container-wrap .snake-container .control-bar {
-  background-image: url(../images/sprite.png);
-  background-position: 0px -1680px;
+  background-image: url(../images/resources.png);
+  background-position: 0px -1860px;
   width: 158px;
   height: 454px;
 }
@@ -94,27 +94,27 @@
   border: none;
   outline: none;
   cursor: pointer;
-  background-image: url(../images/sprite.png);
+  background-image: url(../images/resources.png);
   background-position: 0px 0px;
   width: 128px;
   height: 128px;
   background-color: transparent;
 }
 .snake-container-wrap .snake-container .control-bar #control:active {
-  background-image: url(../images/sprite.png);
-  background-position: 0px -768px;
+  background-image: url(../images/resources.png);
+  background-position: 0px -888px;
   width: 128px;
   height: 128px;
 }
 .snake-container-wrap .snake-container .control-bar #control.pause {
-  background-image: url(../images/sprite.png);
-  background-position: 0px -384px;
+  background-image: url(../images/resources.png);
+  background-position: 0px -444px;
   width: 128px;
   height: 128px;
 }
 .snake-container-wrap .snake-container .control-bar #control.pause:active {
-  background-image: url(../images/sprite.png);
-  background-position: 0px -512px;
+  background-image: url(../images/resources.png);
+  background-position: 0px -592px;
   width: 128px;
   height: 128px;
 }
@@ -158,8 +158,8 @@
 }
 .snake-container-wrap .snake-container .content .canvas {
   position: absolute;
-  background-image: url(../images/sprite.png);
-  background-position: 0px -2134px;
+  background-image: url(../images/resources.png);
+  background-position: 0px -2334px;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.4);
   width: 634px;
   height: 634px;
