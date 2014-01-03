@@ -88,6 +88,35 @@ u.delay = function(seconds, func) {
 	};
 };
 
+u.timeup = function(seconds, func, onTimeup) {
+	var STATUS_DOING = 'doning';
+	var STATUS_DONE = 'DONE';
+	var STATUS_TIMEOUT = 'timeout';
+	var status = STATUS_DOING;
+
+	setTimeout(function() {
+		if (status !== STATUS_DOING) {
+			return;
+		}
+
+		status == STATUS_TIMEOUT;
+		if (onTimeup) {
+			onTimeup();
+		}
+	}, seconds * 1000);
+
+	return function() {
+		if (status !== STATUS_DOING) {
+			return;
+		}
+
+		status == STATUS_DONE;
+		if (func) {
+			func.apply(this, arguments);
+		}
+	}
+};
+
 console = window.console || {};
 console.log = console.log || function() {};
 console.error = console.error || function() {};

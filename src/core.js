@@ -86,7 +86,6 @@ Snake.prototype = {
                 direction = DIRECTION_RIGHT;
             }
         }
-        console.log(direction);
         return direction;
     },
 
@@ -114,24 +113,44 @@ var _Game = {
         if (this.scoreListener) this.scoreListener();
     },
 
-    getAngleByDirection: function(direction) {
-        var angle = 0;
-        switch (direction) {
-            case DIRECTION_UP:
-                angle = 180;
-                break;
-            case DIRECTION_LEFT:
-                angle = 90;
-                break;
-            case DIRECTION_RIGHT:
-                angle = 270;
-                break;
-            case DIRECTION_DOWN:
-                break;
-        }
+    synchronizeScore: function() {
+        var self = this;
+        api.sync_score({
+            score: this.game.score()
+        }, u.timeup(15, function(err, data) {
+            if (err) {
+                console.error(err);
+                _Controller.onUploadScoreFailed.call(self);
+            } else {
+                _Controller.onScoreUploaded.call(self, data);
+            }
+        }, u.bind(_Controller.onUploadScoreTimeout, this)));
+    },
 
-        console.log(angle);
-        return angle;
+    ensureUser: function(callback) {
+        api.info(function(err, data) {
+            if (!err) {
+                return callback(null, data);
+            }
+
+            if (err !== api.NOT_LOGIN) {
+                return callback(err);
+            }
+
+            api.login(function(err) {
+                if (err) {
+                    return callback(err);
+                }
+
+                api.info(function(err, data) {
+                    if (err) {
+                        return callback(err);
+                    }
+
+                    callback(null, data);
+                });
+            });
+        });
     }
 };
 
@@ -196,6 +215,18 @@ u.extend(Game, {
 
 Game.prototype = {
     contructor: Game,
+
+    isInitialized: function() {
+        return this.status === Game.INITIALIZED;
+    },
+
+    isOver: function() {
+        return this.status === Game.OVER;
+    },
+
+    over: function() {
+        this.status = Game.OVER;
+    },
 
     start: function() {
         var self = this;
@@ -300,7 +331,6 @@ Game.prototype = {
     },
 
     drawFood: function() {
-        console.log(this.food);
         var sprite = foodSprites[this.food.key];
         var rect = this.getRect(this.food);
         this.drawImage(foodImage, sprite, rect);
@@ -401,64 +431,59 @@ var _Controller = {
     },
 
     onScoreUploaded: function(user) {
-        console.log('score has been uploaded');
         this.showTotalScore(user.score);
     },
 
     onUploadScoreTimeout: function() {
-        console.log('upload score: time is up');
+        // TODO
+        console.error('upload score: time is up');
     },
 
     onGameFailed: function() {
         var self = this;
-
         $(this.controlButton).removeClass('pause');
-        this.currentScoreEl.innerHTML = 0;
+        this.game.over();
 
-        var STATUS_UPLOADING = 'uploading';
-        var STATUS_UPLOADED = 'uploaded';
-        var STATUS_TIMEOUT = 'timeout';
-        var status = STATUS_UPLOADING;
-
-        function _on_uploading(round, func) {
-            return function() {
-                if (round !== self.rounds ||
-                    status !== STATUS_UPLOADING) {
-                    return;
-                }
-
-                if (func) func.apply(this, arguments);
-            };
+        if (this.user) {
+            return _Game.synchronizeScore.call(this);
         }
 
-        setTimeout(_on_uploading(this.rounds, function() {
-            status = STATUS_TIMEOUT;
-
-            _Controller.onUploadScoreTimeout.call(self);
-        }), 15 * 1000);
-
-        server.sync_score({
-            score: this.game.score()
-        }, _on_uploading(this.rounds, function(err, data) {
-            status = STATUS_UPLOADED;
-
+        _Game.ensureUser.call(this, function(err, data) {
             if (err) {
-                console.error(err);
-                _Controller.onUploadScoreFailed.call(self);
-            } else {
-                console.log(data);
-                _Controller.onScoreUploaded.call(self, data);
+                // TODO
+                return console.error(err);
             }
-        }));
 
+            self.user = data;
+            _Game.synchronizeScore.call(self);
+        });
+    },
+
+    newGame: function() {
         this.game = new Game(this.canvas);
         this.game.onScoreChanged(u.bind(_Controller.onScoreChanged, this));
         this.game.onFailed(u.bind(_Controller.onGameFailed, this));
+    },
+
+    kickOff: function() {
+        this.currentScoreEl.innerHTML = 0;
+        this.rounds++;
+    },
+
+    resume: function() {
+        this.game.start();
+        $(this.controlButton).addClass('pause');
+    },
+
+    pause: function() {
+        self.game.pause();
+        $(this.controlButton).removeClass('pause');
     }
 };
 
 function Controller() {
     this.rounds = 0;
+    this.user = null;
 }
 
 Controller.prototype = {
@@ -467,34 +492,43 @@ Controller.prototype = {
         var self = this;
 
         this.canvas = canvas;
-        this.game = new Game(this.canvas);
+        _Controller.newGame.call(this);
         this.currentScoreEl = document.getElementById('current-score');
         this.totalScoreEl = document.getElementById('total-score');
-
         this.controlButton = document.getElementById('control');
         this.controlButton.onclick = function() {
             switch (self.game.status) {
                 case Game.OVER:
+                    _Controller.newGame.call(self);
+                    _Controller.kickOff.call(self);
+                    _Controller.resume.call(self);
+                    break;
                 case Game.INITIALIZED:
-                    self.game.start();
-                    $(this).addClass('pause');
-                    self.rounds++;
+                    _Controller.kickOff.call(self);
+                    _Controller.resume.call(self);
                     break;
                 case Game.PAUSED:
-                    self.game.start();
-                    $(this).addClass('pause');
+                    _Controller.resume.call(self);
                     break;
                 default:
                     //Game.PLAYING
-                    self.game.pause();
-                    $(this).removeClass('pause');
+                    _Controller.pause.call(self);
             }
         };
-
         _Controller.setupKeyBindings.call(this);
 
-        this.game.onScoreChanged(u.bind(_Controller.onScoreChanged, this));
-        this.game.onFailed(u.bind(_Controller.onGameFailed, this));
+        api.info(function(err, data) {
+            if (self.rounds > 1 || (self.game && self.game.isOver())) {
+                return;
+            }
+
+            if (err) {
+                return console.error(err);
+            }
+
+            self.user = data;
+            self.showTotalScore(self.user.score);
+        });
     },
 
     showTotalScore: function(totalScore) {
@@ -623,35 +657,15 @@ var controller = new Controller();
 
 $(function() {
     canvas = document.getElementById("snake");
-    if (!canvas.getContext) G_vmlCanvasManager.initElement(canvas);
-
-    function _load(callback) {
-        var promise = loadResources();
-        promise.success = function() {
-            console.log(snakeSprites);
-            console.log(foodSprites);
-            callback(null);
-        };
-
-        promise.fail = function(err) {
-            console.error(err);
-            callback(err);
-        };
+    if (!canvas.getContext) {
+        G_vmlCanvasManager.initElement(canvas);
     }
 
-    function _get_info(callback) {
-        server.info(function(err, data) {
-            if (err) {
-                callback(err);
-            } else {
-                callback(null, data);
-            }
-        });
-    }
+    var promise = loadResources();
+    promise.success = u.bind(controller.onload, controller, canvas);
 
-    async.parallel([_load, _get_info], function(err, results) {
-        var data = results[1];
-        controller.onload(canvas);
-        controller.showTotalScore(data.score);
-    });
+    promise.fail = function(err) {
+        console.error(err);
+        // TODO fail to load resources
+    };
 });

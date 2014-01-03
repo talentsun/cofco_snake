@@ -3,7 +3,7 @@ module.exports = function(grunt) {
         'src/head.js',
         'src/animation.js',
         'src/utils.js',
-        'src/server.js',
+        'src/api.js',
         'src/timer.js',
         'src/core.js',
         'src/tail.js'
