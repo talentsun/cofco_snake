@@ -7,12 +7,11 @@
     <link rel="stylesheet" href="/css/normalize.css" type="text/css">
     <!--<link rel="stylesheet" href="/css/style.css" type="text/css">-->
 
-    {{#DEBUG}}
+    {{#if DEBUG}}
     <link rel="stylesheet" href="/css/snake.css" type="text/css">
-    {{/DEBUG}}
-    {{^DEBUG}}
+    {{else}}
     <link rel="stylesheet" href="/css/snake.min.css" type="text/css">
-    {{/DEBUG}}
+    {{/if}}
 
     <!--[if lt IE 9]>
     <script type="text/javascript" src="/libs/html5shiv/dist/html5shiv.js"></script>
@@ -58,14 +57,13 @@
     <script type="text/javascript" src="/libs/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/libs/hammerjs/dist/jquery.hammer.min.js"></script>
 
-    {{#DEBUG}}
+    {{#if DEBUG}}
     <script type="text/javascript" src="/js/snake.js"></script>
-    {{/DEBUG}}
-    {{^DEBUG}}
+    {{else}}
     <script type="text/javascript" src="/js/snake.min.js"></script>
-    {{/DEBUG}}
+    {{/if}}
 
-    {{^DEBUG}}
+    {{#unless DEBUG}}
     <script type="text/javascript">
     (function() {
         var s = document.createElement("script");
@@ -77,6 +75,6 @@
         x.appendChild(s);
     })();
     </script>
-    {{/DEBUG}}
+    {{/unless}}
 </body>
 </html>

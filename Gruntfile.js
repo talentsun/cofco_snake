@@ -100,7 +100,7 @@ module.exports = function(grunt) {
 
         watch: {
             express: {
-                files: ['templates/index.html', 'Gruntfile.js', 'app.js'].concat(sources),
+                files: ['templates/index.hbs', 'Gruntfile.js', 'app.js'].concat(sources),
                 tasks: ['default', 'env:dev', 'express:dev'],
                 options: {
                     spawn: false

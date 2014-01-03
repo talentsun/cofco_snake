@@ -2,8 +2,8 @@
 
 var util = require('util');
 var express = require('express');
-var mu = require('mu2');
-mu.root = __dirname + "/templates";
+var handlebars = require('handlebars');
+var fs = require('fs');
 
 var app = express();
 app.use(express.logger('dev'));
@@ -34,11 +34,19 @@ app.get('/test/upload', function(req, res) {
 	});
 });
 
+var _template = null;
 app.get('/', function(req, res) {
-	var stream = mu.compileAndRender('index.html', {
+	fs.readFile("templates/index.hbs", "utf-8", function(err, data) {
+		if (err) {
+			return console.error(err);
+		}
+
+		_template = _template || handlebars.compile(data);
+		var html = _template({
 		DEBUG: process.env.NODE_ENV === 'development'
+		});
+		res.send(html);
 	});
-	util.pump(stream, res);
 });
 
 app.listen(process.argv.length > 2 ? process.argv[2] : 3000);
