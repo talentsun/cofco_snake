@@ -192,7 +192,7 @@
   height: 634px;
 }
 .snake-container-wrap .snake-loading-pane {
-  background: url(../images/loading_bg.png);
+  background: url(../images/loading_bg.png) #c9231a;
   filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale')";
   -moz-background-size: 100% 100%;
   background-size: 100% 100%;
