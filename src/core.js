@@ -117,7 +117,7 @@ var _Game = {
         var self = this;
         api.sync_score({
             score: this.game.score()
-        }, u.timeup(15, function(err, data) {
+        }, u.timeup(10 * 1000, function(err, data) {
             if (err) {
                 console.error(err);
                 _Controller.onUploadScoreFailed.call(self);

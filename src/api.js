@@ -45,7 +45,7 @@ var api = {
 		}
 
 		async.waterfall([_upload, _info],
-			//u.delay(5,
+			//u.delay(5 * 1000,
 			function(err, result) {
 				if (err) return callback(err);
 				callback(null, result);

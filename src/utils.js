@@ -79,38 +79,40 @@ u.bind = function(func, context) {
 };
 
 
-u.delay = function(seconds, func) {
+u.delay = function(millies, func) {
 	return function() {
 		var args = arguments;
 		setTimeout(function() {
 			if (func) func.apply(this, args);
-		}, seconds * 1000);
+		}, millies);
 	};
 };
 
-u.timeup = function(seconds, func, onTimeup) {
-	var STATUS_DOING = 'doning';
-	var STATUS_DONE = 'DONE';
+u.timeup = function(millies, func, onTimeup) {
+	var STATUS_DOING = 'doing';
+	var STATUS_DONE = 'done';
 	var STATUS_TIMEOUT = 'timeout';
 	var status = STATUS_DOING;
 
 	setTimeout(function() {
+		console.log("u.timeup onTimeup, status: ", status);
 		if (status !== STATUS_DOING) {
 			return;
 		}
 
-		status == STATUS_TIMEOUT;
+		status = STATUS_TIMEOUT;
 		if (onTimeup) {
 			onTimeup();
 		}
-	}, seconds * 1000);
+	}, millies);
 
 	return function() {
+		console.log("u.timeup callback, status: ", status);
 		if (status !== STATUS_DOING) {
 			return;
 		}
 
-		status == STATUS_DONE;
+		status = STATUS_DONE;
 		if (func) {
 			func.apply(this, arguments);
 		}
