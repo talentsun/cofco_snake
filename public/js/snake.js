@@ -1681,7 +1681,7 @@ var _Controller = {
     },
 
     pause: function() {
-        self.game.pause();
+        this.game.pause();
         $(this.controlButton).removeClass('pause');
     }
 };
