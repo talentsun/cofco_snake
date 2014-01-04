@@ -203,12 +203,12 @@
 	@loadingPaneHeight: 720px;
 	.snake-loading-pane {
 		background:url(../images/loading_bg.png) @contentBackgroundColor;
-   		filter:"progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale')";
-   		-moz-background-size:100% 100%;
    		background-size:100% 100%;
 		position: absolute;
+		background-repeat: no-repeat;;
+		filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/loading_bg.png', sizingMethod='scale');
 		top: 0px;
-		width: 100%;
+		width: @wrapperWidth;
 		height: @loadingPaneHeight * @wrapperWidth / @loadingPaneWidth;
 
 		@loadingTitleWidth: 300px;
