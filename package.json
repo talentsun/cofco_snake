@@ -21,7 +21,8 @@
     "grunt-oversprite": "~0.1.5",
     "gm": "~1.14.2",
     "grunt-spritesmith": "~1.21.0",
-    "handlebars": "~1.3.0"
+    "handlebars": "~1.3.0",
+    "express-useragent": "0.0.9-1"
   },
   "dependencies": {
     "gm": "~1.14.2"

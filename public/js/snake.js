@@ -1488,47 +1488,9 @@ Snake.prototype = {
 var _Game = {
     DEFAULT_SCORE: 10,
     triggerScoreChanged: function() {
-        if (this.scoreListener) this.scoreListener();
-    },
-
-    synchronizeScore: function() {
-        var self = this;
-        api.sync_score({
-            score: this.game.score()
-        }, u.timeup(10 * 1000, function(err, data) {
-            if (err) {
-                console.error(err);
-                _Controller.onUploadScoreFailed.call(self);
-            } else {
-                _Controller.onScoreUploaded.call(self, data);
-            }
-        }, u.bind(_Controller.onUploadScoreTimeout, this)));
-    },
-
-    ensureUser: function(callback) {
-        api.info(function(err, data) {
-            if (!err) {
-                return callback(null, data);
-            }
-
-            if (err !== api.NOT_LOGIN) {
-                return callback(err);
-            }
-
-            api.login(function(err) {
-                if (err) {
-                    return callback(err);
-                }
-
-                api.info(function(err, data) {
-                    if (err) {
-                        return callback(err);
-                    }
-
-                    callback(null, data);
-                });
-            });
-        });
+        if (this.scoreListener) {
+            this.scoreListener();
+        }
     }
 };
 
@@ -1763,6 +1725,59 @@ function getDirectionByKeyCode(keyCode) {
     return null;
 }
 
+function GameOverPane(el) {
+    var self = this;
+    this.el = el;
+    this.$el = $(el);
+    this.$el.find('.restart').click(function() {
+        if(self.onRestartHandler) {
+            self.onRestartHandler();
+        }
+        self.hide();
+    });
+}
+
+GameOverPane.prototype = {
+    constructor: GameOverPane,
+
+    showGift: function() {
+        this.$el.find(".courage-section").removeClass('hide');
+    },
+
+    setScore: function(score) {
+        this.$el.find(".score").html(score);
+        if (score > 50) {
+            this.$el.find(".tips").html("<p>你竟然得了</p>" +
+                "<p><span class='score'>" + score + "</span>分</p>" +
+                "<p>年兽好满足，</p>" +
+                "<p>暂时不会再来了！</p>");
+            this.$el.find(".nian-mood").removeClass('nian-sad').addClass('nian-happy');
+        } else {
+            this.$el.find(".tips").html("<p>你才得了</p>" +
+                "<p><span class='score'>" + score + "</span>分</p>" +
+                "<p>年兽还未吃饱，</p>" +
+                "<p>你家里人知道吗？</p>");
+            this.$el.find(".nian-mood").removeClass('nian-happy').addClass('nian-sad');
+        }
+    },
+
+    hideGift: function() {
+        this.$el.find(".courage-section").addClass('hide');
+    },
+
+    onRestart: function(handler) {
+        this.onRestartHandler = handler;
+    },
+
+    show: function() {
+        this.$el.removeClass("hide");
+    },
+
+    hide: function() {
+        this.$el.addClass("hide");
+    }
+};
+
 var _Controller = {
     setupKeyBindings: function() {
         var self = this;
@@ -1810,6 +1825,13 @@ var _Controller = {
 
     onScoreUploaded: function(user) {
         this.showTotalScore(user.score);
+        if(user.gift) {
+            this.gameoverPane.showGift();
+        } else {
+            this.gameoverPane.hideGift();
+        }
+        this.gameoverPane.setScore(this.game.score());
+        this.gameoverPane.show();
     },
 
     onUploadScoreTimeout: function() {
@@ -1821,20 +1843,18 @@ var _Controller = {
         var self = this;
         $(this.controlButton).removeClass('pause');
         this.game.over();
-
-        if (this.user) {
-            return _Game.synchronizeScore.call(this);
-        }
-
-        _Game.ensureUser.call(this, function(err, data) {
+        // TOOD
+        api.sync_score({
+            score: this.game.score()
+        }, u.timeup(10 * 1000, function(err, data) {
+            // TODO 
             if (err) {
-                // TODO
-                return console.error(err);
+                console.error(err);
+                _Controller.onUploadScoreFailed.call(self);
+            } else {
+                _Controller.onScoreUploaded.call(self, data);
             }
-
-            self.user = data;
-            _Game.synchronizeScore.call(self);
-        });
+        }, u.bind(_Controller.onUploadScoreTimeout, this)));
     },
 
     newGame: function() {
@@ -1875,6 +1895,13 @@ Controller.prototype = {
 
         this.canvas = canvas;
         _Controller.newGame.call(this);
+        this.gameoverPane = new GameOverPane($(".gameover")[0]);
+        this.gameoverPane.onRestart(function() {
+            _Controller.newGame.call(self);
+            _Controller.kickOff.call(self);
+            _Controller.resume.call(self);
+        });
+
         this.$rules = $('.snake-container-wrap .rules');
         this.$rules.on('click', 'button', function() {
             if (!api.isUserLogined()) {
@@ -1898,9 +1925,7 @@ Controller.prototype = {
         this.controlButton.onclick = function() {
             switch (self.game.status) {
                 case Game.OVER:
-                    _Controller.newGame.call(self);
-                    _Controller.kickOff.call(self);
-                    _Controller.resume.call(self);
+                    // nothing to do!
                     break;
                 case Game.INITIALIZED:
                     if (!api.isUserLogined()) {
@@ -1919,18 +1944,20 @@ Controller.prototype = {
         };
         _Controller.setupKeyBindings.call(this);
 
-        api.info(function(err, data) {
-            if (self.rounds > 1 || (self.game && self.game.isOver())) {
-                return;
-            }
+        if (api.isUserLogined()) {
+            api.info(function(err, data) {
+                if (self.rounds > 1 || (self.game && self.game.isOver())) {
+                    return;
+                }
 
-            if (err) {
-                return console.error(err);
-            }
+                if (err) {
+                    return console.error(err);
+                }
 
-            self.user = data;
-            self.showTotalScore(self.user.score);
-        });
+                self.user = data;
+                self.showTotalScore(self.user.score);
+            });
+        }
     },
 
     showTotalScore: function(totalScore) {
@@ -2073,7 +2100,6 @@ $(function() {
 
     promise.fail = function(err) {
         console.error(err);
-        // TODO fail to load resources
     };
 });
 
