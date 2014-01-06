@@ -54,7 +54,6 @@
   background-position: 0px -1036px;
   width: 1280px;
   height: 330px;
-  width: 100%;
   position: absolute;
   bottom: 0px;
 }
@@ -192,11 +191,11 @@
   height: 634px;
 }
 .snake-container-wrap .snake-loading-pane {
+  background-repeat: no-repeat;
   background: url(../images/loading_bg.png) #c9231a;
   background-size: 100% 100%;
-  position: absolute;
-  background-repeat: no-repeat;
   filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/loading_bg.png', sizingMethod='scale');
+  position: absolute;
   top: 0px;
   width: 1280px;
   height: 797.2318339100347px;
@@ -210,4 +209,70 @@
   text-align: center;
   bottom: 20%;
   font-size: 64px;
+}
+.snake-container-wrap .snake-modal-wrap {
+  position: absolute;
+  overflow: auto;
+  left: 50%;
+  top: 0px;
+  width: 996px;
+  height: 680px;
+  margin-left: -498px;
+  border: 5px solid #e8392a;
+  border-radius: 5px;
+}
+.snake-container-wrap .snake-modal-wrap .snake-modal {
+  position: relative;
+  background: #fff;
+}
+.snake-container-wrap .rules .snake-modal {
+  font-family: "微软雅黑";
+  padding: 0px 20px 20px;
+}
+.snake-container-wrap .rules .snake-modal strong,
+.snake-container-wrap .rules .snake-modal h3 {
+  font-family: "jianzhi", "微软雅黑";
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 14px;
+}
+.snake-container-wrap .rules .snake-modal h3 {
+  font-family: "jianzhi", "微软雅黑";
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 14px;
+  background-color: #e8392a;
+  color: #fff;
+  padding: 8px 16px 6px;
+  border-radius: 14px;
+  float: left;
+}
+.snake-container-wrap .rules .snake-modal ul,
+.snake-container-wrap .rules .snake-modal p {
+  clear: both;
+  font-size: 14px;
+  line-height: 14px;
+  color: #333;
+}
+.snake-container-wrap .rules .snake-modal ul {
+  padding-left: 20px;
+}
+.snake-container-wrap .rules .snake-modal ul li {
+  padding-bottom: 14px;
+}
+.snake-container-wrap .rules .snake-modal button {
+  font-family: "jianzhi", "微软雅黑";
+  font-weight: normal;
+  background-color: #e8392a;
+  color: #fff;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 24px;
+  line-height: 24px;
+  border-radius: 20px;
+  padding: 9px 30px 7px;
+  cursor: pointer;
+  outline: none;
+  border: none;
 }

@@ -497,6 +497,19 @@ Controller.prototype = {
 
         this.canvas = canvas;
         _Controller.newGame.call(this);
+        this.$rules = $('.snake-container-wrap .rules');
+        this.$rules.on('click', 'button', function() {
+            cookie.set('snake_played', 'true', {
+                expires: 14
+            });
+            self.$rules.addClass('hide');
+            _Controller.kickOff.call(self);
+            _Controller.resume.call(self);
+        });
+        if (cookie.get('snake_played') !== 'true') {
+            this.$rules.removeClass('hide');
+        }
+
         this.currentScoreEl = document.getElementById('current-score');
         this.totalScoreEl = document.getElementById('total-score');
         this.controlButton = document.getElementById('control');

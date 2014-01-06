@@ -16,6 +16,11 @@
     -moz-user-select: none;
 }
 
+.zoomBackground() {
+   	background-size:100% 100%;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/loading_bg.png', sizingMethod='scale');
+}
+
 @coupletWidth: 158px;
 @coupletHeight: 454px;
 @coupletBottom: 43px;
@@ -47,6 +52,7 @@
 }
 
 @wrapperWidth: 1280px;
+@wrapperHeight: 720px;
 @contentSize: 634px;
 @contentPadding: 22px;
 @contentBackgroundColor: #C9231A;
@@ -76,8 +82,10 @@
 	}
 
 	.bottom {
-		.sprite(@bg_bottom);
-		width: 100%;
+		.sprite-image(@bg_bottom);
+		.sprite-position(@bg_bottom);
+		width: @wrapperWidth;
+		height: @bg_bottom-height * @wrapperWidth / @bg_bottom-width;
 		position: absolute;
 		bottom: 0px;
 	}
@@ -202,13 +210,12 @@
 	@loadingPaneWidth: 1156px;
 	@loadingPaneHeight: 720px;
 	.snake-loading-pane {
+		background-repeat: no-repeat;
 		background:url(../images/loading_bg.png) @contentBackgroundColor;
-   		background-size:100% 100%;
+		.zoomBackground();
 		position: absolute;
-		background-repeat: no-repeat;;
-		filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/loading_bg.png', sizingMethod='scale');
 		top: 0px;
-		width: @wrapperWidth;
+		width: @wrapperWidth; 
 		height: @loadingPaneHeight * @wrapperWidth / @loadingPaneWidth;
 
 		@loadingTitleWidth: 300px;
@@ -221,6 +228,85 @@
 			text-align: center;
 			bottom: 20%;
 			font-size: 64px;
+		}
+	}
+
+	.snake-modal-wrap {
+		@bottom: 40px;
+		position: absolute;
+		overflow: auto;
+		left: 50%;
+		top: 0px;
+		.size(@containerWidth, @wrapperHeight - @bottom);
+		margin-left: -@containerWidth/2;
+		border: 5px solid #e8392a;
+		border-radius: 5px;
+
+		.snake-modal {
+			position: relative;
+			background: #fff;
+		}
+	}
+
+	.rules {
+		.snake-modal {
+			font-family: "微软雅黑";
+			padding: 0px 20px 20px;
+
+			.jianzhi() {
+				font-family: "jianzhi", "微软雅黑";	
+				font-weight: normal;
+			}
+
+			.font14() {
+				font-size: 14px;
+				line-height: 14px;
+			}
+
+			.hl() {
+				background-color: #e8392a;
+				color: #fff;
+			}	
+
+			strong, h3 {
+				.jianzhi();
+				.font14();
+			}
+
+			h3 {
+				.jianzhi();
+				.font14();
+				.hl();	
+				padding: 8px 16px 6px;
+				border-radius: 14px;
+				float: left;
+			}
+
+			ul, p {
+				clear: both;
+				.font14();
+				color: #333;
+			}
+
+			ul {
+				padding-left: 20px;
+				li {
+					padding-bottom: 14px;
+				}
+			}
+
+			button {
+				.jianzhi();
+				.hl();	
+				.center-block();
+				font-size: 24px;
+				line-height: 24px;
+				border-radius: 20px;
+				padding: 9px 30px 7px;
+				cursor: pointer;
+				outline: none;				
+				border: none;
+			}
 		}
 	}
 }
