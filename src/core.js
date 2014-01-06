@@ -499,6 +499,10 @@ Controller.prototype = {
         _Controller.newGame.call(this);
         this.$rules = $('.snake-container-wrap .rules');
         this.$rules.on('click', 'button', function() {
+            if (!api.isUserLogined()) {
+                return; // TODO
+            }
+
             cookie.set('snake_played', 'true', {
                 expires: 14
             });
@@ -521,6 +525,9 @@ Controller.prototype = {
                     _Controller.resume.call(self);
                     break;
                 case Game.INITIALIZED:
+                    if (!api.isUserLogined()) {
+                        return; // TODO;
+                    }
                     _Controller.kickOff.call(self);
                     _Controller.resume.call(self);
                     break;

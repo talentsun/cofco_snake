@@ -58,5 +58,16 @@ var api = {
 		setTimeout(function() {
 			callback(null);
 		}, 0);
+	},
+
+	usreid: 0,
+
+	isUserLogined: function() {
+		if (this.userid === 0) {
+			this.userid = 1;
+			return false;
+		} else {
+			return true;
+		}
 	}
 };
