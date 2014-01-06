@@ -1322,7 +1322,7 @@ var api = {
 		}, 0);
 	},
 
-	usreid: 0,
+	userid: 0,
 
 	isUserLogined: function() {
 		if (this.userid === 0) {
