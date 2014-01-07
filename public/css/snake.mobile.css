@@ -84,6 +84,12 @@ fieldset[disabled] .snake-container-wrap .header button.control.active {
   color: #ffffff;
   background-color: #fff;
 }
+.snake-container-wrap .content canvas {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #EBEBEB;
+}
 .snake-container-wrap .snake-loading-pane {
   position: absolute;
   left: 0px;
