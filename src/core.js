@@ -383,7 +383,7 @@ GameOverPane.prototype = {
     setScore: function(score) {
         this.$el.find(".score").html(score);
         if (score > 50) {
-            this.$el.find(".tips").html("<p>你竟然得了</p>" +
+            this.$el.find(".tip-section .tips").html("<p>你竟然得了</p>" +
                 "<p><span class='score'>" + score + "</span>分</p>" +
                 "<p>年兽好满足，</p>" +
                 "<p>暂时不会再来了！</p>");
