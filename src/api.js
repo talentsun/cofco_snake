@@ -63,6 +63,7 @@ var api = {
 	userid: 0,
 
 	isUserLogined: function() {
+		return true;
 		if (this.userid === 0) {
 			this.userid = 1;
 			return false;

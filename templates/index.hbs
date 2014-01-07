@@ -49,6 +49,7 @@
             </div>
         </div>
         <div class="bottom"></div>
+        <div class="snake-modal-overlay hide"></div>
 
         <div class="snake-modal-wrap error hide">
             <div class="snake-modal">
@@ -85,7 +86,7 @@
         <div class="snake-modal-wrap rules hide">
             <div class="snake-modal">
                 <h3>游戏玩法</h3>
-                <p>
+                <p style="line-height: 28px; margin: 0px;">
                     使用新浪微博或QQ登录游戏，玩家使用方向键（在手机上使用滑动手势）操控年兽的头部朝向（上下左右），尽可能多地吃掉界面中出现的中粮年货，并要避免触碰到自身或者其他障碍物。每次年兽吃掉一件年货，它的身体便增长一些，速度更逐渐加快，游戏的难度渐渐变大（类比贪吃蛇游戏）。
                 </p>
                 <h3>游戏规则</h3>
@@ -97,11 +98,16 @@
                     <li>1月30日活动截止，最终积分排行榜前3名可以获得iPad Air（64G）（每个帐号只有一次获奖机会，包含当日统计中获得的贪吃奖和优胜奖）</li>
                 </ul>
                 <h3>礼品设置</h3>
-                <p><strong>参与奖：</strong>50元我买网红包</p>
-                <p><strong>分享奖：</strong>18元牛奶产品券</p>
-                <p><strong>贪吃奖：</strong>价值1000元的中粮大礼包</p>
-                <p><strong>优胜奖：</strong>价值500元的重量大礼包</p>
-                <p><strong>终极大奖：</strong>iPad Air（64G）</p>
+                <div class="gifts-section">
+                    <div class="gifts">
+                    <p style="margin-top: 0px;"><strong>参与奖：</strong>50元我买网红包</p>
+                    <p><strong>分享奖：</strong>18元牛奶产品券</p>
+                    <p><strong>贪吃奖：</strong>价值1000元的中粮大礼包（每天2份）</p>
+                    <p><strong>优胜奖：</strong>价值500元的重量大礼包（每天1份）</p>
+                    <p><strong>终极大奖：</strong>iPad Air（64G）（共3个）</p>
+                    </div>
+                    <img src="../images/gift.png">
+                </div>
                 <h3>特别说明</h3>
                 <ul>
                     <li>每天的前三名都会在个人中心看到领取奖品的提示，这时你要决定是拿走奖品还是放弃，继续冲击最后的终极大奖。</li>
@@ -110,7 +116,7 @@
                 </ul>
                 <p>（ 注：本次活动最终解释权归中粮集团所有）</p>
                 <div style="text-align: center">
-                    <button class="snake-modal-button">开始游戏</button>
+                    <button class="snake-modal-btn">开始游戏</button>
                 </div>
             </div>
         </div>

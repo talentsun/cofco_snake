@@ -210,6 +210,15 @@
   bottom: 20%;
   font-size: 64px;
 }
+.snake-container-wrap .snake-modal-overlay {
+  position: absolute;
+  opacity: .6;
+  background-color: #fff;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+}
 .snake-container-wrap .snake-modal-wrap {
   position: absolute;
   overflow: auto;
@@ -357,6 +366,18 @@
   border-radius: 14px;
   float: left;
 }
+.snake-container-wrap .rules .snake-modal .gifts-section {
+  overflow: hidden;
+  width: 100%;
+}
+.snake-container-wrap .rules .snake-modal .gifts-section img {
+  display: block;
+  height: 125px;
+}
+.snake-container-wrap .rules .snake-modal .gifts-section .gifts,
+.snake-container-wrap .rules .snake-modal .gifts-section img {
+  float: left;
+}
 .snake-container-wrap .rules .snake-modal ul,
 .snake-container-wrap .rules .snake-modal p {
   clear: both;
@@ -366,6 +387,7 @@
 }
 .snake-container-wrap .rules .snake-modal ul {
   padding-left: 20px;
+  margin: 0px;
 }
 .snake-container-wrap .rules .snake-modal ul li {
   padding-bottom: 14px;

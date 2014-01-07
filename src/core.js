@@ -347,15 +347,29 @@ function getDirectionByKeyCode(keyCode) {
     return null;
 }
 
+function Modal(el) {
+    this.el = el;
+    this.$el = $(el);
+}
+
+Modal.prototype = {
+    show: function() {
+        this.$el.removeClass("hide");
+    },
+
+    hide: function() {
+        this.$el.addClass("hide");
+    }
+};
+
 function GameOverPane(el) {
     var self = this;
     this.el = el;
     this.$el = $(el);
     this.$el.find('.restart').click(function() {
-        if(self.onRestartHandler) {
+        if (self.onRestartHandler) {
             self.onRestartHandler();
         }
-        self.hide();
     });
 }
 
@@ -441,13 +455,18 @@ var _Controller = {
     },
 
     onUploadScoreFailed: function() {
-        // TODO
+        var self = this;
         console.error('failed to upload score');
+        this.errorPane.show();
+        setTimeout(function() {
+            self.errorPane.hide();
+            self.$overlay.hide();
+        }, 2 * 1000);
     },
 
     onScoreUploaded: function(user) {
         this.showTotalScore(user.score);
-        if(user.gift) {
+        if (user.gift) {
             this.gameoverPane.showGift();
         } else {
             this.gameoverPane.hideGift();
@@ -457,26 +476,40 @@ var _Controller = {
     },
 
     onUploadScoreTimeout: function() {
-        // TODO
-        console.error('upload score: time is up');
+        _Controller.onUploadScoreFailed.call(this);
     },
 
     onGameFailed: function() {
         var self = this;
         $(this.controlButton).removeClass('pause');
         this.game.over();
-        // TOOD
-        api.sync_score({
-            score: this.game.score()
-        }, u.timeup(10 * 1000, function(err, data) {
-            // TODO 
-            if (err) {
-                console.error(err);
-                _Controller.onUploadScoreFailed.call(self);
-            } else {
-                _Controller.onScoreUploaded.call(self, data);
+
+        function _hide(func) {
+            return function() {
+                self.loadingPane.hide();
+                if (func) {
+                    func.apply(null, arguments);
+                }
             }
-        }, u.bind(_Controller.onUploadScoreTimeout, this)));
+        }
+
+        this.$overlay.show();
+        this.loadingPane.show();
+        api.sync_score({
+                score: this.game.score()
+            },
+            //u.delay(5 * 1000,
+            u.timeup(10 * 1000,
+                _hide(function(err, data) {
+                    if (err) {
+                        _Controller.onUploadScoreFailed.call(self);
+                    } else {
+                        _Controller.onScoreUploaded.call(self, data);
+                    }
+                }), _hide(u.bind(_Controller.onUploadScoreTimeout, this))
+            )
+            //)
+        );
     },
 
     newGame: function() {
@@ -490,6 +523,7 @@ var _Controller = {
         this.rounds++;
     },
 
+    //start or resume
     resume: function() {
         this.game.start();
         $(this.controlButton).addClass('pause');
@@ -498,6 +532,12 @@ var _Controller = {
     pause: function() {
         this.game.pause();
         $(this.controlButton).removeClass('pause');
+    },
+
+    startGame: function() {
+        _Controller.newGame.call(this);
+        _Controller.kickOff.call(this);
+        _Controller.resume.call(this);
     }
 };
 
@@ -509,77 +549,85 @@ function Controller() {
 Controller.prototype = {
 
     onload: function(canvas) {
-        var self = this;
         $(".snake-loading-pane").addClass('fade');
         setTimeout(function() {
             $(".snake-loading-pane").addClass("hide");
         }, 150);
 
+        var self = this;
+
+        if (!api.isUserLogined()) {
+            this.$rules = $('.snake-container-wrap .rules');
+            this.$rules.on('click', 'button', function() {
+                // TODO
+            })
+            this.controlButton = document.getElementById('control');
+            this.controlButton.onclick = function() {
+                // TODO
+            };
+            return;
+        }
+
         this.canvas = canvas;
-        _Controller.newGame.call(this);
+        //_Controller.newGame.call(this);
+        this.$overlay = $(".snake-modal-overlay");
+        this.loadingPane = new Modal($(".snake-modal-wrap.loading")[0]);
+        this.errorPane = new Modal($(".snake-modal-wrap.error")[0]);
         this.gameoverPane = new GameOverPane($(".gameover")[0]);
         this.gameoverPane.onRestart(function() {
-            _Controller.newGame.call(self);
-            _Controller.kickOff.call(self);
-            _Controller.resume.call(self);
+            self.$overlay.hide();
+            self.gameoverPane.hide();
+            _Controller.startGame.call(self);
         });
 
         this.$rules = $('.snake-container-wrap .rules');
         this.$rules.on('click', 'button', function() {
-            if (!api.isUserLogined()) {
-                return; // TODO
-            }
-
             cookie.set('snake_played', 'true', {
                 expires: 14
             });
-            self.$rules.addClass('hide');
-            _Controller.kickOff.call(self);
-            _Controller.resume.call(self);
+            self.$rules.hide();
+            _Controller.startGame.call(self);
         });
         if (cookie.get('snake_played') !== 'true') {
-            this.$rules.removeClass('hide');
+            this.$rules.show();
         }
 
         this.currentScoreEl = document.getElementById('current-score');
         this.totalScoreEl = document.getElementById('total-score');
         this.controlButton = document.getElementById('control');
         this.controlButton.onclick = function() {
+            if (!self.game) {
+                return _Controller.startGame.call(self);
+            }
+
             switch (self.game.status) {
                 case Game.OVER:
-                    // nothing to do!
-                    break;
-                case Game.INITIALIZED:
-                    if (!api.isUserLogined()) {
-                        return; // TODO;
-                    }
-                    _Controller.kickOff.call(self);
-                    _Controller.resume.call(self);
+                    _Controller.startGame.call(self);
                     break;
                 case Game.PAUSED:
                     _Controller.resume.call(self);
                     break;
-                default:
-                    //Game.PLAYING
+                case Game.PLAYING:
                     _Controller.pause.call(self);
+                    break;
+                default:
+                    console.error('invlaid status', self.game.status);
             }
         };
         _Controller.setupKeyBindings.call(this);
 
-        if (api.isUserLogined()) {
-            api.info(function(err, data) {
-                if (self.rounds > 1 || (self.game && self.game.isOver())) {
-                    return;
-                }
+        api.info(function(err, data) {
+            if (self.rounds > 1 || (self.game && self.game.isOver())) {
+                return;
+            }
 
-                if (err) {
-                    return console.error(err);
-                }
+            if (err) {
+                return console.error(err);
+            }
 
-                self.user = data;
-                self.showTotalScore(self.user.score);
-            });
-        }
+            self.user = data;
+            self.showTotalScore(self.user.score);
+        });
     },
 
     showTotalScore: function(totalScore) {

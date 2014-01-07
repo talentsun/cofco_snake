@@ -231,7 +231,17 @@
 		}
 	}
 
-	.jianzhi() {
+	.snake-modal-overlay {
+		position: absolute;
+		opacity: .6;
+		background-color: #fff;
+		left: 0px;
+		top: 0px;
+		right: 0px;
+		bottom: 0px;
+	}
+
+ 	.jianzhi() {
 		font-family: "jianzhi", "微软雅黑";	
 		font-weight: normal;
 	}
@@ -399,6 +409,20 @@
 				float: left;
 			}
 
+			.gifts-section {
+				overflow: hidden;
+				width: 100%;
+
+				img {
+					display: block;
+					height: 125px;
+				}
+
+				.gifts, img {
+					float: left;
+				}
+			}
+
 			ul, p {
 				clear: both;
 				.font(14px);
@@ -407,6 +431,7 @@
 
 			ul {
 				padding-left: 20px;
+				margin: 0px;
 				li {
 					padding-bottom: 14px;
 				}
