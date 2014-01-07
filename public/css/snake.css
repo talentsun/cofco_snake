@@ -212,9 +212,6 @@
 }
 .snake-container-wrap .snake-modal-overlay {
   position: absolute;
-  opacity: 0.6;
-  filter: alpha(opacity=60);
-  background-color: #fff;
   left: 0px;
   top: 0px;
   right: 0px;
@@ -264,8 +261,9 @@
   width: 150px;
   height: 150px;
   margin-left: -75px;
+  margin-top: -75px;
   left: 50%;
-  top: 20%;
+  top: 50%;
 }
 .snake-container-wrap .loading .snake-modal {
   height: 100%;
@@ -275,7 +273,7 @@
   width: 520px;
   height: auto;
   left: 50%;
-  top: 10%;
+  top: 15%;
   margin-left: -260px;
   border: none;
 }
@@ -306,14 +304,14 @@
   margin: 5px 0px 20px;
   font-family: "jianzhi", "微软雅黑";
   font-weight: normal;
-  font-size: 32px;
-  line-height: 32px;
+  font-size: 25px;
+  line-height: 25px;
   text-align: center;
   color: #e8392a;
 }
 .snake-container-wrap .gameover .snake-modal .tip-section .tips .score {
-  font-size: 64px;
-  line-height: 64px;
+  font-size: 50px;
+  line-height: 50px;
 }
 .snake-container-wrap .gameover .snake-modal .courage-section {
   text-align: center;

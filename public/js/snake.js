@@ -1768,7 +1768,7 @@ GameOverPane.prototype = {
                 "<p>暂时不会再来了！</p>");
             this.$el.find(".nian-mood").removeClass('nian-sad').addClass('nian-happy');
         } else {
-            this.$el.find(".tips").html("<p>你才得了</p>" +
+            this.$el.find(".tip-section .tips").html("<p>你才得了</p>" +
                 "<p><span class='score'>" + score + "</span>分</p>" +
                 "<p>年兽还未吃饱，</p>" +
                 "<p>你家里人知道吗？</p>");

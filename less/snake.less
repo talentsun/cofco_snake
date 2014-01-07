@@ -233,8 +233,8 @@
 
 	.snake-modal-overlay {
 		position: absolute;
-		.opacity(0.6);
-		background-color: #fff;
+		//.opacity(0.6);
+		//background-color: #fff;
 		left: 0px;
 		top: 0px;
 		right: 0px;
@@ -303,8 +303,9 @@
 	.loading {
 		.size(@loadingWidth, @loadingWidth);
 		margin-left: -@loadingWidth /  2;
+		margin-top: -@loadingWidth / 2;
 		left: 50%;
-		top: 20%;
+		top: 50%;
 
 		.snake-modal {
 			height: 100%;
@@ -317,7 +318,7 @@
 		width: @gameoverPaneWidth;
 		height: auto;
 		left: 50%;
-		top: 10%;
+		top: 15%;
 		margin-left: -@gameoverPaneWidth / 2;
 		border: none;
 
@@ -345,13 +346,13 @@
 					p {
 						margin: 5px 0px 20px;
 						.jianzhi();
-						.font(32px);
+						.font(25px);
 						text-align: center;
 						color: #e8392a;
 					}
 
 					.score {
-						.font(64px);
+						.font(50px);
 					}
 				}
 			}
