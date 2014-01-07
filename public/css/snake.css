@@ -200,15 +200,28 @@
   width: 1280px;
   height: 797.2318339100347px;
 }
+.snake-container-wrap .snake-loading-pane button,
 .snake-container-wrap .snake-loading-pane h1 {
-  color: #fde85b;
-  width: 300px;
-  margin-left: -150px;
-  left: 50%;
+  left: 60%;
   position: absolute;
   text-align: center;
-  bottom: 20%;
+  margin-bottom: 0px;
+  margin-top: 0px;
+  bottom: 25%;
+}
+.snake-container-wrap .snake-loading-pane button {
+  padding: 0px 16px;
+  font-size: 32px;
+  line-height: 64px;
+  border-radius: 32px;
+  width: 200px;
+  margin-left: -100px;
+}
+.snake-container-wrap .snake-loading-pane h1 {
+  margin-left: -150px;
+  width: 300px;
   font-size: 64px;
+  color: #fbd67e;
 }
 .snake-container-wrap .snake-modal-overlay {
   position: absolute;
@@ -216,6 +229,19 @@
   top: 0px;
   right: 0px;
   bottom: 0px;
+}
+.snake-container-wrap .snake-modal-btn {
+  font-family: "jianzhi", "微软雅黑";
+  font-weight: normal;
+  background-color: #e8392a;
+  color: #fff;
+  font-size: 24px;
+  line-height: 24px;
+  border-radius: 20px;
+  padding: 9px 30px 7px;
+  cursor: pointer;
+  outline: none;
+  border: none;
 }
 .snake-container-wrap .snake-modal-wrap {
   position: absolute;
@@ -231,19 +257,6 @@
 .snake-container-wrap .snake-modal-wrap .snake-modal {
   position: relative;
   background: #fff;
-}
-.snake-container-wrap .snake-modal-wrap .snake-modal .snake-modal-btn {
-  font-family: "jianzhi", "微软雅黑";
-  font-weight: normal;
-  background-color: #e8392a;
-  color: #fff;
-  font-size: 24px;
-  line-height: 24px;
-  border-radius: 20px;
-  padding: 9px 30px 7px;
-  cursor: pointer;
-  outline: none;
-  border: none;
 }
 .snake-container-wrap .error {
   width: 100px;

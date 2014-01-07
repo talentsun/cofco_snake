@@ -549,24 +549,26 @@ function Controller() {
 Controller.prototype = {
 
     onload: function(canvas) {
-        $(".snake-loading-pane").addClass('fade');
-        setTimeout(function() {
-            $(".snake-loading-pane").addClass("hide");
-        }, 150);
 
         var self = this;
 
+        var $loadingPanel = $(".snake-loading-pane");
+        $loadingPanel.find("h1").hide();
         if (!api.isUserLogined()) {
-            this.$rules = $('.snake-container-wrap .rules');
-            this.$rules.on('click', 'button', function() {
+            $loadingPanel.find("button").show().click(function() {
                 // TODO
-            })
-            this.controlButton = document.getElementById('control');
-            this.controlButton.onclick = function() {
-                // TODO
-            };
+            });
             return;
         }
+
+        $loadingPanel.find("button").show().click(function() {
+            $loadingPanel.hide();
+            if (cookie.get('snake_played') !== 'true') {
+                self.$rules.show();
+            } else {
+                _Controller.startGame.call(self);
+            }
+        });
 
         this.canvas = canvas;
         //_Controller.newGame.call(this);
@@ -588,9 +590,6 @@ Controller.prototype = {
             self.$rules.hide();
             _Controller.startGame.call(self);
         });
-        if (cookie.get('snake_played') !== 'true') {
-            this.$rules.show();
-        }
 
         this.currentScoreEl = document.getElementById('current-score');
         this.totalScoreEl = document.getElementById('total-score');
