@@ -6,7 +6,8 @@ module.exports = function(grunt) {
         'src/cookie.js',
         'src/api.js',
         'src/timer.js',
-        'src/core.js',
+        'src/game.js',
+        'src/controller_pc.js',
         'src/tail.js'
     ];
 
