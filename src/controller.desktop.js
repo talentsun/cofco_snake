@@ -325,7 +325,7 @@ $(function() {
         image.src = src;
     }
 
-    async.parallel([loadSpriteImage, loadSpriteMeta, loadResImages],
+    async.parallel([loadSpriteImages, loadSpriteMeta, loadResImages],
         //u.delay(2 * 1000,
         function(err) {
             if (err) {

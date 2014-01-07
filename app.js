@@ -2,12 +2,14 @@
 
 var util = require('util');
 var express = require('express');
+var useragent = require('express-useragent');
 var handlebars = require('handlebars');
 var fs = require('fs');
 
 var app = express();
 app.use(express.logger('dev'));
 app.use(express.static(__dirname + '/public'));
+app.use(useragent.express());
 app.use("/libs", express.static(__dirname + '/bower_components'));
 
 var user = {
@@ -34,16 +36,35 @@ app.get('/test/upload', function(req, res) {
 	});
 });
 
-var _template = null;
 app.get('/', function(req, res) {
-	fs.readFile("templates/index.hbs", "utf-8", function(err, data) {
+	res.redirect(req.useragent.isDesktop ? '/desktop' : 'mobile');
+});
+
+var _desktop_template = null;
+app.get('/desktop', function(req, res, next) {
+	fs.readFile("templates/desktop.hbs", "utf-8", function(err, data) {
 		if (err) {
-			return console.error(err);
+			return next(err);
 		}
 
-		_template = _template || handlebars.compile(data);
-		var html = _template({
-		DEBUG: process.env.NODE_ENV === 'development'
+		_desktop_template = _desktop_template || handlebars.compile(data);
+		var html = _desktop_template({
+			DEBUG: process.env.NODE_ENV === 'development'
+		});
+		res.send(html);
+	});
+});
+
+var _mobile_template = null;
+app.get('/mobile', function(req, res, next) {
+	fs.readFile("templates/mobile.hbs", "utf-8", function(err, data) {
+		if (err) {
+			return next(err);
+		}
+
+		_mobile_template = _mobile_template || handlebars.compile(data);
+		var html = _mobile_template({
+			DEBUG: process.env.NODE_ENV === 'development'
 		});
 		res.send(html);
 	});

@@ -1377,6 +1377,8 @@ Timer.prototype = {
 
 ;
 
+// game
+
 DIRECTION_LEFT = 'left';
 DIRECTION_RIGHT = 'right';
 DIRECTION_UP = 'up';
@@ -1788,7 +1790,6 @@ function loadSpriteImages(callback) {
 	});
 }
 
-
 function loadSpriteMeta(callback) {
 	async.each(["json/snake.json", "json/foods.json"], function(item, cb) {
 		$.get(item, "json").success(function(sprites) {
@@ -1809,8 +1810,6 @@ function loadSpriteMeta(callback) {
 		callback(null, results);
 	});
 }
-
-
 
 ;
 
@@ -2141,7 +2140,7 @@ $(function() {
         image.src = src;
     }
 
-    async.parallel([loadSpriteImage, loadSpriteMeta, loadResImages],
+    async.parallel([loadSpriteImages, loadSpriteMeta, loadResImages],
         //u.delay(2 * 1000,
         function(err) {
             if (err) {

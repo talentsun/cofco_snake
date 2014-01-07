@@ -2,15 +2,13 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>snake demo</title>
     <link rel="stylesheet" href="/css/normalize.css" type="text/css">
-    <!--<link rel="stylesheet" href="/css/style.css" type="text/css">-->
 
     {{#if DEBUG}}
-    <link rel="stylesheet" href="/css/snake.css" type="text/css">
+    <link rel="stylesheet" href="/css/snake.desktop.css" type="text/css">
     {{else}}
-    <link rel="stylesheet" href="/css/snake.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/snake.desktop.min.css" type="text/css">
     {{/if}}
 
     <!--[if lt IE 9]>
@@ -34,12 +32,6 @@
                 </div>
             </div><div class='content'>
                 <canvas class='canvas' id="snake" width="634" height="634"></canvas>
-                <div class='hide msgbox'>
-                    <div class='loading'></div>
-                    <div class='timeout-pane hide'></div>
-                    <div class='error hide'></div>
-                    <div class='result hide'></div>
-                </div>
             </div><div class='couplet control-bar'>
                 <button class='couplet-head' id="control"></button>
                 <div class="title-pane">
@@ -131,9 +123,9 @@
     <script type="text/javascript" src="/libs/hammerjs/dist/jquery.hammer.min.js"></script>
 
     {{#if DEBUG}}
-    <script type="text/javascript" src="/js/snake.js"></script>
+    <script type="text/javascript" src="/js/snake.desktop.js"></script>
     {{else}}
-    <script type="text/javascript" src="/js/snake.min.js"></script>
+    <script type="text/javascript" src="/js/snake.desktop.min.js"></script>
     {{/if}}
 
     {{#unless DEBUG}}

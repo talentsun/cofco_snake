@@ -1,15 +1,28 @@
 module.exports = function(grunt) {
-    var sources = [
-        'src/head.js',
-        'src/animation.js',
-        'src/utils.js',
-        'src/cookie.js',
-        'src/api.js',
-        'src/timer.js',
-        'src/game.js',
-        'src/controller_pc.js',
-        'src/tail.js'
-    ];
+    var sources = {
+        desktop: [
+            'src/head.js',
+            'src/animation.js',
+            'src/utils.js',
+            'src/cookie.js',
+            'src/api.js',
+            'src/timer.js',
+            'src/game.js',
+            'src/controller.desktop.js',
+            'src/tail.js'
+        ],
+        mobile: [
+            'src/head.js',
+            'src/animation.js',
+            'src/utils.js',
+            'src/cookie.js',
+            'src/api.js',
+            'src/timer.js',
+            'src/game.js',
+            'src/controller.mobile.js',
+            'src/tail.js'
+        ]
+    };
 
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
@@ -48,12 +61,14 @@ module.exports = function(grunt) {
                     cleancss: true
                 },
                 files: {
-                    "<%= static_dir %>/css/snake.min.css": "less/snake.less"
+                    "<%= static_dir %>/css/snake.desktop.min.css": "less/snake.desktop.less",
+                    "<%= static_dir %>/css/snake.mobile.min.css": "less/snake.mobile.less"
                 }
             },
             development: {
                 files: {
-                    "<%= static_dir %>/css/snake.css": "less/snake.less"
+                    "<%= static_dir %>/css/snake.desktop.css": "less/snake.desktop.less",
+                    "<%= static_dir %>/css/snake.mobile.css": "less/snake.mobile.less"
                 }
             }
         },
@@ -75,18 +90,26 @@ module.exports = function(grunt) {
             options: {
                 separator: '\n\n;\n\n'
             },
-            dist: {
-                src: ['<%= async %>'].concat(sources),
-                dest: '<%= static_dir %>/js/<%= pkg.name %>.js',
+            desktop: {
+                src: ['<%= async %>'].concat(sources.desktop),
+                dest: '<%= static_dir %>/js/<%= pkg.name %>.desktop.js',
+            },
+            mobile: {
+                src: ['<%= async %>'].concat(sources.mobile),
+                dest: '<%= static_dir %>/js/<%= pkg.name %>.mobile.js'
             }
         },
         uglify: {
             options: {
                 banner: "/*! <%=pkg.name%> <%=grunt.template.today('yyyy-mm-dd')%> */\n"
             },
-            build: {
-                src: '<%= concat.dist.dest %>',
-                dest: '<%= static_dir %>/js/<%= pkg.name %>.min.js',
+            desktop: {
+                src: '<%= concat.desktop.dest %>',
+                dest: '<%= static_dir %>/js/<%= pkg.name %>.desktop.min.js',
+            },
+            mobile: {
+                src: '<%= concat.mobile.dest %>',
+                dest: '<%= static_dir %>/js/<%= pkg.name %>.mobile.min.js',
             }
         },
         qunit: {
@@ -102,7 +125,7 @@ module.exports = function(grunt) {
 
         watch: {
             express: {
-                files: ['templates/index.hbs', 'Gruntfile.js', 'app.js'].concat(sources),
+                files: ['templates/index.hbs', 'Gruntfile.js', 'app.js', 'src/*.js', 'templates/*.hbs'],
                 tasks: ['default', 'env:dev', 'express:dev'],
                 options: {
                     spawn: false

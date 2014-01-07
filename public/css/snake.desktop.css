@@ -31,12 +31,14 @@
   display: block;
   margin-left: auto;
   margin-right: auto;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
   font-family: 'jianzhi', '微软雅黑';
   width: 1280px;
   position: relative;
-  -ms-user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
 }
 .snake-container-wrap h1,
 .snake-container-wrap h2 {

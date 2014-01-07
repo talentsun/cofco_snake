@@ -1,0 +1,40 @@
+@import "../bower_components/bootstrap/less/mixins.less";
+@import "../bower_components/bootstrap/less/component-animations.less";
+@import "base.less";
+
+.snake-container-wrap {
+	width: 100%;
+	position: relative;
+	.jianzhi();
+
+	.hide {
+		display: none;
+	}
+
+	.header {
+		border: 1px solid #F1F1F1;
+		padding: 5px;
+
+		button.control {
+			.button-variant(#333; #FFF; #FFF);
+			.button-size(0px; 5px; 12px; 14px; 0px);
+			display: block;
+			float: right;
+		}
+	}
+
+	.content {
+		canvas {
+
+		}	
+	}
+
+	.snake-loading-pane {
+		position: absolute;	
+		left: 0px;
+		top: 0px;
+		right: 0px;
+		bottom: 0px;
+	}
+}
+

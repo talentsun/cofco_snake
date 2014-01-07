@@ -1,20 +1,7 @@
-@import "resources.less";
 @import "../bower_components/bootstrap/less/mixins.less";
 @import "../bower_components/bootstrap/less/component-animations.less";
-
-@font-face {
-	font-family: 'jianzhi';
-    src: url(../fonts/jianzhi.eot) format('eot'); 
-    src: url(../fonts/jianzhi.eot?#iefix) format('embedded-opentype'), 
-         url(../fonts/jianzhi.woff) format('woff'), 
-         url(../fonts/jianzhi.ttf) format('truetype');
-}
-
-.unselectable() {
-	-ms-user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-}
+@import "resources.less";
+@import "base.less";
 
 .zoomBackground() {
    	background-size:100% 100%;
@@ -29,7 +16,6 @@
 	width:	@coupletWidth;
 	height: @coupletHeight;
 	padding-bottom: @coupletBottom;
-
 }
 
 .couplet-head() {
@@ -63,10 +49,10 @@
 .snake-container-wrap {
 	.sprite(@bg);
     .center-block();
+    .user-select(none);
 	font-family: 'jianzhi', '微软雅黑';
     width: @wrapperWidth;
     position: relative;
-	.unselectable;    
 
 	h1, h2 {
 		font-weight: normal;
@@ -255,11 +241,7 @@
 		bottom: 0px;
 	}
 
- 	.jianzhi() {
-		font-family: "jianzhi", "微软雅黑";	
-		font-weight: normal;
-	}
-
+ 	
 	.font(@size) {
 		font-size: @size;
 		line-height: @size;
@@ -409,7 +391,7 @@
 		.snake-modal {
 			font-family: "微软雅黑";
 			padding: 0px 20px 20px;
-			
+
 			strong, h3 {
 				.jianzhi();
 				.font(14px);

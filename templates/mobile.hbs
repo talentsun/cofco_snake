@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>snake demo</title>
+    <link rel="stylesheet" href="/css/normalize.css" type="text/css">
+
+    {{#if DEBUG}}
+    <link rel="stylesheet" href="/css/snake.mobile.css" type="text/css">
+    {{else}}
+    <link rel="stylesheet" href="/css/snake.mobile.min.css" type="text/css">
+    {{/if}}
+</head>
+<body>
+    <div class="snake-container-wrap">
+        <div class="snake-container">
+        	<div class="header">
+        		<span class="prop">总积分：</span>
+        		<span class="score">0</span>
+        		<span class="prop">当前积分：</span>
+        		<span class="score">0</span>
+        		<button class='control'>开始</button>
+        	</div>
+            <div class='content'>
+                <canvas class='canvas' id="snake" width="600" height="600"></canvas>
+            </div>
+        </div>
+        <div class="snake-loading-pane hide">
+            <h1>loading...</h1>
+            <button class='snake-modal-btn hide'>开始游戏</button>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="/libs/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/libs/hammerjs/dist/jquery.hammer.min.js"></script>
+
+    {{#if DEBUG}}
+    <script type="text/javascript" src="/js/snake.mobile.js"></script>
+    {{else}}
+    <script type="text/javascript" src="/js/snake.mobile.min.js"></script>
+    {{/if}}
+</body>
+</html>
