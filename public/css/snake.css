@@ -212,7 +212,8 @@
 }
 .snake-container-wrap .snake-modal-overlay {
   position: absolute;
-  opacity: .6;
+  opacity: 0.6;
+  filter: alpha(opacity=60);
   background-color: #fff;
   left: 0px;
   top: 0px;
