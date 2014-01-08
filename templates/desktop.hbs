@@ -3,20 +3,21 @@
 <head>
     <meta charset="utf-8" />
     <title>snake demo</title>
-    <link rel="stylesheet" href="/css/normalize.css" type="text/css">
-
+    <!-- 游戏样式 -->
     {{#if DEBUG}}
     <link rel="stylesheet" href="/css/snake.desktop.css" type="text/css">
     {{else}}
     <link rel="stylesheet" href="/css/snake.desktop.min.css" type="text/css">
     {{/if}}
 
+    <!-- 为适配IE8使用flashcanvas提供canvas功能 -->
     <!--[if lt IE 9]>
     <script type="text/javascript" src="/js/flashcanvas.js"></script>
     <![endif]-->
 </head>
-
-<body>
+<body style="margin: 0px;">
+    
+    <!-- 游戏的dom部分 -->
     <div class="snake-container-wrap">
         <div class="snake-container">
             <div class="couplet scorebar">
@@ -146,9 +147,11 @@
         </div>
     </div>
 
-    <script type="text/javascript" src="/libs/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="/libs/hammerjs/dist/jquery.hammer.min.js"></script>
+    <!-- 依赖的代码库 -->
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.hammer.min.js"></script>
 
+    <!-- 功能代码 -->
     {{#if DEBUG}}
     <script type="text/javascript" src="/js/snake.desktop.js"></script>
     {{else}}
