@@ -1383,37 +1383,61 @@ DIRECTION_DOWN = 'down';
 
 var META = {
 	foods: {
-		zhongcha: {
-			key: "zhongcha",
-			name: '中茶'
+		food1: {
+			key: "food1",
+			name: 'food1'
 		},
-		wugu: {
-			key: "wugu",
-			name: '五谷'
+		food2: {
+			key: "food2",
+			name: 'food2'
 		},
-		mengniu: {
-			key: "mengniu",
-			name: '蒙牛'
+		food3: {
+			key: "food3",
+			name: 'food3'
 		},
-		jindi: {
-			key: "jindi",
-			name: 'jingdi'
+		food4: {
+			key: "food4",
+			name: 'food4'
 		},
-		jiajiakang: {
-			key: "jiajiakang",
-			name: '家佳康'
+		food5: {
+			key: "food5",
+			name: 'food5'
 		},
-		changcheng: {
-			key: "changcheng",
-			name: '长城'
+		food6: {
+			key: "food6",
+			name: 'food6'
 		},
-		fulinmen: {
-			key: "fulinmen",
-			name: '福临门'
+		food7: {
+			key: "food7",
+			name: 'food7'
 		},
-		yuehuo: {
-			key: "yuehuo",
-			name: 'yuehuo'
+		food8: {
+			key: "food8",
+			name: 'food8'
+		},
+		food9: {
+			key: "food9",
+			name: 'food9'
+		},
+		food10: {
+			key: "food10",
+			name: 'food10'
+		},
+		food11: {
+			key: "food11",
+			name: 'food11'
+		},
+		food12: {
+			key: "food12",
+			name: 'food12'
+		},
+		food13: {
+			key: "food13",
+			name: 'food13'
+		},
+		food14: {
+			key: "food14",
+			name: 'food14'
 		}
 	}
 };
@@ -1683,7 +1707,7 @@ Game.prototype = {
 	},
 
 	drawSnakeBody: function() {
-		for (var i = 2; i < this.snake.length() - 2; i++) {
+		for (var i = 1; i < this.snake.length() - 1; i++) {
 			var section = this.snake.section(i);
 			this.drawImage(snakeImage, snakeSprites["animal_body_nian"], this.getRect(section));
 		}
@@ -1694,10 +1718,6 @@ Game.prototype = {
 			direction = this.snake.directionOfSection(0),
 			sprite = snakeSprites["animal_tail_" + direction];
 		this.drawImage(snakeImage, sprite, this.getRect(tail));
-
-		var beforeTail = this.snake.section(1);
-		sprite = snakeSprites["animal_tail_nian_" + direction];
-		this.drawImage(snakeImage, sprite, this.getRect(beforeTail));
 	},
 
 	drawSnakeHead: function() {
@@ -1705,10 +1725,6 @@ Game.prototype = {
 			direction = this.snake.directionOfSection(-1),
 			sprite = snakeSprites["animal_head_" + direction];
 		this.drawImage(snakeImage, sprite, this.getRect(head));
-
-		var afterHead = this.snake.section(-2);
-		sprite = snakeSprites["animal_head_nian_" + direction];
-		this.drawImage(snakeImage, sprite, this.getRect(afterHead));
 	},
 
 	getRect: function(section) {
@@ -1756,7 +1772,6 @@ Game.prototype = {
 		return pos;
 	}
 };
-
 
 ;
 
