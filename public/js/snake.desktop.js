@@ -1838,8 +1838,9 @@ GameOverPane.prototype = {
         } else {
             this.$el.find(".tip-section .tips").html("<p>你才得了</p>" +
                 "<p><span class='score'>" + score + "</span>分</p>" +
-                "<p>年兽还未吃饱，</p>" +
-                "<p>你家里人知道吗？</p>");
+                "<p>年兽还没吃饱，</p>" +
+                "<p>还有可能出没哦！</p>" + 
+                "<p>继续加油吧！</p>");
             this.$el.find(".nian-mood").removeClass('nian-happy').addClass('nian-sad');
         }
     },

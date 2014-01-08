@@ -266,11 +266,11 @@
   background: url(../images/loading.gif) center center no-repeat #ffffff;
 }
 .snake-container-wrap .gameover {
-  width: 520px;
+  width: 450px;
   height: auto;
   left: 50%;
   top: 15%;
-  margin-left: -260px;
+  margin-left: -225px;
   border: none;
 }
 .snake-container-wrap .gameover .snake-modal {
@@ -337,7 +337,7 @@
   text-align: center;
 }
 .snake-container-wrap .gameover .snake-modal .foot-section .share {
-  margin-left: 80px;
+  margin-left: 40px;
 }
 .snake-container-wrap .rules .snake-modal {
   font-family: "微软雅黑";
