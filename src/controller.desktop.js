@@ -59,7 +59,7 @@ GameOverPane.prototype = {
             this.$el.find(".nian-mood").removeClass('nian-sad').addClass('nian-happy');
         } else {
             this.$el.find(".tip-section .tips").html("<p>你才得了</p>" +
-                "<p><span class='score'>" + score + "</span>分</p>" +
+                "<p><span class='score'>" + score + "</span><span>分</span></p>" +
                 "<p>年兽还没吃饱，</p>" +
                 "<p>还有可能出没哦！</p>" +
                 "<p>继续加油吧！</p>");
