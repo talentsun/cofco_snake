@@ -7,20 +7,21 @@
 ##开发
 具体的搭建步骤：
 * 安装nodejs，clone代码库
-
+```bash
 	git clone https://github.com/jiarvis/cofco_snake
+```
 
 * 安装bower，less和grunt
-
+```bash
 	npm install -g bower lessc grunt-cli
-
+```
 * 安装依赖库
-
+```bash
 	npm install
 	bower install
-
+```
 * 运行服务
-
+```bash
 	node app.js 
-
+```
 * 访问http://localhost:3000
