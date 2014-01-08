@@ -29,9 +29,9 @@
                 </div>
                 <div class='rank'>
                     <h2>今日排名</h2>
-                    <h2 id='current-rank'>0</h2>
+                    <h2 class='current'>0</h2>
                     <h2>总排名</h2>
-                    <h2 id='total-rank'>0</h2>
+                    <h2 class='total'>0</h2>
                 </div>
             </div><div class='content'>
                 <canvas class='canvas' id="snake" width="634" height="634"></canvas>
@@ -45,18 +45,15 @@
         </div>
         <div class="bottom"></div>
         <div class="snake-modal-overlay hide"></div>
-
         <div class="snake-modal-wrap error hide">
             <div class="snake-modal">
                 加载失败
             </div>
         </div>
-
         <div class="snake-modal-wrap loading hide">
             <div class="snake-modal">
             </div>
         </div>
-
         <div class="snake-modal-wrap gameover hide">
             <div class="snake-modal">
                 <div class="tip-section">
@@ -150,6 +147,7 @@
     <!-- 依赖的代码库 -->
     <script type="text/javascript" src="/js/jquery.min.js"></script>
     <script type="text/javascript" src="/js/jquery.hammer.min.js"></script>
+    <script type="text/javascript" src="/js/async.js"></script>
 
     <!-- 功能代码 -->
     {{#if DEBUG}}

@@ -135,8 +135,11 @@ var _Controller = {
     },
 
     onScoreUploaded: function(user) {
-        this.showTotalScore(user.score);
-        if (user.gift) {
+        this.user = u.extend(this.user, user);
+
+        this.showTotalScore(this.user.score);
+        _Controller.showRank.call(this);
+        if (this.user.winPrize) {
             this.gameoverPane.showGift();
         } else {
             this.gameoverPane.hideGift();
@@ -165,16 +168,14 @@ var _Controller = {
 
         this.$overlay.show();
         this.loadingPane.show();
-        api.sync_score({
-                score: this.game.score()
-            },
+        api.sync_score(this.user.member_id, this.game.score(),
             //u.delay(5 * 1000,
             u.timeup(10 * 1000,
-                _hide(function(err, data) {
+                _hide(function(err, user) {
                     if (err) {
                         _Controller.onUploadScoreFailed.call(self);
                     } else {
-                        _Controller.onScoreUploaded.call(self, data);
+                        _Controller.onScoreUploaded.call(self, user);
                     }
                 }), _hide(u.bind(_Controller.onUploadScoreTimeout, this))
             )
@@ -186,6 +187,11 @@ var _Controller = {
         this.game = new Game(this.canvas);
         this.game.onScoreChanged(u.bind(_Controller.onScoreChanged, this));
         this.game.onFailed(u.bind(_Controller.onGameFailed, this));
+    },
+
+    showRank: function() {
+        this.$currentRank.html(this.user.today_rank);
+        this.$totalRank.html(this.user.total_rank);
     },
 
     kickOff: function() {
@@ -218,13 +224,12 @@ function Controller() {
 
 Controller.prototype = {
 
-    onload: function(canvas) {
-
+    onload: function(canvas, user) {
         var self = this;
 
         var $loadingPanel = $(".snake-loading-pane");
         $loadingPanel.find("h1").hide();
-        if (!api.isUserLogined()) {
+        if (!user) {
             $loadingPanel.find("button").show().click(function() {
                 // TODO
             });
@@ -241,7 +246,6 @@ Controller.prototype = {
         });
 
         this.canvas = canvas;
-        //_Controller.newGame.call(this);
         this.$overlay = $(".snake-modal-overlay");
         this.loadingPane = new Modal($(".snake-modal-wrap.loading")[0]);
         this.errorPane = new Modal($(".snake-modal-wrap.error")[0]);
@@ -261,6 +265,8 @@ Controller.prototype = {
             _Controller.startGame.call(self);
         });
 
+        this.$currentRank = $(".rank .current");
+        this.$totalRank = $(".rank .total");
         this.currentScoreEl = document.getElementById('current-score');
         this.totalScoreEl = document.getElementById('total-score');
         this.controlButton = document.getElementById('control');
@@ -285,18 +291,10 @@ Controller.prototype = {
         };
         _Controller.setupKeyBindings.call(this);
 
-        api.info(function(err, data) {
-            if (self.rounds > 1 || (self.game && self.game.isOver())) {
-                return;
-            }
 
-            if (err) {
-                return console.error(err);
-            }
-
-            self.user = data;
-            self.showTotalScore(self.user.score);
-        });
+        self.user = user;
+        self.showTotalScore(self.user.score);
+        _Controller.showRank.call(self);
     },
 
     showTotalScore: function(totalScore) {
@@ -362,15 +360,11 @@ var controller = new Controller();
 
 $(function() {
     canvas = document.getElementById("snake");
-    /*
-    if (!canvas.getContext) {
-        G_vmlCanvasManager.initElement(canvas);
-    }
-    */
-    
     if (typeof FlashCanvas != "undefined") {
         FlashCanvas.initElement(canvas);
     }
+
+    var user = null;
 
     function loadResImages(callback) {
         var src = "images/resources.png";
@@ -386,14 +380,29 @@ $(function() {
         image.src = src;
     }
 
-    async.parallel([loadSpriteImages, loadSpriteMeta, loadResImages],
+    function getInfoInNeed(callback) {
+        api.getInfoInNeed(function(err, _user) {
+            if (!err) {
+                user = _user;
+            }
+
+            callback(null);
+        });
+    }
+
+    async.parallel([
+            loadSpriteImages,
+            loadSpriteMeta,
+            loadResImages,
+            getInfoInNeed
+        ],
         //u.delay(2 * 1000,
         function(err) {
             if (err) {
                 return conosle.error(err);
             }
 
-            controller.onload(canvas);
+            controller.onload(canvas, user);
         }
         //)
     );

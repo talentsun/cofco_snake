@@ -97,11 +97,11 @@ module.exports = function(grunt) {
                 separator: '\n\n;\n\n'
             },
             desktop: {
-                src: ['<%= async %>'].concat(sources.desktop),
+                src: sources.desktop,
                 dest: '<%= static_dir %>/js/<%= pkg.name %>.desktop.js',
             },
             mobile: {
-                src: ['<%= async %>'].concat(sources.mobile),
+                src: sources.mobile,
                 dest: '<%= static_dir %>/js/<%= pkg.name %>.mobile.js'
             }
         },

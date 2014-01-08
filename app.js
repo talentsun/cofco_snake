@@ -15,24 +15,60 @@ app.use("/libs", express.static(__dirname + '/bower_components'));
 var user = {
 	id: 0,
 	score: 2000,
+	today_rank: 200,
+	total_rank: 2000
 };
 
-app.get('/test/info', function(req, res) {
+app.get('/game/api/getMemberInfo', function(req, res) {
 	res.send({
 		status: 1,
+		info: '',
+		data: {
+			member_id: user.id,
+			nickname: 'Jarvis',
+			profile_url: '',
+			score: user.score
+		}
+	});
+});
+
+app.get('/game/api/addScore', function(req, res) {
+	var score = parseInt(req.query.score, 10);
+	var member_id = parseInt(req.query.member_id, 10);
+
+	user.score += score;
+	if (score > 0) {
+		user.today_rank = Math.max(0, --user.today_rank);
+		user.total_rank = Math.max(0, --user.total_rank);
+	}
+
+	res.send({
+		status: 1,
+		info: '',
+		data: {
+			winPrize: score >= 50
+		}
+	});
+});
+
+app.get('/game/api/getTotalScore', function(req, res) {
+	var member_id = parseInt(req.query.member_id, 10);
+
+	res.send({
+		status: 1,
+		info: '',
 		data: user
 	});
 });
 
-app.get('/test/upload', function(req, res) {
-	var score = parseInt(req.query.score, 10);
-	user.score += score;
+app.get('/game/api/getScoreRank', function(req, res) {
+	var member_id = parseInt(req.query.member_id, 10);
+
+	// TODO 修改成两种排名
 	res.send({
 		status: 1,
-		data: {
-			id: user.id,
-			gift: score >= 50
-		}
+		info: '',
+		data: user
 	});
 });
 
