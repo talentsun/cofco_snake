@@ -1,7 +1,7 @@
 #中粮贪食蛇游戏项目
 
 ##使用说明
-目前还没有实现导出完整demo的功能，所以现在运行起来会比较麻烦，需要使用nodejs
+目前还没有实现导出完整demo的功能，所以现在运行起来会比较麻烦，需要使用nodejs和相关的开发工具
 
 
 ##开发
@@ -16,13 +16,13 @@
 	npm install -g bower lessc grunt-cli
 ```
 
-* 安装依赖库
+* 安装依赖
 ```bash
 	npm install
 	bower install
 ```
 
-* 运行服务
+* 运行测试服务
 ```bash
 	node app.js 
 ```
