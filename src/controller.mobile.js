@@ -1,3 +1,35 @@
+function MGame(canvas) {
+	Game.call(this, canvas);
+}
+
+MGame.prototype = new Game();
+
+MGame.drawBackground = function(ctx) {
+	var sprite = canvasSprites.canvas_bg;
+	var rect = {
+		x: 0,
+		y: 0,
+		width: this.canvas.width,
+		height: this.canvas.height
+	};
+	drawImage(canvasImage, sprite, rect);
+};
+
+u.extend(MGame.prototype, {
+	constructor: MGame,
+
+	drawBackground: function() {
+
+	},
+
+	draw: function() {
+		this.resetCanvas();
+		this.drawBackground();
+		this.drawSnake();
+		this.drawFood();
+	}
+});
+
 _Controller = {
 	setupKeyBindings: function() {
 		var self = this;
@@ -5,18 +37,6 @@ _Controller = {
 		function while_playing(func) {
 			return function() {
 				if (self.game.status !== Game.PLAYING) {
-					return;
-				}
-
-				if (func) {
-					func.apply(this, arguments);
-				}
-			};
-		}
-
-		function game_over(func) {
-			return function() {
-				if (self.game.status !== Game.OVER) {
 					return;
 				}
 
@@ -41,9 +61,6 @@ _Controller = {
 		})).on("swiperight dragright", while_playing(function(e) {
 			e.preventDefault();
 			self.game.changeSnakeDirection('right');
-		})).on("tap", game_over(function(e) {
-			e.preventDefault();
-			_Controller.startGame.call(self);
 		}));
 	},
 
@@ -119,7 +136,7 @@ _Controller = {
 	},
 
 	newGame: function() {
-		this.game = new Game(this.canvas);
+		this.game = new MGame(this.canvas);
 		this.game.onScoreChanged(u.bind(_Controller.onScoreChanged, this));
 		this.game.onFailed(u.bind(_Controller.onGameFailed, this));
 	},
@@ -152,7 +169,8 @@ function Controller(el) {
 	this.el = el;
 	this.$el = $(el);
 	this.$canvas = this.$el.find('canvas');
-	this.canvas = this.$canvas[0];
+	MGame.drawBackground(this.canvas);
+	this.game.drawBackground();
 	this.context = this.canvas.getContext('2d');
 
 	function _ensureCanvasSize() {
@@ -192,8 +210,70 @@ u.extend(Controller.prototype, {
 					console.error('invlaid status', self.game.status);
 			}
 		});
+		_Controller.setupKeyBindings.call(this);
 	}
 });
+
+var canvasBackgroundImage = null;
+
+var foodImage = null;
+var foodSprites = null;
+var snakeImage = null;
+var snakeSprites = null;
+var canvasImage = null;
+var canvasSprites = null;
+
+function loadSpriteImages(callback) {
+	var images = ["images/snake.png", "images/foods.png", "images/canvas.png"];
+	async.each(images, function(item, cb) {
+		var image = new Image();
+		image.onload = function() {
+			if (item === "images/snake.png") {
+				snakeImage = image;
+			} else if (item == "images/foods.png") {
+				foodImage = image;
+			} else if (item == "images/canvas.png") {
+				canvasImage = image;
+			}
+			cb(null, image);
+		};
+
+		image.onerror = function() {
+			cb('fail to load image:' + item);
+		};
+
+		image.src = item;
+	}, function(err, results) {
+		if (err) {
+			return callback(err);
+		}
+
+		callback(null, results);
+	});
+}
+
+function loadSpriteMeta(callback) {
+	async.each(["json/snake.json", "json/foods.json", "json/canvas.json"], function(item, cb) {
+		$.get(item, "json").success(function(sprites) {
+			if (item === "json/snake.json") {
+				snakeSprites = sprites;
+			} else if (item === "json/foods.json") {
+				foodSprites = sprites;
+			} else if (item === "json/canvas.json") {
+				canvasSprites = sprites;
+			}
+			cb(null, sprites);
+		}).error(function() {
+			cb('fail to load sprites: ' + item);
+		});
+	}, function(err, results) {
+		if (err) {
+			return callback(err);
+		}
+
+		callback(null, results);
+	});
+}
 
 $(function() {
 	var controller = new Controller($(".snake-container-wrap")[0]);

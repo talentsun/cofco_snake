@@ -1,3 +1,4 @@
+
 var DIRECTION_KEYCODES = {
     up: [38, 75, 87],
     down: [40, 74, 83],
@@ -302,6 +303,60 @@ Controller.prototype = {
         this.totalScoreEl.innerHTML = totalScore;
     }
 };
+
+var foodImage = null;
+var foodSprites = null;
+var snakeImage = null;
+var snakeSprites = null;
+
+function loadSpriteImages(callback) {
+    var images = ["images/snake.png", "images/foods.png"];
+    async.each(images, function(item, cb) {
+        var image = new Image();
+        image.onload = function() {
+            if (item === "images/snake.png") {
+                snakeImage = image;
+            } else if (item == "images/foods.png") {
+                foodImage = image;
+            }
+            cb(null, image);
+        };
+
+        image.onerror = function() {
+            cb('fail to load image:' + item);
+        };
+
+        image.src = item;
+    }, function(err, results) {
+        if (err) {
+            return callback(err);
+        }
+
+        callback(null, results);
+    });
+}
+
+function loadSpriteMeta(callback) {
+    async.each(["json/snake.json", "json/foods.json"], function(item, cb) {
+        $.get(item, "json").success(function(sprites) {
+            if (item === "json/snake.json") {
+                snakeSprites = sprites;
+            } else {
+                foodSprites = sprites;
+            }
+            cb(null, sprites);
+        }).error(function() {
+            cb('fail to load sprites: ' + item);
+        });
+    }, function(err, results) {
+        if (err) {
+            return callback(err);
+        }
+
+        callback(null, results);
+    });
+}
+
 
 var controller = new Controller();
 

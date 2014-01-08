@@ -53,6 +53,12 @@ module.exports = function(grunt) {
                 destImg: '<%= static_dir %>/images/snake.png',
                 padding: 20,
                 destCSS: '<%= static_dir %>/json/snake.json'
+            },
+            canvas: {
+                src: "images/res/canvas_bg.png",
+                destImg: '<%= static_dir %>/images/canvas.png',
+                padding: 20,
+                destCSS: '<%= static_dir %>/json/canvas.json'
             }
         },
         less: {

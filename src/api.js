@@ -2,9 +2,7 @@
 var api = {
 	NOT_LOGIN: 'not-login',
 	upload: function(params, callback) {
-		console.log(params.score);
 		$.get('/test/upload', params, "json").success(function(data) {
-			console.log(data);
 			if (data.status != 1) {
 				callback('error');
 			} else {
@@ -17,7 +15,6 @@ var api = {
 
 	info: function(callback) {
 		$.get('/test/info', "json").success(function(data) {
-			console.log(data);
 			if (data.status != 1) {
 				callback('error');
 			} else {
