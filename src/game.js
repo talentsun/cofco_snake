@@ -126,7 +126,7 @@ Snake.prototype = {
 	},
 
 	onBody: function(x, y) {
-		for (var i = 0; i < this.sections.length; i++) {
+		for (var i = 1; i < this.sections.length; i++) {
 			var section = this.sections[i];
 			if (section.x === x && section.y === y) return true;
 		}
