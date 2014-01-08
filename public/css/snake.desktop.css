@@ -285,6 +285,9 @@
   font-family: "微软雅黑";
   padding: 20px;
 }
+.snake-container-wrap .gameover .snake-modal .tip-section {
+  margin-bottom: 20px;
+}
 .snake-container-wrap .gameover .snake-modal .tip-section .nian-happy {
   background-image: url(../images/resources.png);
   background-position: 0px -653px;
@@ -302,8 +305,11 @@
   display: inline-block;
   vertical-align: top;
 }
-.snake-container-wrap .gameover .snake-modal .tip-section .tips p {
-  margin: 5px 0px 20px;
+.snake-container-wrap .gameover .snake-modal .tip-section .tips {
+  text-align: center;
+}
+.snake-container-wrap .gameover .snake-modal .tip-section .tips span {
+  padding: 5px 0px 20px;
   font-family: "jianzhi", "微软雅黑";
   font-weight: normal;
   font-size: 25px;
