@@ -31,7 +31,7 @@ app.get('/test/upload', function(req, res) {
 		status: 1,
 		data: {
 			id: user.id,
-			gift: score > 50
+			gift: score >= 50
 		}
 	});
 });
