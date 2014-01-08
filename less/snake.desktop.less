@@ -47,6 +47,10 @@
 @baseFontSize: 16px;
 
 .snake-container-wrap {
+	filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src=hIEfix.png,sizingMethod=crop)";
+}
+
+.snake-container-wrap {
 	.sprite(@bg);
     .center-block();
     .user-select(none);
@@ -196,15 +200,15 @@
 			text-align: center;
 			margin-bottom: 0px;
 			margin-top: 0px;
-			bottom: 20%;
+			bottom: 15%;
 		}
 
 		button {
 			padding: 0px 16px;
-			font-size: 32px;
-			line-height: 64px;
-			border-radius: 32px;
-			width: 200px;
+			font-size: 60px;
+			line-height: 96px;
+			border-radius: 62px;
+			width: 400px;
 			margin-left: -100px;
 		}
 
@@ -374,6 +378,10 @@
 	}
 
 	.rules {
+		top: 50%;
+		bottom: none;
+		margin-top: -@wrapperHeight/2 + 10;
+
 		.snake-modal {
 			font-family: "微软雅黑";
 			padding: 0px 20px 20px;

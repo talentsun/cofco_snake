@@ -25,6 +25,9 @@
   src: url(../fonts/jianzhi.eot?#iefix) format('embedded-opentype'), url(../fonts/jianzhi.woff) format('woff'), url(../fonts/jianzhi.ttf) format('truetype');
 }
 .snake-container-wrap {
+  filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src=hIEfix.png,sizingMethod=crop)";
+}
+.snake-container-wrap {
   background-image: url(../images/resources.png);
   background-position: 0px -2946px;
   height: 720px;
@@ -193,14 +196,14 @@
   text-align: center;
   margin-bottom: 0px;
   margin-top: 0px;
-  bottom: 20%;
+  bottom: 15%;
 }
 .snake-container-wrap .snake-loading-pane button {
   padding: 0px 16px;
-  font-size: 32px;
-  line-height: 64px;
-  border-radius: 32px;
-  width: 200px;
+  font-size: 60px;
+  line-height: 96px;
+  border-radius: 62px;
+  width: 400px;
   margin-left: -100px;
 }
 .snake-container-wrap .snake-loading-pane h1 {
@@ -342,6 +345,11 @@
 }
 .snake-container-wrap .gameover .snake-modal .foot-section .share {
   margin-left: 40px;
+}
+.snake-container-wrap .rules {
+  top: 50%;
+  bottom: none;
+  margin-top: -350px;
 }
 .snake-container-wrap .rules .snake-modal {
   font-family: "微软雅黑";
