@@ -963,7 +963,9 @@
 ;
 
 function _nextTick(cb) {
-	setTimeout(cb, 0);
+	if (cb) {
+		cb();
+	}
 }
 
 var requestAnimationFrame = window.requestAnimationFrame ||
@@ -1574,6 +1576,10 @@ function Game(canvas) {
 	this.context = this.canvas.getContext('2d');
 	this.blocks = Game.BLOCKS;
 	this.block_size = this.canvas.width / this.blocks;
+	console.log("blocks: " + this.blocks);
+	console.log("canvas.width: " + this.canvas.width);
+	console.log("block_size: " + this.block_size);
+
 
 	this.snake = new Snake(this.blocks, 5);
 	this.foods = [];
@@ -1701,6 +1707,8 @@ Game.prototype = {
 	},
 
 	drawImage: function(image, sprite, rect) {
+		console.log("sprite: " + sprite.x + " " + sprite.y + " " + sprite.width + " " + sprite.height);
+		console.log("rect: " + rect.x + " " + rect.y + " " + rect.width + " " + rect.height);
 		var ctx = this.context;
 		ctx.drawImage(image, sprite.x, sprite.y, sprite.width, sprite.height,
 			rect.x, rect.y, rect.width, rect.height);

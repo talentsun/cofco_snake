@@ -1,5 +1,7 @@
 function _nextTick(cb) {
-	setTimeout(cb, 0);
+	if (cb) {
+		cb();
+	}
 }
 
 var requestAnimationFrame = window.requestAnimationFrame ||

@@ -26,7 +26,7 @@
 }
 .snake-container-wrap {
   background-image: url(../images/resources.png);
-  background-position: 0px -3056px;
+  background-position: 0px -2946px;
   height: 720px;
   display: block;
   margin-left: auto;
@@ -53,7 +53,7 @@
 }
 .snake-container-wrap .bottom {
   background-image: url(../images/resources.png);
-  background-position: 0px -1111px;
+  background-position: 0px -1041px;
   width: 1156px;
   height: 323px;
   position: absolute;
@@ -79,7 +79,7 @@
 }
 .snake-container-wrap .snake-container .scorebar {
   background-image: url(../images/resources.png);
-  background-position: 0px -1454px;
+  background-position: 0px -1374px;
   width: 158px;
   height: 454px;
   color: #fcf1f1;
@@ -96,7 +96,7 @@
 }
 .snake-container-wrap .snake-container .control-bar {
   background-image: url(../images/resources.png);
-  background-position: 0px -1928px;
+  background-position: 0px -1838px;
   width: 158px;
   height: 454px;
 }
@@ -113,26 +113,26 @@
   outline: none;
   cursor: pointer;
   background-image: url(../images/resources.png);
-  background-position: 0px -407px;
+  background-position: 0px -377px;
   width: 128px;
   height: 128px;
   background-color: transparent;
 }
 .snake-container-wrap .snake-container .control-bar #control:active {
   background-image: url(../images/resources.png);
-  background-position: 0px -555px;
+  background-position: 0px -515px;
   width: 128px;
   height: 128px;
 }
 .snake-container-wrap .snake-container .control-bar #control.pause {
   background-image: url(../images/resources.png);
-  background-position: 0px -111px;
+  background-position: 0px -101px;
   width: 128px;
   height: 128px;
 }
 .snake-container-wrap .snake-container .control-bar #control.pause:active {
   background-image: url(../images/resources.png);
-  background-position: 0px -259px;
+  background-position: 0px -239px;
   width: 128px;
   height: 128px;
 }
@@ -170,7 +170,7 @@
 .snake-container-wrap .snake-container .content .canvas {
   position: absolute;
   background-image: url(../images/resources.png);
-  background-position: 0px -2402px;
+  background-position: 0px -2302px;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.4);
   width: 634px;
   height: 634px;
@@ -284,13 +284,13 @@
 }
 .snake-container-wrap .gameover .snake-modal .tip-section .nian-happy {
   background-image: url(../images/resources.png);
-  background-position: 0px -703px;
+  background-position: 0px -653px;
   width: 192px;
   height: 184px;
 }
 .snake-container-wrap .gameover .snake-modal .tip-section .nian-sad {
   background-image: url(../images/resources.png);
-  background-position: 0px -907px;
+  background-position: 0px -847px;
   width: 192px;
   height: 184px;
 }

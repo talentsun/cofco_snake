@@ -963,7 +963,9 @@
 ;
 
 function _nextTick(cb) {
-	setTimeout(cb, 0);
+	if (cb) {
+		cb();
+	}
 }
 
 var requestAnimationFrame = window.requestAnimationFrame ||
@@ -1574,6 +1576,10 @@ function Game(canvas) {
 	this.context = this.canvas.getContext('2d');
 	this.blocks = Game.BLOCKS;
 	this.block_size = this.canvas.width / this.blocks;
+	console.log("blocks: " + this.blocks);
+	console.log("canvas.width: " + this.canvas.width);
+	console.log("block_size: " + this.block_size);
+
 
 	this.snake = new Snake(this.blocks, 5);
 	this.foods = [];
@@ -1701,6 +1707,8 @@ Game.prototype = {
 	},
 
 	drawImage: function(image, sprite, rect) {
+		console.log("sprite: " + sprite.x + " " + sprite.y + " " + sprite.width + " " + sprite.height);
+		console.log("rect: " + rect.x + " " + rect.y + " " + rect.width + " " + rect.height);
 		var ctx = this.context;
 		ctx.drawImage(image, sprite.x, sprite.y, sprite.width, sprite.height,
 			rect.x, rect.y, rect.width, rect.height);
@@ -1775,7 +1783,6 @@ Game.prototype = {
 
 ;
 
-
 var DIRECTION_KEYCODES = {
     up: [38, 75, 87],
     down: [40, 74, 83],
@@ -1839,7 +1846,7 @@ GameOverPane.prototype = {
             this.$el.find(".tip-section .tips").html("<p>你才得了</p>" +
                 "<p><span class='score'>" + score + "</span>分</p>" +
                 "<p>年兽还没吃饱，</p>" +
-                "<p>还有可能出没哦！</p>" + 
+                "<p>还有可能出没哦！</p>" +
                 "<p>继续加油吧！</p>");
             this.$el.find(".nian-mood").removeClass('nian-happy').addClass('nian-sad');
         }
@@ -2140,8 +2147,14 @@ var controller = new Controller();
 
 $(function() {
     canvas = document.getElementById("snake");
+    /*
     if (!canvas.getContext) {
         G_vmlCanvasManager.initElement(canvas);
+    }
+    */
+    
+    if (typeof FlashCanvas != "undefined") {
+        FlashCanvas.initElement(canvas);
     }
 
     function loadResImages(callback) {
