@@ -49,11 +49,12 @@ cofco_snake
 * 访问http://localhost:3000
 
 ##导出静态文件:
+
 ```bash
-	grunt templates #导出html文件
-	grunt sprite    #导出图片
-	grunt less      #导出css文件
-	grunt           #导出到吗
+grunt templates #导出html文件
+grunt sprite    #导出图片
+grunt less      #导出css文件
+grunt           #导出到吗
 ```
 
 其他功能详见Gruntfile.js
