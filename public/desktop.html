@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>snake demo</title>
+    <!-- 游戏样式 -->
+    
+    <link rel="stylesheet" href="/css/snake.desktop.css" type="text/css">
+    
+
+    <!-- 为适配IE8使用flashcanvas提供canvas功能 -->
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="/js/flashcanvas.js"></script>
+    <![endif]-->
+</head>
+<body style="margin: 0px;">
+    
+    <!-- 游戏的dom部分 -->
+    <div class="snake-container-wrap">
+        <div class="snake-container">
+            <div class="couplet scorebar">
+                <div class='score'>
+                    <h2>本局积分</h2>
+                    <h2 id='current-score'>0</h2>
+                    <h2>总积分</h2>
+                    <h2 id='total-score'>0</h2>
+                </div>
+                <div class='rank'>
+                    <h2>今日排名</h2>
+                    <h2 class='current'>0</h2>
+                    <h2>总排名</h2>
+                    <h2 class='total'>0</h2>
+                </div>
+            </div><div class='content'>
+                <canvas class='canvas' id="snake" width="634" height="634"></canvas>
+            </div><div class='couplet control-bar'>
+                <button class='couplet-head' id="control"></button>
+                <div class="title-pane">
+                    <h1 class="title">年货</h1>
+                    <h1 class="title">贪吃达人</h1>
+                </div>
+            </div>
+        </div>
+        <div class="bottom"></div>
+        <div class="snake-modal-overlay hide"></div>
+        <div class="snake-modal-wrap error hide">
+            <div class="snake-modal">
+                加载失败
+            </div>
+        </div>
+        <div class="snake-modal-wrap loading hide">
+            <div class="snake-modal">
+            </div>
+        </div>
+        <div class="snake-modal-wrap gameover hide">
+            <div class="snake-modal">
+                <div class="tip-section">
+                    <div class="nian-mood nian-happy"></div>
+                    <div class="tips">
+                    </div>
+                </div>
+                <div class="courage-section hide">
+                    <div class="redbag"></div>
+                    <div class="tips">
+                        <p>“参与奖”抱回家：</p>
+                        <p>一张50元我买网红包</p>
+                        <p>继续冲击贪吃大奖吧！</p>
+                    </div>
+                </div>
+                <div class="foot-section">
+                    <button class="snake-modal-btn restart">再来一局</button>
+                    <button class="snake-modal-btn share">告诉朋友们</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="snake-modal-wrap rules hide">
+            <div class="snake-modal">
+                <h3>游戏玩法</h3>
+                <p style="line-height: 28px; margin: 0px;">
+                使用新浪微博或者QQ登陆游戏。玩家使用方向键（在手机上使用滑动手势）操控年兽的头部朝向（上下左右），尽可能多地吃掉界面中出现的中粮年货，并要避免触碰到自身或者其他障碍物。每次年兽吃掉一件年货，它的身体便增长一些，速度更逐渐加快，游戏的难度渐渐变大。（类似贪吃蛇游戏）
+                </p>
+                <h3>奖项设置</h3>
+                <ul>
+                    <li>
+                        <strong>参与奖：</strong>50元我买网红包
+                        <p>
+                        单次游戏得分超过50分即可获得参与奖（每个账号每天最多可以得到10张）
+                        </p>
+                    </li>
+                    <li>
+                        <strong>分享奖：</strong>18元牛奶产品券
+                        <p>
+                        分享游戏得分到微博可以获得分享奖（每个账号每天最多可以得到3张）
+                        </p>
+                    </li>
+                    <li>
+                        <strong>贪吃奖：</strong>价值1000元的中粮大礼包（每天2份）
+                        <p>
+                        每日积分排行榜第二、三名可获得优胜奖（每个账号只有一次获奖机会，活动期内不重复获奖）
+                        </p>
+                    </li>
+                    <li>
+                        <strong>优胜奖：</strong>价值500元的重量大礼包（每天1份）
+                        <p>
+                        每日积分排行榜第一名可获得贪吃奖（每个账号只有一次获奖机会，活动期内不重复获奖）
+                        </p>
+                    </li>
+                    <li>
+                        <strong>终极大奖：</strong>iPad Air（64G）（共3个）
+                        <p>
+                        1月30日活动截止，总积分排行榜前3名可以获得终极大奖（终极大奖、贪吃奖和优胜奖不可重复获得）
+                        </p>
+                    </li>
+                </ul>
+                <img style="display: block; margin: 0 auto;" src="../images/gift.png">
+                <h3>特别说明</h3>
+                <ul>
+                    <li>
+                    50元我买网红包和18元牛奶产品券，直接去个人中心领取
+                    </li>
+                    <li>
+                    每日积分排行的前三名，第二日在个人中心中可看到领取奖品的提示，可选择兑奖或者放弃，继续冲击最后的终极大奖
+                    </li>
+                    <li>
+                    总积分排行的前三名获得iPad Air，如果其中有人获得贪吃奖或者优胜奖，我们会依次顺延名额，从而选择终极大奖的获奖者
+                    </li>
+                    <li>
+                    每个奖项的获得者，如5日内不领取奖品和填写兑奖信息，视为放弃
+                    </li>
+                </ul>
+                <p style="padding-top: 15px;">（ 注：本次活动最终解释权归中粮集团所有）</p>
+                <div style="text-align: center">
+                    <button class="snake-modal-btn">我知道了</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="snake-loading-pane">
+            <h1>loading...</h1>
+            <button class='snake-modal-btn hide'>开始游戏</button>
+        </div>
+    </div>
+
+    <!-- 依赖的代码库 -->
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.hammer.min.js"></script>
+    <script type="text/javascript" src="/js/async.js"></script>
+
+    <!-- 功能代码 -->
+    
+    <script type="text/javascript" src="/js/snake.desktop.js"></script>
+    
+
+    
+</body>
+</html>

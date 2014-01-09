@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>snake demo</title>
+    
+    <link rel="stylesheet" href="/css/snake.mobile.css" type="text/css">
+    
+</head>
+<body style="margin: 0px;">
+    <p style="width: 100%; height: 300px;"></p>
+    <div class="snake-container-wrap">
+        <div class="snake-container">
+        	<div class="header">
+    	       <span class="prop">总积分：</span>
+        	   <span class="total score">0</span>
+        	   <span class="prop">当前积分：</span>
+        	   <span class="current score">0</span>
+        	   <button class='control'>开始</button>
+        	</div>
+            <div class='content'>
+                <canvas class='canvas' id="snake" width="600" height="600"></canvas>
+            </div>
+        </div>
+        <div class="snake-loading-pane hide">
+            <h1>loading...</h1>
+            <button class='snake-modal-btn hide'>开始游戏</button>
+        </div>
+    </div>
+
+    <p style="width: 100%; height: 300px;"></p>
+
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.hammer.min.js">
+    </script>
+    <script type="text/javascript" src="/js/async.js"></script>
+
+    
+    <script type="text/javascript" src="/js/snake.mobile.js"></script>
+    
+</body>
+</html>

@@ -1,3 +1,7 @@
+var async = require("async"),
+    fs = require("fs"),
+    handlebars = require("handlebars");
+
 module.exports = function(grunt) {
     var common = [
         'src/animation.js',
@@ -141,6 +145,10 @@ module.exports = function(grunt) {
             styles: {
                 files: ['less/**/*.less'],
                 tasks: ['less']
+            },
+            templates: {
+                files: ['templates/**/*.hbs'],
+                tasks: ['templates']
             }
         }
     });
@@ -158,4 +166,37 @@ module.exports = function(grunt) {
     grunt.registerTask('test', []);
     grunt.registerTask('server', ['default', 'env:dev', 'express:dev', 'watch:express']);
     grunt.registerTask('default', ['concat', 'jshint', 'uglify']);
+    grunt.registerTask('templates', 'generate templates', function() {
+        var done = this.async();
+
+        function compile(item, callback) {
+            var path = "templates/" + item + ".hbs";
+            fs.readFile(path, "utf-8", function(err, data) {
+                if (err) {
+                    return callback(err);
+                }
+
+                var template = handlebars.compile(data);
+                var html = template({
+                    DEBUG: true
+                });
+                var to = "public/" + item + ".html";
+                fs.writeFile(to, html, function(err) {
+                    if (err) {
+                        return callback(err);
+                    }
+
+                    callback(null);
+                });
+            });
+        }
+
+        async.each(["mobile", "desktop"], compile, function(err) {
+            if (err) {
+                done(false);
+            } else {
+                done();
+            }
+        });
+    });
 };
