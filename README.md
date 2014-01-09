@@ -54,7 +54,7 @@ cofco_snake
 grunt templates #导出html文件
 grunt sprite    #导出图片
 grunt less      #导出css文件
-grunt           #导出到吗
+grunt           #导出代码
 ```
 
 其他功能详见Gruntfile.js
