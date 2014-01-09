@@ -218,6 +218,7 @@ var _Controller = {
         _Controller.kickOff.call(this);
         _Controller.resume.call(this);
         this.render.draw();
+        this.canvas.scrollintoview();
     },
 
     initRender: function(canvas) {
@@ -313,60 +314,6 @@ Controller.prototype = {
     }
 };
 
-var foodImage = null;
-var foodSprites = null;
-var snakeImage = null;
-var snakeSprites = null;
-
-function loadSpriteImages(callback) {
-    var images = ["images/snake.png", "images/foods.png"];
-    async.each(images, function(item, cb) {
-        var image = new Image();
-        image.onload = function() {
-            if (item === "images/snake.png") {
-                snakeImage = image;
-            } else if (item == "images/foods.png") {
-                foodImage = image;
-            }
-            cb(null, image);
-        };
-
-        image.onerror = function() {
-            cb('fail to load image:' + item);
-        };
-
-        image.src = item;
-    }, function(err, results) {
-        if (err) {
-            return callback(err);
-        }
-
-        callback(null, results);
-    });
-}
-
-function loadSpriteMeta(callback) {
-    async.each(["json/snake.json", "json/foods.json"], function(item, cb) {
-        $.get(item, "json").success(function(sprites) {
-            if (item === "json/snake.json") {
-                snakeSprites = sprites;
-            } else {
-                foodSprites = sprites;
-            }
-            cb(null, sprites);
-        }).error(function() {
-            cb('fail to load sprites: ' + item);
-        });
-    }, function(err, results) {
-        if (err) {
-            return callback(err);
-        }
-
-        callback(null, results);
-    });
-}
-
-
 var controller = new Controller();
 
 $(function() {
@@ -375,37 +322,11 @@ $(function() {
         FlashCanvas.initElement(canvas);
     }
 
-    var user = null;
-
-    function loadResImages(callback) {
-        var src = "images/resources.png";
-        var image = new Image();
-        image.onload = function() {
-            callback(null, image);
-        };
-
-        image.onerror = function() {
-            callback('fail to load image:' + src);
-        };
-
-        image.src = src;
-    }
-
-    function getInfoInNeed(callback) {
-        api.getInfoInNeed(function(err, _user) {
-            if (!err) {
-                user = _user;
-            }
-
-            callback(null);
-        });
-    }
-
     async.parallel([
-            loadSpriteImages,
-            loadSpriteMeta,
-            loadResImages,
-            getInfoInNeed
+            loader.loadGameSpriteImages,
+            loader.loadGameSpriteMeta,
+            loader.loadResImages,
+            loader.getInfoInNeed
         ],
         //u.delay(2 * 1000,
         function(err) {
@@ -413,7 +334,7 @@ $(function() {
                 return conosle.error(err);
             }
 
-            controller.onload(canvas, user);
+            controller.onload(canvas, loader.user);
         }
         //)
     );

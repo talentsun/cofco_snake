@@ -475,6 +475,101 @@ Timer.prototype = {
 
 ;
 
+var loader = {
+	foodImage: null,
+	foodSprites: null,
+	snakeImage: null,
+	snakeSprites: null,
+	canvasImage: null,
+	canvasSprites: null,
+	user: null,
+
+	loadGameSpriteImages: function(callback) {
+		var images = ["images/snake.png", "images/foods.png", "images/canvas.png"];
+		async.each(images, function(item, cb) {
+			var image = new Image();
+			image.onload = function() {
+				switch (item) {
+					case "images/snake.png":
+						loader.snakeImage = image;
+						break;
+					case "images/foods.png":
+						loader.foodImage = image;
+						break;
+					case "images/canvas.png":
+						loader.canvasImage = image;
+						break;
+				}
+				cb(null);
+			};
+
+			image.onerror = function() {
+				cb("fail to load sprite image " + item);
+			};
+
+			image.src = item;
+		}, function(err, results) {
+			if (err) {
+				return callback(err);
+			}
+
+			callback(null, results);
+		});
+	},
+
+	loadGameSpriteMeta: function(callback) {
+		async.each(["json/snake.json", "json/foods.json", "json/canvas.json"], function(item, cb) {
+			$.get(item, "json").success(function(sprites) {
+				switch (item) {
+					case "json/snake.json":
+						loader.snakeSprites = sprites;
+						break;
+					case "json/foods.json":
+						loader.foodSprites = sprites;
+						break;
+					case "json/canvas.json":
+						loader.canvasSprites = sprites;
+						break;
+				}
+				cb(null, sprites);
+			}).error(function() {
+				cb('fail to load sprites: ' + item);
+			});
+		}, function(err, results) {
+			if (err) {
+				return callback(err);
+			}
+
+			callback(null, results);
+		});
+	},
+
+	getInfoInNeed: function(callback) {
+		api.getInfoInNeed(function(err, _user) {
+			if (!err) {
+				loader.user = _user;
+			}
+
+			callback(null);
+		});
+	},
+
+	loadResImages: function(callback) {
+		var image = new Image();
+		image.onload = function() {
+			callback(null, image);
+		};
+
+		image.onerror = function() {
+			callback('fail to load image:' + src);
+		};
+
+		image.src = "images/resources.png";
+	}
+};
+
+;
+
 // game
 
 DIRECTION_LEFT = 'left';
@@ -912,26 +1007,26 @@ GameLayer.prototype = {
 		// snake head
 		var head = snake.section(-1);
 		var direction = snake.directionOfSection(-1);
-		var sprite = snakeSprites["animal_head_" + direction];
-		render.drawImage(snakeImage, sprite, game.getRect(head));
+		var sprite = loader.snakeSprites["animal_head_" + direction];
+		render.drawImage(loader.snakeImage, sprite, game.getRect(head));
 
 		// snake body
-		sprite = snakeSprites["animal_body_nian"];
+		sprite = loader.snakeSprites["animal_body_nian"];
 		for (var i = 1; i < snake.length() - 1; i++) {
 			var section = snake.section(i);
-			render.drawImage(snakeImage, sprite, game.getRect(section));
+			render.drawImage(loader.snakeImage, sprite, game.getRect(section));
 		}
 
 		//
 		var tail = snake.section(0);
 		direction = snake.directionOfSection(0);
-		sprite = snakeSprites["animal_tail_" + direction];
-		render.drawImage(snakeImage, sprite, game.getRect(tail));
+		sprite = loader.snakeSprites["animal_tail_" + direction];
+		render.drawImage(loader.snakeImage, sprite, game.getRect(tail));
 
 		// food	
 		var food = game.food;
-		sprite = foodSprites[food.key];
-		render.drawImage(foodImage, sprite, game.getRect(food));
+		sprite = loader.foodSprites[food.key];
+		render.drawImage(loader.foodImage, sprite, game.getRect(food));
 	},
 };
 
@@ -1158,6 +1253,7 @@ var _Controller = {
         _Controller.kickOff.call(this);
         _Controller.resume.call(this);
         this.render.draw();
+        this.canvas.scrollintoview();
     },
 
     initRender: function(canvas) {
@@ -1253,60 +1349,6 @@ Controller.prototype = {
     }
 };
 
-var foodImage = null;
-var foodSprites = null;
-var snakeImage = null;
-var snakeSprites = null;
-
-function loadSpriteImages(callback) {
-    var images = ["images/snake.png", "images/foods.png"];
-    async.each(images, function(item, cb) {
-        var image = new Image();
-        image.onload = function() {
-            if (item === "images/snake.png") {
-                snakeImage = image;
-            } else if (item == "images/foods.png") {
-                foodImage = image;
-            }
-            cb(null, image);
-        };
-
-        image.onerror = function() {
-            cb('fail to load image:' + item);
-        };
-
-        image.src = item;
-    }, function(err, results) {
-        if (err) {
-            return callback(err);
-        }
-
-        callback(null, results);
-    });
-}
-
-function loadSpriteMeta(callback) {
-    async.each(["json/snake.json", "json/foods.json"], function(item, cb) {
-        $.get(item, "json").success(function(sprites) {
-            if (item === "json/snake.json") {
-                snakeSprites = sprites;
-            } else {
-                foodSprites = sprites;
-            }
-            cb(null, sprites);
-        }).error(function() {
-            cb('fail to load sprites: ' + item);
-        });
-    }, function(err, results) {
-        if (err) {
-            return callback(err);
-        }
-
-        callback(null, results);
-    });
-}
-
-
 var controller = new Controller();
 
 $(function() {
@@ -1315,37 +1357,11 @@ $(function() {
         FlashCanvas.initElement(canvas);
     }
 
-    var user = null;
-
-    function loadResImages(callback) {
-        var src = "images/resources.png";
-        var image = new Image();
-        image.onload = function() {
-            callback(null, image);
-        };
-
-        image.onerror = function() {
-            callback('fail to load image:' + src);
-        };
-
-        image.src = src;
-    }
-
-    function getInfoInNeed(callback) {
-        api.getInfoInNeed(function(err, _user) {
-            if (!err) {
-                user = _user;
-            }
-
-            callback(null);
-        });
-    }
-
     async.parallel([
-            loadSpriteImages,
-            loadSpriteMeta,
-            loadResImages,
-            getInfoInNeed
+            loader.loadGameSpriteImages,
+            loader.loadGameSpriteMeta,
+            loader.loadResImages,
+            loader.getInfoInNeed
         ],
         //u.delay(2 * 1000,
         function(err) {
@@ -1353,7 +1369,7 @@ $(function() {
                 return conosle.error(err);
             }
 
-            controller.onload(canvas, user);
+            controller.onload(canvas, loader.user);
         }
         //)
     );

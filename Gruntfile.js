@@ -1,28 +1,28 @@
 module.exports = function(grunt) {
+    var common = [
+        'src/animation.js',
+        'src/utils.js',
+        'src/cookie.js',
+        'src/api.js',
+        'src/timer.js',
+        'src/loader.js',
+        'src/game.js',
+        'src/render.js',
+    ];
+
     var sources = {
-        desktop: [
-            'src/head.js',
-            'src/animation.js',
-            'src/utils.js',
-            'src/cookie.js',
-            'src/api.js',
-            'src/timer.js',
-            'src/game.js',
-            'src/render.js',
-            'src/controller.desktop.js',
-            'src/tail.js'
-        ],
-        mobile: [
-            'src/head.js',
-            'src/animation.js',
-            'src/utils.js',
-            'src/cookie.js',
-            'src/api.js',
-            'src/timer.js',
-            'src/game.js',
-            'src/controller.mobile.js',
-            'src/tail.js'
-        ]
+        desktop: ['src/head.js']
+            .concat(common)
+            .concat([
+                'src/desktop.js',
+                'src/tail.js'
+            ]),
+        mobile: ['src/head.js']
+            .concat(common)
+            .concat([
+                'src/mobile.js',
+                'src/tail.js'
+            ])
     };
 
     grunt.initConfig({

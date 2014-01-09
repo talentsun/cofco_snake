@@ -475,6 +475,101 @@ Timer.prototype = {
 
 ;
 
+var loader = {
+	foodImage: null,
+	foodSprites: null,
+	snakeImage: null,
+	snakeSprites: null,
+	canvasImage: null,
+	canvasSprites: null,
+	user: null,
+
+	loadGameSpriteImages: function(callback) {
+		var images = ["images/snake.png", "images/foods.png", "images/canvas.png"];
+		async.each(images, function(item, cb) {
+			var image = new Image();
+			image.onload = function() {
+				switch (item) {
+					case "images/snake.png":
+						loader.snakeImage = image;
+						break;
+					case "images/foods.png":
+						loader.foodImage = image;
+						break;
+					case "images/canvas.png":
+						loader.canvasImage = image;
+						break;
+				}
+				cb(null);
+			};
+
+			image.onerror = function() {
+				cb("fail to load sprite image " + item);
+			};
+
+			image.src = item;
+		}, function(err, results) {
+			if (err) {
+				return callback(err);
+			}
+
+			callback(null, results);
+		});
+	},
+
+	loadGameSpriteMeta: function(callback) {
+		async.each(["json/snake.json", "json/foods.json", "json/canvas.json"], function(item, cb) {
+			$.get(item, "json").success(function(sprites) {
+				switch (item) {
+					case "json/snake.json":
+						loader.snakeSprites = sprites;
+						break;
+					case "json/foods.json":
+						loader.foodSprites = sprites;
+						break;
+					case "json/canvas.json":
+						loader.canvasSprites = sprites;
+						break;
+				}
+				cb(null, sprites);
+			}).error(function() {
+				cb('fail to load sprites: ' + item);
+			});
+		}, function(err, results) {
+			if (err) {
+				return callback(err);
+			}
+
+			callback(null, results);
+		});
+	},
+
+	getInfoInNeed: function(callback) {
+		api.getInfoInNeed(function(err, _user) {
+			if (!err) {
+				loader.user = _user;
+			}
+
+			callback(null);
+		});
+	},
+
+	loadResImages: function(callback) {
+		var image = new Image();
+		image.onload = function() {
+			callback(null, image);
+		};
+
+		image.onerror = function() {
+			callback('fail to load image:' + src);
+		};
+
+		image.src = "images/resources.png";
+	}
+};
+
+;
+
 // game
 
 DIRECTION_LEFT = 'left';
@@ -847,37 +942,121 @@ Game.prototype = {
 
 ;
 
-function MGame(canvas) {
-	Game.call(this, canvas);
+// render 
+function Render(canvas) {
+	this.canvas = canvas;
+	this.context = this.canvas.getContext('2d');
+	this.layers = [];
 }
 
-MGame.prototype = new Game();
+Render.prototype = {
+	constructor: Render,
 
-MGame.drawBackground = function(ctx) {
-	var sprite = canvasSprites.canvas_bg;
-	var rect = {
-		x: 0,
-		y: 0,
-		width: this.canvas.width,
-		height: this.canvas.height
-	};
-	drawImage(canvasImage, sprite, rect);
-};
+	addLayer: function(layer) {
+		this.layers.push(layer);
+	},
 
-u.extend(MGame.prototype, {
-	constructor: MGame,
-
-	drawBackground: function() {
-
+	removeLayer: function(layer) {
+		if (~u.indexOf(this.layers, layer)) {
+			this.layers.remove(layer);
+		}
 	},
 
 	draw: function() {
-		this.resetCanvas();
-		this.drawBackground();
-		this.drawSnake();
-		this.drawFood();
+		var self = this;
+		requestAnimationFrame(function() {
+			self.resetCanvas();
+			for (var i = 0; i < self.layers.length; i++) {
+				self.layers[i].draw(self);
+			}
+		});
+	},
+
+	resetCanvas: function() {
+		var canvas = this.canvas;
+		var ctx = this.context;
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+	},
+
+	drawImage: function(image, sprite, rect) {
+		var ctx = this.context;
+		ctx.drawImage(image, sprite.x, sprite.y, sprite.width, sprite.height,
+			rect.x, rect.y, rect.width, rect.height);
 	}
-});
+};
+
+function GameLayer() {
+	this.game = null;
+}
+
+GameLayer.prototype = {
+	constructor: GameLayer,
+
+	setGame: function(game) {
+		this.game = game;
+	},
+
+	draw: function(render) {
+		var game = this.game;
+		if (!game) {
+			return;
+		}
+
+		var snake = game.snake;
+
+		// snake head
+		var head = snake.section(-1);
+		var direction = snake.directionOfSection(-1);
+		var sprite = loader.snakeSprites["animal_head_" + direction];
+		render.drawImage(loader.snakeImage, sprite, game.getRect(head));
+
+		// snake body
+		sprite = loader.snakeSprites["animal_body_nian"];
+		for (var i = 1; i < snake.length() - 1; i++) {
+			var section = snake.section(i);
+			render.drawImage(loader.snakeImage, sprite, game.getRect(section));
+		}
+
+		//
+		var tail = snake.section(0);
+		direction = snake.directionOfSection(0);
+		sprite = loader.snakeSprites["animal_tail_" + direction];
+		render.drawImage(loader.snakeImage, sprite, game.getRect(tail));
+
+		// food	
+		var food = game.food;
+		sprite = loader.foodSprites[food.key];
+		render.drawImage(loader.foodImage, sprite, game.getRect(food));
+	},
+};
+
+
+;
+
+function BackgroundLayer() {
+	this.bg = null;
+	this.sprite = null;
+}
+
+BackgroundLayer.prototype = {
+	constructor: BackgroundLayer,
+
+	draw: function(render) {
+		var bg = this.bg;
+		var sprite = this.sprite;
+		if (!bg || !sprite) {
+			return;
+		}
+
+		var rect = {
+			x: 0,
+			y: 0,
+			width: render.canvas.width,
+			height: render.canvas.height
+		};
+		render.drawImage(bg, sprite, rect);
+	}
+};
 
 _Controller = {
 	setupKeyBindings: function() {
@@ -930,7 +1109,9 @@ _Controller = {
 	},
 
 	onScoreUploaded: function(user) {
+		this.user = user;
 		this.$totalScore.html(user.score);
+		_Controller.showInfo.call(this);
 		/*
 		this.showTotalScore(user.score);
 		if (user.gift) {
@@ -961,11 +1142,7 @@ _Controller = {
 			}
 		}
 
-		// this.$overlay.show();
-		// this.loadingPane.show();
-		api.sync_score({
-				score: this.game.score()
-			},
+		api.sync_score(this.user.member_id, this.game.score(),
 			//u.delay(5 * 1000,
 			u.timeup(10 * 1000,
 				_hide(function(err, data) {
@@ -985,7 +1162,8 @@ _Controller = {
 	},
 
 	newGame: function() {
-		this.game = new MGame(this.canvas);
+		this.game = new Game(this.canvas);
+		this.game.onMoved(u.bind(this.render.draw, this.render));
 		this.game.onScoreChanged(u.bind(_Controller.onScoreChanged, this));
 		this.game.onFailed(u.bind(_Controller.onGameFailed, this));
 	},
@@ -1010,6 +1188,23 @@ _Controller = {
 		_Controller.newGame.call(this);
 		_Controller.kickOff.call(this);
 		_Controller.resume.call(this);
+		window.scrollTo(0, 0);
+		this.el.scrollIntoView(true);
+		this.gameLayer.setGame(this.game);
+		this.render.draw();
+	},
+
+	initRender: function() {
+		this.render = new Render(this.canvas);
+		this.gameLayer = new GameLayer();
+		this.bgLayer = new BackgroundLayer();
+		this.render.addLayer(this.bgLayer);
+		this.render.addLayer(this.gameLayer);
+	},
+
+	showInfo: function() {
+		this.$currentScore.html("0");
+		this.$totalScore.html(this.user.score);
 	}
 };
 
@@ -1018,27 +1213,47 @@ function Controller(el) {
 	this.el = el;
 	this.$el = $(el);
 	this.$canvas = this.$el.find('canvas');
-	MGame.drawBackground(this.canvas);
-	this.game.drawBackground();
-	this.context = this.canvas.getContext('2d');
+	this.canvas = this.$canvas[0];
+	_Controller.initRender.call(this);
 
-	function _ensureCanvasSize() {
-		var size = Math.min(window.innerWidth, window.innerHeight);
-		self.$canvas.css('width', size + "px");
-		self.$canvas.css('height', size + "px");
-	}
-	window.onresize = _ensureCanvasSize;
-	_ensureCanvasSize();
+
 
 	this.user = null;
 	this.rounds = 0;
 }
 
 u.extend(Controller.prototype, {
-	onload: function() {
+	onload: function(user) {
 		var self = this;
+		this.user = user;
+
+		this.bgLayer.bg = loader.canvasImage;
+		this.bgLayer.sprite = loader.canvasSprites["canvas_bg"];
+		this.render.draw();
+
+		if (!user) {
+			this.$control.click(function() {
+				// TODO
+			});
+			return;
+		}
+
+		this.$controlbar = this.$el.find(".header");
+		function _ensureCanvasSize() {
+			var size = Math.min(window.innerWidth, window.innerHeight);
+			var controlbar_height = self.$controlbar.outerHeight();
+			size -= controlbar_height;
+			self.$canvas.css('width', size + "px");
+			self.$canvas.css('height', size + "px");
+			self.render.draw();
+		}
+		window.onresize = _ensureCanvasSize;
+		_ensureCanvasSize();
+
 		this.$currentScore = this.$el.find(".current.score");
 		this.$totalScore = this.$el.find(".total.score");
+		_Controller.showInfo.call(this);
+
 		this.$control = this.$el.find(".control");
 		this.$control.click(function() {
 			if (!self.game) {
@@ -1063,76 +1278,19 @@ u.extend(Controller.prototype, {
 	}
 });
 
-var canvasBackgroundImage = null;
-
-var foodImage = null;
-var foodSprites = null;
-var snakeImage = null;
-var snakeSprites = null;
-var canvasImage = null;
-var canvasSprites = null;
-
-function loadSpriteImages(callback) {
-	var images = ["images/snake.png", "images/foods.png", "images/canvas.png"];
-	async.each(images, function(item, cb) {
-		var image = new Image();
-		image.onload = function() {
-			if (item === "images/snake.png") {
-				snakeImage = image;
-			} else if (item == "images/foods.png") {
-				foodImage = image;
-			} else if (item == "images/canvas.png") {
-				canvasImage = image;
-			}
-			cb(null, image);
-		};
-
-		image.onerror = function() {
-			cb('fail to load image:' + item);
-		};
-
-		image.src = item;
-	}, function(err, results) {
-		if (err) {
-			return callback(err);
-		}
-
-		callback(null, results);
-	});
-}
-
-function loadSpriteMeta(callback) {
-	async.each(["json/snake.json", "json/foods.json", "json/canvas.json"], function(item, cb) {
-		$.get(item, "json").success(function(sprites) {
-			if (item === "json/snake.json") {
-				snakeSprites = sprites;
-			} else if (item === "json/foods.json") {
-				foodSprites = sprites;
-			} else if (item === "json/canvas.json") {
-				canvasSprites = sprites;
-			}
-			cb(null, sprites);
-		}).error(function() {
-			cb('fail to load sprites: ' + item);
-		});
-	}, function(err, results) {
-		if (err) {
-			return callback(err);
-		}
-
-		callback(null, results);
-	});
-}
-
 $(function() {
 	var controller = new Controller($(".snake-container-wrap")[0]);
 
-	async.parallel([loadSpriteImages, loadSpriteMeta], function(err) {
+	async.parallel([
+		loader.loadGameSpriteMeta,
+		loader.loadGameSpriteImages,
+		loader.getInfoInNeed
+	], function(err) {
 		if (err) {
 			return console.error(err);
 		}
 
-		controller.onload();
+		controller.onload(loader.user);
 	});
 });
 

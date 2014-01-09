@@ -63,25 +63,25 @@ GameLayer.prototype = {
 		// snake head
 		var head = snake.section(-1);
 		var direction = snake.directionOfSection(-1);
-		var sprite = snakeSprites["animal_head_" + direction];
-		render.drawImage(snakeImage, sprite, game.getRect(head));
+		var sprite = loader.snakeSprites["animal_head_" + direction];
+		render.drawImage(loader.snakeImage, sprite, game.getRect(head));
 
 		// snake body
-		sprite = snakeSprites["animal_body_nian"];
+		sprite = loader.snakeSprites["animal_body_nian"];
 		for (var i = 1; i < snake.length() - 1; i++) {
 			var section = snake.section(i);
-			render.drawImage(snakeImage, sprite, game.getRect(section));
+			render.drawImage(loader.snakeImage, sprite, game.getRect(section));
 		}
 
 		//
 		var tail = snake.section(0);
 		direction = snake.directionOfSection(0);
-		sprite = snakeSprites["animal_tail_" + direction];
-		render.drawImage(snakeImage, sprite, game.getRect(tail));
+		sprite = loader.snakeSprites["animal_tail_" + direction];
+		render.drawImage(loader.snakeImage, sprite, game.getRect(tail));
 
 		// food	
 		var food = game.food;
-		sprite = foodSprites[food.key];
-		render.drawImage(foodImage, sprite, game.getRect(food));
+		sprite = loader.foodSprites[food.key];
+		render.drawImage(loader.foodImage, sprite, game.getRect(food));
 	},
 };
