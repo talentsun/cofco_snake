@@ -48,7 +48,7 @@ cofco_snake
 
 * 访问http://localhost:3000
 
-##导出静态文件:
+###导出静态文件:
 
 ```bash
 grunt templates #导出html文件
