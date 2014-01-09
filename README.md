@@ -1,7 +1,22 @@
 #中粮贪食蛇游戏项目
 
 ##使用说明
-目前还没有实现导出完整demo的功能，所以现在运行起来会比较麻烦，需要使用nodejs和相关的开发工具
+需要使用nodejs和相关的开发工具才能启动测试服务
+目录结构介绍：
+project
++--templates html模板（模板里只用到了少量的debug条件分支）
+   +--mobile.hbs 移动版的html模板
+   +--desktop.hbs pc版的html模板
++--public 游戏所需的静态文件
+   +--css
+   +--js
+   +--images
+   +--fonts
+   +--json
+   +--mobile.html
+   +--desktop.html
++--images 游戏会用的图片素材
++--src 主要的js代码
 
 
 ##开发
