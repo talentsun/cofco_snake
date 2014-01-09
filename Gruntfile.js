@@ -8,6 +8,7 @@ module.exports = function(grunt) {
             'src/api.js',
             'src/timer.js',
             'src/game.js',
+            'src/render.js',
             'src/controller.desktop.js',
             'src/tail.js'
         ],

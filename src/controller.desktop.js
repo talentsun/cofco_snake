@@ -184,7 +184,10 @@ var _Controller = {
     },
 
     newGame: function() {
-        this.game = new Game(this.canvas);
+        var self = this;
+        var game = this.game = new Game(this.canvas);
+        this.gameLayer.setGame(game);
+        this.game.onMoved(u.bind(this.render.draw, this.render));
         this.game.onScoreChanged(u.bind(_Controller.onScoreChanged, this));
         this.game.onFailed(u.bind(_Controller.onGameFailed, this));
     },
@@ -214,6 +217,14 @@ var _Controller = {
         _Controller.newGame.call(this);
         _Controller.kickOff.call(this);
         _Controller.resume.call(this);
+        this.render.draw();
+    },
+
+    initRender: function(canvas) {
+        this.canvas = canvas;
+        this.render = new Render(canvas);
+        this.gameLayer = new GameLayer();
+        this.render.addLayer(this.gameLayer);
     }
 };
 
@@ -245,7 +256,7 @@ Controller.prototype = {
             }
         });
 
-        this.canvas = canvas;
+        _Controller.initRender.call(this, canvas);
         this.$overlay = $(".snake-modal-overlay");
         this.loadingPane = new Modal($(".snake-modal-wrap.loading")[0]);
         this.errorPane = new Modal($(".snake-modal-wrap.error")[0]);

@@ -241,9 +241,12 @@ function Game(canvas) {
 			});
 		}
 
+		self.triggerMoved();
+		/*
 		requestAnimationFrame(function() {
 			self.draw();
 		});
+		*/
 	});
 }
 
@@ -280,9 +283,6 @@ Game.prototype = {
 
 		this.status = Game.PLAYING;
 		this.timer.start();
-		requestAnimationFrame(function() {
-			self.draw();
-		});
 	},
 
 	pause: function() {
@@ -292,11 +292,23 @@ Game.prototype = {
 
 	fail: function() {
 		this.status = Game.OVER;
-		if (this.failListener) this.failListener();
+		if (this.failListener) {
+			this.failListener();
+		}
 	},
 
 	onFailed: function(l) {
 		this.failListener = l;
+	},
+
+	onMoved: function(handler) {
+		this.moveHanlder = handler;
+	},
+
+	triggerMoved: function() {
+		if (this.moveHanlder) {
+			this.moveHanlder();
+		}
 	},
 
 	isCollision: function() {
@@ -322,41 +334,6 @@ Game.prototype = {
 		this.scoreListener = l;
 	},
 
-	drawSnake: function() {
-		this.drawSnakeHead();
-		this.drawSnakeBody();
-		this.drawSnakeTail();
-	},
-
-	drawImage: function(image, sprite, rect) {
-		console.log("sprite: " + sprite.x + " " + sprite.y + " " + sprite.width + " " + sprite.height);
-		console.log("rect: " + rect.x + " " + rect.y + " " + rect.width + " " + rect.height);
-		var ctx = this.context;
-		ctx.drawImage(image, sprite.x, sprite.y, sprite.width, sprite.height,
-			rect.x, rect.y, rect.width, rect.height);
-	},
-
-	drawSnakeBody: function() {
-		for (var i = 1; i < this.snake.length() - 1; i++) {
-			var section = this.snake.section(i);
-			this.drawImage(snakeImage, snakeSprites["animal_body_nian"], this.getRect(section));
-		}
-	},
-
-	drawSnakeTail: function(section) {
-		var tail = this.snake.section(0),
-			direction = this.snake.directionOfSection(0),
-			sprite = snakeSprites["animal_tail_" + direction];
-		this.drawImage(snakeImage, sprite, this.getRect(tail));
-	},
-
-	drawSnakeHead: function() {
-		var head = this.snake.section(-1),
-			direction = this.snake.directionOfSection(-1),
-			sprite = snakeSprites["animal_head_" + direction];
-		this.drawImage(snakeImage, sprite, this.getRect(head));
-	},
-
 	getRect: function(section) {
 		return {
 			x: section.x * this.block_size,
@@ -364,18 +341,6 @@ Game.prototype = {
 			width: this.block_size,
 			height: this.block_size
 		};
-	},
-
-	drawFood: function() {
-		var sprite = foodSprites[this.food.key];
-		var rect = this.getRect(this.food);
-		this.drawImage(foodImage, sprite, rect);
-	},
-
-	draw: function() {
-		this.resetCanvas();
-		this.drawSnake();
-		this.drawFood();
 	},
 
 	changeSnakeDirection: function(direction) {
