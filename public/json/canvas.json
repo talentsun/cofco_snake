@@ -1,0 +1,25 @@
+{
+    "canvas_bg": {
+        "x": 0,
+        "y": 0,
+        "width": 634,
+        "height": 634,
+        "source_image": "images/res/canvas_bg.png",
+        "image": "../images/canvas.png",
+        "total_width": 634,
+        "total_height": 634,
+        "offset_x": 0,
+        "offset_y": 0,
+        "px": {
+            "x": "0px",
+            "y": "0px",
+            "offset_x": "0px",
+            "offset_y": "0px",
+            "height": "634px",
+            "width": "634px",
+            "total_height": "634px",
+            "total_width": "634px"
+        },
+        "escaped_image": "../images/canvas.png"
+    }
+}

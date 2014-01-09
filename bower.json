@@ -1,0 +1,27 @@
+{
+  "name": "snake",
+  "main": "snake.js",
+  "version": "0.0.0",
+  "homepage": "https://github.com/jiarvis/cofco_snake",
+  "authors": [
+    "Jarvis Young <yangchen@limijiaoyin.cm>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "1.9.1",
+    "async": "*",
+    "hammerjs": "*",
+    "html5shiv": "*",
+    "bootstrap": "~3.0.3"
+  },
+  "devDependencies": {
+  }
+}
