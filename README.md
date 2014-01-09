@@ -4,6 +4,7 @@
 需要使用nodejs和相关的开发工具才能启动服务，不过public当中有导出的所有静态文件
 
 ###工程结构：
+```Javascript
 cofco_snake
 ├── app.js 测试服务代码
 ├── images 图片素材
@@ -19,6 +20,7 @@ cofco_snake
 └── templates 服务使用的页面模板
     ├── desktop.hbs
     └── mobile.hbs
+```
 
 
 ##开发
