@@ -4,7 +4,7 @@
 需要使用nodejs和相关的开发工具才能启动服务，不过public当中有导出的所有静态文件
 
 ###工程结构：
-```Javascript
+```
 cofco_snake
 ├── app.js 测试服务代码
 ├── images 图片素材
@@ -48,24 +48,12 @@ cofco_snake
 
 * 访问http://localhost:3000
 
-*导出html文件
+##导出静态文件:
 ```bash
-	grunt templates
+	grunt templates #导出html文件
+	grunt sprite    #导出图片
+	grunt less      #导出css文件
+	grunt           #导出到吗
 ```
 
-*导出css文件
-```bash
-	grunt less
-```
-
-*导出图片
-```bash
-	grunt sprite
-```
-
-*导出代码
-```bash
-	grunt
-```
-
-*其他功能详见Gruntfile.js
+其他功能详见Gruntfile.js
