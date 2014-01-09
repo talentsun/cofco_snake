@@ -189,28 +189,19 @@
   right: 0px;
   bottom: 0px;
 }
-.snake-container-wrap .snake-loading-pane button,
-.snake-container-wrap .snake-loading-pane h1 {
+.snake-container-wrap .snake-loading-pane button {
   left: 60%;
   position: absolute;
   text-align: center;
   margin-bottom: 0px;
   margin-top: 0px;
-  bottom: 15%;
-}
-.snake-container-wrap .snake-loading-pane button {
   padding: 0px 16px;
   font-size: 60px;
   line-height: 96px;
   border-radius: 62px;
   width: 400px;
   margin-left: -100px;
-}
-.snake-container-wrap .snake-loading-pane h1 {
-  margin-left: -150px;
-  width: 300px;
-  font-size: 64px;
-  color: #fbd67e;
+  bottom: 18%;
 }
 .snake-container-wrap .snake-modal-overlay {
   position: absolute;
